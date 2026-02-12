@@ -7,6 +7,15 @@
 
 {% liquid
   assign block_settings = block.settings
+
+  # If a French main menu exists and we're in the French locale, use that menu.
+  assign menu_fr = 'main-menu-fr'
+  assign dynamic_menu = linklists[block_settings.menu]
+  if request.locale.iso_code == 'fr' or request.locale.iso_code == 'fr-CA'
+    if linklists[menu_fr] and linklists[menu_fr].links.size > 0
+      assign dynamic_menu = linklists[menu_fr]
+    endif
+  endif
 %}
 
 {% case variant %}
@@ -17,7 +26,7 @@
       data-hydration-key="header-drawer-mobile"
       {{ block.shopify_attributes }}
     >
-      {% render 'header-drawer', linklist: block_settings.menu, data_header_drawer_type: 'mobile-drawer' %}
+      {% render 'header-drawer', linklist: dynamic_menu, data_header_drawer_type: 'mobile-drawer' %}
     </div>
 
   {% when 'navigation_bar' %}
@@ -32,7 +41,7 @@
             class="menu-list__list list-unstyled"
             role="list"
           >
-            {% for link in block_settings.menu.links %}
+            {% for link in dynamic_menu.links %}
               <li>
                 <a
                   href="{{ link.url }}"
@@ -77,7 +86,7 @@
     %}
 
     {% capture children %}
-      {% for link in block_settings.menu.links %}
+      {% for link in dynamic_menu.links %}
         <li
           role="presentation"
           class="menu-list__list-item"
@@ -116,7 +125,7 @@
                       parent_link: link,
                       id: list_id,
                       section: section,
-                      grid_columns_count: 6,
+                      grid_columns_count: 4,
                       grid_columns_count_tablet: 4,
                       grid_columns_count_collection_images: 8,
                       menu_content_type: menu_content_type,
