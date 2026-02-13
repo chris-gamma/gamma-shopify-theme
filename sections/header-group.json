@@ -80,6 +80,7 @@
           "blocks": {}
         }
       },
+      "custom_css": [],
       "settings": {
         "logo_position": "left",
         "menu_position": "left",

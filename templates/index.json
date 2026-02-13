@@ -16,10 +16,10 @@
           "type": "text",
           "name": "t:names.heading",
           "settings": {
-            "text": "<p>Reliable performance, professional results. Anywhere you work.</p>",
-            "width": "fit-content",
+            "text": "<p>Reliable performance. Professional results.<br/>Anywhere you work.</p>",
+            "width": "100%",
             "max_width": "normal",
-            "alignment": "left",
+            "alignment": "center",
             "type_preset": "h2",
             "font": "var(--font-body--family)",
             "font_size": "1rem",
