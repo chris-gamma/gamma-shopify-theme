@@ -108,7 +108,7 @@
           "secondary_button_background": "rgba(0,0,0,0)",
           "secondary_button_text": "#000000",
           "secondary_button_border": "#000000",
-          "secondary_button_hover_background": "#FFFFFF",
+          "secondary_button_hover_background": "#ffffff",
           "secondary_button_hover_text": "{{ shop.brand.colors.primary[0].background }}",
           "secondary_button_hover_border": "{{ shop.brand.colors.primary[0].background }}",
           "input_background": "#ffffffc7",
@@ -381,7 +381,7 @@
           "secondary_button_background": "rgba(0,0,0,0)",
           "secondary_button_text": "#000000",
           "secondary_button_border": "#000000",
-          "secondary_button_hover_background": "#FFFFFF",
+          "secondary_button_hover_background": "#ffffff",
           "secondary_button_hover_text": "{{ shop.brand.colors.primary[0].background }}",
           "secondary_button_hover_border": "{{ shop.brand.colors.primary[0].background }}",
           "input_background": "#ffffffc7",
@@ -684,6 +684,8 @@
     }
   },
   "platform_customizations": {
-    "custom_css": []
+    "custom_css": [
+      "/* Fix badly centred header logo */@media screen and (min-width: 749px) {a.header-logo {position: relative; left: 5.55px; }}"
+    ]
   }
 }
