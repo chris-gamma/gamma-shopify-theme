@@ -156,7 +156,7 @@
                   },
                   "blocks": {}
                 },
-                "custom_liquid_PXJjqG": {
+                "custom_liquid_9kWTNy": {
                   "type": "custom-liquid",
                   "name": "Product spec badges",
                   "settings": {
@@ -168,7 +168,7 @@
               "block_order": [
                 "text_xpVMaM",
                 "price_tVjtKg",
-                "custom_liquid_PXJjqG"
+                "custom_liquid_9kWTNy"
               ]
             },
             "divider_VJhene": {
@@ -257,7 +257,7 @@
               },
               "blocks": {}
             },
-            "accordion_9hLGPg": {
+            "accordion_LgMD6D": {
               "type": "accordion",
               "name": "t:names.accordion",
               "settings": {
@@ -276,7 +276,29 @@
                 "padding-inline-end": 0
               },
               "blocks": {
-                "accordion_row_jhkfRM": {
+                "accordion_row_YwACnP": {
+                  "type": "_accordion-row",
+                  "settings": {
+                    "heading": "Technical specifications",
+                    "open_by_default": true,
+                    "icon": "none",
+                    "width": 20
+                  },
+                  "blocks": {
+                    "custom_liquid_zAWmG3": {
+                      "type": "custom-liquid",
+                      "name": "Tech specs table",
+                      "settings": {
+                        "custom_liquid": "{%- if product.metafields.custom.technical_specifications\n  and product.metafields.custom.technical_specifications.value != blank -%}\n\n  <table class=\"product-specs-table\">\n    <tbody>\n      {%- for spec in product.metafields.custom.technical_specifications.value -%}\n        {%- assign parts = spec | split: ':' -%}\n        {%- assign label = parts | first | strip -%}\n        {%- assign value = parts | slice: 1 | join: ':' | strip -%}\n\n        {%- if label != blank or value != blank -%}\n          <tr>\n            <th scope=\"row\" style=\"text-align:left;\">{{ label }}</th>\n            <td style=\"text-align:left;\">{{ value }}</td>\n          </tr>\n        {%- endif -%}\n      {%- endfor -%}\n    </tbody>\n  </table>\n\n{%- endif -%}"
+                      },
+                      "blocks": {}
+                    }
+                  },
+                  "block_order": [
+                    "custom_liquid_zAWmG3"
+                  ]
+                },
+                "accordion_row_4E3HXK": {
                   "type": "_accordion-row",
                   "settings": {
                     "heading": "Warranty",
@@ -285,7 +307,7 @@
                     "width": 20
                   },
                   "blocks": {
-                    "text_4ENCVd": {
+                    "text_r3LftH": {
                       "type": "text",
                       "settings": {
                         "text": "{{ closest.product.metafields.custom.warranty_policy.value.warranty_policy | metafield_tag }}",
@@ -312,10 +334,10 @@
                     }
                   },
                   "block_order": [
-                    "text_4ENCVd"
+                    "text_r3LftH"
                   ]
                 },
-                "accordion_row_zi3qrq": {
+                "accordion_row_Qbcb3J": {
                   "type": "_accordion-row",
                   "settings": {
                     "heading": "Returns & exchanges",
@@ -324,7 +346,7 @@
                     "width": 20
                   },
                   "blocks": {
-                    "text_8iThKC": {
+                    "text_BhUmdw": {
                       "type": "text",
                       "settings": {
                         "text": "{{ closest.product.metafields.custom.return_exchange_policy.value.policy_text | metafield_tag }}",
@@ -351,13 +373,14 @@
                     }
                   },
                   "block_order": [
-                    "text_8iThKC"
+                    "text_BhUmdw"
                   ]
                 }
               },
               "block_order": [
-                "accordion_row_jhkfRM",
-                "accordion_row_zi3qrq"
+                "accordion_row_YwACnP",
+                "accordion_row_4E3HXK",
+                "accordion_row_Qbcb3J"
               ]
             }
           },
@@ -367,10 +390,11 @@
             "variant_picker_R3rGDr",
             "buy_buttons_eYQEYi",
             "text_aEtTtq",
-            "accordion_9hLGPg"
+            "accordion_LgMD6D"
           ]
         }
       },
+      "custom_css": [],
       "settings": {
         "content_width": "content-center-aligned",
         "desktop_media_position": "left",

@@ -1,0 +1,370 @@
+{% doc %}
+  @prompt
+    Make a copy of the Custom Liquid block that has the standard color scheme, typography, appearance and padding options that a text block would have.
+{% enddoc %}
+{% assign ai_gen_id = block.id | replace: '_', '' | downcase %}
+
+{% style %}
+  .ai-custom-liquid-{{ ai_gen_id }} {
+    display: block;
+    width: 100%;
+  }
+
+  .ai-custom-liquid-container-{{ ai_gen_id }} {
+    padding-top: {{ block.settings.padding_top }}px;
+    padding-bottom: {{ block.settings.padding_bottom }}px;
+    padding-left: {{ block.settings.padding_left }}px;
+    padding-right: {{ block.settings.padding_right }}px;
+  }
+
+  @media screen and (max-width: 749px) {
+    .ai-custom-liquid-container-{{ ai_gen_id }} {
+      padding-top: {{ block.settings.padding_top_mobile }}px;
+      padding-bottom: {{ block.settings.padding_bottom_mobile }}px;
+      padding-left: {{ block.settings.padding_left_mobile }}px;
+      padding-right: {{ block.settings.padding_right_mobile }}px;
+    }
+  }
+
+  .ai-custom-liquid-content-{{ ai_gen_id }} {
+    color: rgb({{ block.settings.color_scheme.settings.foreground.red }}, {{ block.settings.color_scheme.settings.foreground.green }}, {{ block.settings.color_scheme.settings.foreground.blue }});
+    background-color: rgb({{ block.settings.color_scheme.settings.background.red }}, {{ block.settings.color_scheme.settings.background.green }}, {{ block.settings.color_scheme.settings.background.blue }});
+    border-radius: {{ block.settings.border_radius }}px;
+    {% if block.settings.border_style != 'none' %}
+      border: {{ block.settings.border_width }}px {{ block.settings.border_style }} rgba({{ block.settings.color_scheme.settings.border.red }}, {{ block.settings.color_scheme.settings.border.green }}, {{ block.settings.color_scheme.settings.border.blue }}, {{ block.settings.border_opacity | divided_by: 100.0 }});
+    {% endif %}
+    {% if block.settings.enable_shadow %}
+      box-shadow: 0 4px 12px rgba({{ block.settings.color_scheme.settings.shadow.red }}, {{ block.settings.color_scheme.settings.shadow.green }}, {{ block.settings.color_scheme.settings.shadow.blue }}, 0.1);
+    {% endif %}
+  }
+
+  .ai-custom-liquid-content-{{ ai_gen_id }} h1,
+  .ai-custom-liquid-content-{{ ai_gen_id }} h2,
+  .ai-custom-liquid-content-{{ ai_gen_id }} h3,
+  .ai-custom-liquid-content-{{ ai_gen_id }} h4,
+  .ai-custom-liquid-content-{{ ai_gen_id }} h5,
+  .ai-custom-liquid-content-{{ ai_gen_id }} h6 {
+    color: rgb({{ block.settings.color_scheme.settings.foreground_heading.red }}, {{ block.settings.color_scheme.settings.foreground_heading.green }}, {{ block.settings.color_scheme.settings.foreground_heading.blue }});
+  }
+
+  .ai-custom-liquid-content-{{ ai_gen_id }} a {
+    color: rgb({{ block.settings.color_scheme.settings.primary.red }}, {{ block.settings.color_scheme.settings.primary.green }}, {{ block.settings.color_scheme.settings.primary.blue }});
+  }
+
+  .ai-custom-liquid-content-{{ ai_gen_id }} a:hover {
+    color: rgb({{ block.settings.color_scheme.settings.primary_hover.red }}, {{ block.settings.color_scheme.settings.primary_hover.green }}, {{ block.settings.color_scheme.settings.primary_hover.blue }});
+  }
+
+  {% if block.settings.text_alignment == 'left' %}
+    .ai-custom-liquid-content-{{ ai_gen_id }} {
+      text-align: left;
+    }
+  {% elsif block.settings.text_alignment == 'center' %}
+    .ai-custom-liquid-content-{{ ai_gen_id }} {
+      text-align: center;
+    }
+  {% elsif block.settings.text_alignment == 'right' %}
+    .ai-custom-liquid-content-{{ ai_gen_id }} {
+      text-align: right;
+    }
+  {% endif %}
+
+  {% if block.settings.font_family == 'body' %}
+    .ai-custom-liquid-content-{{ ai_gen_id }} {
+      font-family: var(--font-body-family);
+      font-weight: var(--font-body-weight);
+      font-style: var(--font-body-style);
+    }
+  {% elsif block.settings.font_family == 'heading' %}
+    .ai-custom-liquid-content-{{ ai_gen_id }} {
+      font-family: var(--font-heading-family);
+      font-weight: var(--font-heading-weight);
+      font-style: var(--font-heading-style);
+    }
+  {% elsif block.settings.font_family == 'subheading' %}
+    .ai-custom-liquid-content-{{ ai_gen_id }} {
+      font-family: var(--font-subheading-family);
+      font-weight: var(--font-subheading-weight);
+      font-style: var(--font-subheading-style);
+    }
+  {% elsif block.settings.font_family == 'accent' %}
+    .ai-custom-liquid-content-{{ ai_gen_id }} {
+      font-family: var(--font-accent-family);
+      font-weight: var(--font-accent-weight);
+      font-style: var(--font-accent-style);
+    }
+  {% endif %}
+
+  .ai-custom-liquid-content-{{ ai_gen_id }} {
+    font-size: {{ block.settings.font_size }}px;
+    line-height: {{ block.settings.line_height }};
+  }
+
+  @media screen and (max-width: 749px) {
+    .ai-custom-liquid-content-{{ ai_gen_id }} {
+      font-size: {{ block.settings.font_size_mobile }}px;
+    }
+  }
+{% endstyle %}
+
+<div class="ai-custom-liquid-{{ ai_gen_id }}" {{ block.shopify_attributes }}>
+  <div class="ai-custom-liquid-container-{{ ai_gen_id }}">
+    <div class="ai-custom-liquid-content-{{ ai_gen_id }}">
+      {{ block.settings.liquid_code }}
+    </div>
+  </div>
+</div>
+
+{% schema %}
+{
+  "name": "Custom liquid",
+  "tag": null,
+  "settings": [
+    {
+      "type": "liquid",
+      "id": "liquid_code",
+      "label": "Liquid code"
+    },
+    {
+      "type": "header",
+      "content": "Color scheme"
+    },
+    {
+      "type": "color_scheme",
+      "id": "color_scheme",
+      "label": "Color scheme",
+      "default": "scheme-1"
+    },
+    {
+      "type": "header",
+      "content": "Typography"
+    },
+    {
+      "type": "select",
+      "id": "font_family",
+      "label": "Font",
+      "options": [
+        {
+          "value": "body",
+          "label": "Body"
+        },
+        {
+          "value": "subheading",
+          "label": "Subheading"
+        },
+        {
+          "value": "heading",
+          "label": "Heading"
+        },
+        {
+          "value": "accent",
+          "label": "Accent"
+        }
+      ],
+      "default": "body"
+    },
+    {
+      "type": "range",
+      "id": "font_size",
+      "label": "Desktop font size",
+      "min": 10,
+      "max": 48,
+      "step": 1,
+      "unit": "px",
+      "default": 14
+    },
+    {
+      "type": "range",
+      "id": "font_size_mobile",
+      "label": "Mobile font size",
+      "min": 10,
+      "max": 32,
+      "step": 1,
+      "unit": "px",
+      "default": 14
+    },
+    {
+      "type": "range",
+      "id": "line_height",
+      "label": "Line height",
+      "min": 1,
+      "max": 2,
+      "step": 0.1,
+      "default": 1.5
+    },
+    {
+      "type": "select",
+      "id": "text_alignment",
+      "label": "Text alignment",
+      "options": [
+        {
+          "value": "left",
+          "label": "Left"
+        },
+        {
+          "value": "center",
+          "label": "Center"
+        },
+        {
+          "value": "right",
+          "label": "Right"
+        }
+      ],
+      "default": "left"
+    },
+    {
+      "type": "header",
+      "content": "Appearance"
+    },
+    {
+      "type": "range",
+      "id": "border_radius",
+      "label": "Border radius",
+      "min": 0,
+      "max": 40,
+      "step": 2,
+      "unit": "px",
+      "default": 0
+    },
+    {
+      "type": "select",
+      "id": "border_style",
+      "label": "Border style",
+      "options": [
+        {
+          "value": "none",
+          "label": "None"
+        },
+        {
+          "value": "solid",
+          "label": "Solid"
+        },
+        {
+          "value": "dashed",
+          "label": "Dashed"
+        },
+        {
+          "value": "dotted",
+          "label": "Dotted"
+        }
+      ],
+      "default": "none"
+    },
+    {
+      "type": "range",
+      "id": "border_width",
+      "label": "Border width",
+      "min": 0,
+      "max": 10,
+      "step": 1,
+      "unit": "px",
+      "default": 1
+    },
+    {
+      "type": "range",
+      "id": "border_opacity",
+      "label": "Border opacity",
+      "min": 0,
+      "max": 100,
+      "step": 5,
+      "unit": "%",
+      "default": 100
+    },
+    {
+      "type": "checkbox",
+      "id": "enable_shadow",
+      "label": "Enable shadow",
+      "default": false
+    },
+    {
+      "type": "header",
+      "content": "Padding"
+    },
+    {
+      "type": "range",
+      "id": "padding_top",
+      "label": "Desktop top",
+      "min": 0,
+      "max": 100,
+      "step": 4,
+      "unit": "px",
+      "default": 0
+    },
+    {
+      "type": "range",
+      "id": "padding_bottom",
+      "label": "Desktop bottom",
+      "min": 0,
+      "max": 100,
+      "step": 4,
+      "unit": "px",
+      "default": 0
+    },
+    {
+      "type": "range",
+      "id": "padding_left",
+      "label": "Desktop left",
+      "min": 0,
+      "max": 100,
+      "step": 4,
+      "unit": "px",
+      "default": 0
+    },
+    {
+      "type": "range",
+      "id": "padding_right",
+      "label": "Desktop right",
+      "min": 0,
+      "max": 100,
+      "step": 4,
+      "unit": "px",
+      "default": 0
+    },
+    {
+      "type": "range",
+      "id": "padding_top_mobile",
+      "label": "Mobile top",
+      "min": 0,
+      "max": 100,
+      "step": 4,
+      "unit": "px",
+      "default": 0
+    },
+    {
+      "type": "range",
+      "id": "padding_bottom_mobile",
+      "label": "Mobile bottom",
+      "min": 0,
+      "max": 100,
+      "step": 4,
+      "unit": "px",
+      "default": 0
+    },
+    {
+      "type": "range",
+      "id": "padding_left_mobile",
+      "label": "Mobile left",
+      "min": 0,
+      "max": 100,
+      "step": 4,
+      "unit": "px",
+      "default": 0
+    },
+    {
+      "type": "range",
+      "id": "padding_right_mobile",
+      "label": "Mobile right",
+      "min": 0,
+      "max": 100,
+      "step": 4,
+      "unit": "px",
+      "default": 0
+    }
+  ],
+  "presets": [
+    {
+      "name": "Custom liquid"
+    }
+  ]
+}
+{% endschema %}

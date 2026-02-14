@@ -319,7 +319,7 @@
           "type": "text",
           "name": "t:names.text",
           "settings": {
-            "text": "{{ metaobjects.short_about_paragraph[\"short-about-paragraph-xu2um6zs\"].content | metafield_tag }}",
+            "text": "<p>Founded in 1983, Gamma Equipment Rental in Montréal's diverse Notre-Dame-de-Grâce neighbourhood has been a family-run business from the start. Our reliable rental equipment and outdoor power equipment from top brands are trusted by homeowners, contractors, work crews, and property managers across the city.</p><p>After more than forty years, that's why we're still local: serving our community drives us to be the best in everything we do.</p><p><a href=\"/pages/about-us\" title=\"Find out more about us\"><strong>Find out more about us.</strong></a></p>",
             "width": "100%",
             "max_width": "none",
             "alignment": "left",
