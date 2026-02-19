@@ -243,6 +243,8 @@
     "accelerated_checkout": "Accelerated checkout",
     "accordion": "Accordion",
     "accordion_row": "Accordion row",
+    "accordion_dynamic": "Accordion - Dynamic",
+    "accordion_row_dynamic": "Accordion row - Dynamic",
     "add_to_cart": "Add to cart",
     "alternating_content_rows": "Alternating rows",
     "animations": "Animations",
