@@ -258,7 +258,7 @@
               "blocks": {}
             },
             "accordion_9hLGPg": {
-              "type": "accordion",
+              "type": "accordion-dynamic",
               "name": "t:names.accordion",
               "settings": {
                 "icon": "caret",
@@ -277,7 +277,7 @@
               },
               "blocks": {
                 "accordion_row_jhkfRM": {
-                  "type": "_accordion-row",
+                  "type": "_accordion-row-dynamic",
                   "settings": {
                     "heading": "Warranty",
                     "open_by_default": false,
@@ -316,7 +316,7 @@
                   ]
                 },
                 "accordion_row_zi3qrq": {
-                  "type": "_accordion-row",
+                  "type": "_accordion-row-dynamic",
                   "settings": {
                     "heading": "Returns & exchanges",
                     "open_by_default": false,
