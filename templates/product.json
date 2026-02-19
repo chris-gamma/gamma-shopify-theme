@@ -276,8 +276,192 @@
                 "padding-inline-end": 0
               },
               "blocks": {
+                "accordion_row_dynamic_3KKLya": {
+                  "type": "_accordion-row-dynamic",
+                  "name": "Included in the set",
+                  "settings": {
+                    "heading": "Included in the set",
+                    "open_by_default": true,
+                    "icon": "none",
+                    "width": 20
+                  },
+                  "blocks": {
+                    "text_dE4APd": {
+                      "type": "text",
+                      "settings": {
+                        "text": "{{ closest.product.metafields.custom.included_in_the_set | metafield_tag }}",
+                        "width": "100%",
+                        "max_width": "normal",
+                        "alignment": "left",
+                        "type_preset": "rte",
+                        "font": "var(--font-body--family)",
+                        "font_size": "1rem",
+                        "line_height": "normal",
+                        "letter_spacing": "normal",
+                        "case": "none",
+                        "wrap": "pretty",
+                        "color": "var(--color-foreground)",
+                        "background": false,
+                        "background_color": "#00000026",
+                        "corner_radius": 0,
+                        "padding-block-start": 0,
+                        "padding-block-end": 0,
+                        "padding-inline-start": 0,
+                        "padding-inline-end": 0
+                      },
+                      "blocks": {}
+                    }
+                  },
+                  "block_order": [
+                    "text_dE4APd"
+                  ]
+                },
+                "accordion_row_dynamic_4tj6gk": {
+                  "type": "_accordion-row-dynamic",
+                  "name": "Technical specifications",
+                  "settings": {
+                    "heading": "Technical specifications",
+                    "open_by_default": true,
+                    "icon": "none",
+                    "width": 20
+                  },
+                  "blocks": {
+                    "custom_liquid_aXhjLC": {
+                      "type": "custom-liquid",
+                      "name": "Tech specs table",
+                      "settings": {
+                        "custom_liquid": "{%- if product.metafields.custom.technical_specifications\n  and product.metafields.custom.technical_specifications.value != blank\n-%}\n  <table class=\"product-specs-table\">\n    <tbody>\n      {%- for spec in product.metafields.custom.technical_specifications.value -%}\n        {%- assign parts = spec | split: ':' -%}\n        {%- assign label = parts | first | strip -%}\n        {%- assign value = parts | slice: 1 | join: ':' | strip -%}\n\n        {%- if label != blank or value != blank -%}\n          <tr>\n            <th scope=\"row\" style=\"text-align:left;\">{{ label }}</th>\n            <td style=\"text-align:left;\">{{ value }}</td>\n          </tr>\n        {%- endif -%}\n      {%- endfor -%}\n    </tbody>\n  </table>\n{%- endif -%}"
+                      },
+                      "blocks": {}
+                    }
+                  },
+                  "block_order": [
+                    "custom_liquid_aXhjLC"
+                  ]
+                },
+                "accordion_row_dynamic_yeqHPy": {
+                  "type": "_accordion-row-dynamic",
+                  "name": "Spare parts & accessories",
+                  "settings": {
+                    "heading": "Spare parts & accessories",
+                    "open_by_default": false,
+                    "icon": "none",
+                    "width": 20
+                  },
+                  "blocks": {
+                    "text_PpP4Ki": {
+                      "type": "text",
+                      "settings": {
+                        "text": "{{ closest.product.metafields.custom.spare_parts_accessories | metafield_tag }}",
+                        "width": "100%",
+                        "max_width": "normal",
+                        "alignment": "left",
+                        "type_preset": "rte",
+                        "font": "var(--font-body--family)",
+                        "font_size": "1rem",
+                        "line_height": "normal",
+                        "letter_spacing": "normal",
+                        "case": "none",
+                        "wrap": "pretty",
+                        "color": "var(--color-foreground)",
+                        "background": false,
+                        "background_color": "#00000026",
+                        "corner_radius": 0,
+                        "padding-block-start": 0,
+                        "padding-block-end": 0,
+                        "padding-inline-start": 0,
+                        "padding-inline-end": 0
+                      },
+                      "blocks": {}
+                    }
+                  },
+                  "block_order": [
+                    "text_PpP4Ki"
+                  ]
+                },
+                "accordion_row_dynamic_kYLXxd": {
+                  "type": "_accordion-row-dynamic",
+                  "name": "Manuals & documentation",
+                  "settings": {
+                    "heading": "Manuals & documentation",
+                    "open_by_default": false,
+                    "icon": "none",
+                    "width": 20
+                  },
+                  "blocks": {
+                    "text_EJcW3f": {
+                      "type": "text",
+                      "settings": {
+                        "text": "{{ closest.product.metafields.custom.manuals_documentation | metafield_tag }}",
+                        "width": "100%",
+                        "max_width": "normal",
+                        "alignment": "left",
+                        "type_preset": "rte",
+                        "font": "var(--font-body--family)",
+                        "font_size": "1rem",
+                        "line_height": "normal",
+                        "letter_spacing": "normal",
+                        "case": "none",
+                        "wrap": "pretty",
+                        "color": "var(--color-foreground)",
+                        "background": false,
+                        "background_color": "#00000026",
+                        "corner_radius": 0,
+                        "padding-block-start": 0,
+                        "padding-block-end": 0,
+                        "padding-inline-start": 0,
+                        "padding-inline-end": 0
+                      },
+                      "blocks": {}
+                    }
+                  },
+                  "block_order": [
+                    "text_EJcW3f"
+                  ]
+                },
+                "accordion_row_dynamic_YfaL4M": {
+                  "type": "_accordion-row-dynamic",
+                  "name": "Frequently asked questions",
+                  "settings": {
+                    "heading": "Frequently asked questions",
+                    "open_by_default": false,
+                    "icon": "none",
+                    "width": 20
+                  },
+                  "blocks": {
+                    "text_X6YB9t": {
+                      "type": "text",
+                      "settings": {
+                        "text": "{{ closest.product.metafields.custom.frequently_asked_questions | metafield_tag }}",
+                        "width": "100%",
+                        "max_width": "normal",
+                        "alignment": "left",
+                        "type_preset": "rte",
+                        "font": "var(--font-body--family)",
+                        "font_size": "1rem",
+                        "line_height": "normal",
+                        "letter_spacing": "normal",
+                        "case": "none",
+                        "wrap": "pretty",
+                        "color": "var(--color-foreground)",
+                        "background": false,
+                        "background_color": "#00000026",
+                        "corner_radius": 0,
+                        "padding-block-start": 0,
+                        "padding-block-end": 0,
+                        "padding-inline-start": 0,
+                        "padding-inline-end": 0
+                      },
+                      "blocks": {}
+                    }
+                  },
+                  "block_order": [
+                    "text_X6YB9t"
+                  ]
+                },
                 "accordion_row_jhkfRM": {
                   "type": "_accordion-row-dynamic",
+                  "name": "Warranty",
                   "settings": {
                     "heading": "Warranty",
                     "open_by_default": false,
@@ -317,6 +501,7 @@
                 },
                 "accordion_row_zi3qrq": {
                   "type": "_accordion-row-dynamic",
+                  "name": "Returns & exchanges",
                   "settings": {
                     "heading": "Returns & exchanges",
                     "open_by_default": false,
@@ -356,6 +541,11 @@
                 }
               },
               "block_order": [
+                "accordion_row_dynamic_3KKLya",
+                "accordion_row_dynamic_4tj6gk",
+                "accordion_row_dynamic_yeqHPy",
+                "accordion_row_dynamic_kYLXxd",
+                "accordion_row_dynamic_YfaL4M",
                 "accordion_row_jhkfRM",
                 "accordion_row_zi3qrq"
               ]
