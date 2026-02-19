@@ -1,0 +1,77 @@
+/* Fix badly centred header logo */
+@media screen and (min-width: 749px) {
+  a.header-logo {
+    position: relative;
+    left: 5.55px;
+  }
+}
+
+/* Style Shopify cookie consent window */
+#shopify-pc__banner,
+#shopify-pc__prefs {
+  font-family: "Inter", sans-serif;
+}
+/* Style headers */
+#shopify-pc__banner__body-title,
+#shopify-pc__prefs__header-title {
+  font-family: "Oswald", sans-serif;
+  font-weight: 500;
+}
+/* Style buttons */
+#shopify-pc__banner__btn-manage-prefs,
+#shopify-pc__prefs__header-decline,
+#shopify-pc__prefs__header-save {
+  padding-block: var(--button-padding-block);
+  padding-inline: var(--button-padding-inline);
+  font-family: var(--button-font-family-secondary);
+  background-color: #f5f5f6;
+  color: #000000;
+  border-color: #000000;
+  border-width: 1px;
+  border-radius: var(--style-border-radius-buttons-secondary);
+}
+#shopify-pc__banner__btn-manage-prefs:hover,
+#shopify-pc__banner__btn-manage-prefs:focus,
+#shopify-pc__prefs__header-decline:hover,
+#shopify-pc__prefs__header-decline:focus,
+#shopify-pc__prefs__header-save:hover,
+#shopify-pc__prefs__header-save:focus {
+  color: #ee2622;
+  border-color: #ee2622;
+}
+#shopify-pc__banner__btn-accept,
+#shopify-pc__prefs__header-accept,
+#shopify-pc__prefs__header-save.primary {
+  padding-block: var(--button-padding-block);
+  padding-inline: var(--button-padding-inline);
+  font-family: var(--button-font-family-primary);
+  background-color: #ee2622;
+  color: #ffffff;
+  border-color: #ee2622;
+  border-radius: var(--style-border-radius-buttons-primary);
+}
+#shopify-pc__banner__btn-accept:hover,
+#shopify-pc__banner__btn-accept:focus,
+#shopify-pc__prefs__header-accept:hover,
+#shopify-pc__prefs__header-accept:focus,
+#shopify-pc__prefs__header-save.primary:hover,
+#shopify-pc__prefs__header-save.primary:focus {
+  background-color: #c41f1c;
+}
+#shopify-pc__prefs__header-close svg path,
+span svg[data-icon-type="checked"] path,
+span svg[data-icon-type="unchecked"] path {
+  fill: #ee2622;
+}
+#shopify-pc__prefs__header-close:hover svg path,
+#shopify-pc__prefs__header-close:focus svg path,
+span:hover svg[data-icon-type="checked"] path,
+span:focus svg[data-icon-type="checked"] path,
+span:hover svg[data-icon-type="unchecked"] path,
+span:focus svg[data-icon-type="unchecked"] path {
+  fill: #c41f1c;
+}
+/* Hide decline button on banner */
+#shopify-pc__banner__btn-decline {
+  display: none !important;
+}

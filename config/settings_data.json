@@ -88,18 +88,19 @@
     "variant_button_radius": 14,
     "variant_button_width": "equal-width-buttons",
     "button_font_weight_secondary": "default",
+    "sections": {
+      "password-footer": {
+        "type": "password-footer",
+        "custom_css": [
+          ".password-footer__powered-by {display: none !important;}"
+        ],
+        "settings": {
+          "color_scheme": ""
+        }
+      }
+    },
     "content_for_index": [],
     "blocks": {
-      "2567389343055140935": {
-        "type": "shopify://apps/microsoft-clarity/blocks/clarity_js/31c3d126-8116-4b4a-8ba1-baeda7c4aeea",
-        "disabled": false,
-        "settings": {}
-      },
-      "2200952712151285029": {
-        "type": "shopify://apps/microsoft-clarity/blocks/brandAgents_js/31c3d126-8116-4b4a-8ba1-baeda7c4aeea",
-        "disabled": false,
-        "settings": {}
-      },
       "7079518687644006178": {
         "type": "shopify://apps/checkout-blocks/blocks/app-embed/b0024ca5-9de8-4bf0-a92f-cd0783877ae2",
         "disabled": false,
@@ -112,8 +113,13 @@
           "ref": true
         }
       },
-      "4804304946286255945": {
-        "type": "shopify://apps/avada-cookie-consent/blocks/app-embed/deacc407-65bc-4a4e-84d9-f90e9e492cf3",
+      "2567389343055140935": {
+        "type": "shopify://apps/microsoft-clarity/blocks/clarity_js/31c3d126-8116-4b4a-8ba1-baeda7c4aeea",
+        "disabled": true,
+        "settings": {}
+      },
+      "2200952712151285029": {
+        "type": "shopify://apps/microsoft-clarity/blocks/brandAgents_js/31c3d126-8116-4b4a-8ba1-baeda7c4aeea",
         "disabled": false,
         "settings": {}
       }
@@ -713,8 +719,6 @@
     }
   },
   "platform_customizations": {
-    "custom_css": [
-      "/* Fix badly centred header logo */@media screen and (min-width: 749px) {a.header-logo {position: relative; left: 5.55px; }}"
-    ]
+    "custom_css": []
   }
 }
