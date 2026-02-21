@@ -158,9 +158,9 @@
                 },
                 "custom_liquid_PXJjqG": {
                   "type": "custom-liquid",
-                  "name": "Product spec badges",
+                  "name": "Product system badges",
                   "settings": {
-                    "custom_liquid": "{%- if product.metafields.custom.battery_system and product.metafields.custom.battery_system.value != blank -%}\n  {%- assign bat_sys = product.metafields.custom.battery_system.value -%}\n  {%- assign width = 60 -%}\n  <span style=\"display:inline-flex; align-items:center;\">\n  {%- if bat_sys.icon -%}\n    {%- assign image_width = width -%}\n    {%- assign image_width_2x = width | default: image_width | times: 2 -%}\n    {%- assign image_width_3x = width | default: image_width | times: 3 -%}\n\n    {%- capture image_srcset -%}\n      {{ bat_sys.icon | image_url: width: image_width }} 1x, {{ bat_sys.icon | image_url: width: image_width_2x }} 2x, {{ bat_sys.icon | image_url: width: image_width_3x }} 3x\n    {%- endcapture -%}\n\n    {%- assign style_value = style | default: '' -%}\n\n    {%- if unset_image_tag -%}\n      {%- assign style_value = style_value | append: 'object-position: inherit;' -%}\n    {%- endif -%}\n\n    <span style=\"display: inline-block; width: {{ width }}px;\">\n      {{ bat_sys.icon | image_url: width: image_width | image_tag: class: class, srcset: image_srcset, style: style_value }}\n    </span>\n  {%- endif -%}\n  {%- if bat_sys.system_type -%}\n    <span style=\"margin-left: 0.5rem;\">\n    {%- render 'text', fallback_text:bat_sys.system_type.value, class:'h6' -%}\n  {%- endif -%}\n  </span>\n{%- endif -%}"
+                    "custom_liquid": "{%- render 'system-badges' -%}"
                   },
                   "blocks": {}
                 }
