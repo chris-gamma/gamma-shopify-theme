@@ -212,9 +212,12 @@
       "page": "Page {{ page }}"
     },
     "pickup_available_at_html": "Pickup available at <b>{{ location }}</b>",
+    "pickup_available_at_backordered_html": "Pickup will be available at <b>{{ location }}</b>",
     "pickup_available_in": "Pickup available, {{ pickup_time }}",
     "pickup_not_available": "Pickup currently not available",
     "pickup_ready_in": "{{ pickup_time }}",
+    "pickup_ready_in_backordered": "Currently backordered, we'll let you know when it arrives.",
+    "pickup_ready_in_special_order": "Special order availability depends on the supplier, we'll let you know.",
     "powered_by": "This shop will be powered by",
     "price": "Price",
     "price_compare_at": "Compare at price",
@@ -228,6 +231,8 @@
     "product_total": "Product total",
     "product_badge_sold_out": "Sold out",
     "product_badge_sale": "Sale",
+    "product_badge_backorder": "Backordered",
+    "product_badge_special_order": "Special order",
     "product_card_placeholder": "Product title",
     "placeholder_image": "Placeholder image",
     "quantity": "Quantity",
@@ -309,7 +314,11 @@
     "recipient_form_fields_visible": "Recipient form fields are now visible",
     "recipient_form_fields_hidden": "Recipient form fields are now hidden",
     "recipient_form_error": "There was an error with the form submission",
-    "product_custom_property_character_count": "{{ used_chars }}/{{ max_chars }} characters used"
+    "product_custom_property_character_count": "{{ used_chars }}/{{ max_chars }} characters used",
+    // Backorder and special order notices for product pages
+    "backorder_notice": "This item is backordered, and shipping times depend on supplier availability.",
+    "special_order_notice": "This item is available by special order only, and shipping times depend on supplier availability.",
+    "backorder_ships_together_notice": "Your entire order ships together, and your card is only charged when it ships. Contact us if you prefer split shipments (extra fees apply), or for an updated delivery ETA. Pickup of in-stock items is available anytime."
   },
   "fields": {
     // Separates min and max values in price range filter

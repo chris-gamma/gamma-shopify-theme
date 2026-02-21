@@ -1,0 +1,132 @@
+{% liquid
+  assign block_settings = block.settings
+  assign product = closest.product
+  if request.visual_preview_mode and product == blank
+    assign product = collections.all.products.first
+  endif
+
+    assign variant = closest.product.selected_or_first_available_variant
+    assign inventory_quantity = variant.inventory_quantity
+    assign inventory_policy = variant.inventory_policy
+
+    if variant.inventory_management == 'shopify'
+      assign inventory_managed = true
+    endif
+    
+    if variant
+      if variant.quantity_rule.min > variant.inventory_quantity and inventory_managed and inventory_policy == 'deny'
+        assign quantity_rule_soldout = true
+      endif
+
+      if inventory_managed and inventory_quantity <= 0 and inventory_policy == 'deny' or quantity_rule_soldout
+        assign notice_type = 'sold_out'
+        assign notice_text = ''
+      elsif inventory_quantity <= 0 and product.tags contains "special order"
+        assign notice_type = 'special_order'
+        assign notice_text = 'content.special_order_notice' | t
+      elsif inventory_quantity <= 0
+        assign notice_type = 'backordered'
+        assign notice_text = 'content.backorder_notice' | t
+      elsif variant.available
+        assign notice_type = 'available'
+        assign notice_text = ''
+      endif
+
+      if block_settings.type_preset == 'rte' or block_settings.type_preset == 'paragraph'
+          assign is_rte = true
+      endif
+    endif
+
+  capture text_block_classes
+      if block_settings.width == '100%'
+      echo 'text-block--align-' | append: block_settings.alignment
+      if block_settings.max_width == 'none'
+          echo ' text-block--full-width'
+      endif
+      endif
+      if block_settings.type_preset == 'custom'
+      echo ' custom-typography'
+      if block_settings.font_size != ''
+          echo ' custom-font-size'
+      endif
+      if block_settings.color != ''
+          echo ' custom-color'
+      endif
+      endif
+      if block_settings.background
+      echo ' text-block--background'
+      endif
+      if is_rte
+      echo ' rte'
+      endif
+  endcapture
+%}
+  {%-  if notice_type == 'backordered' or notice_type == 'special_order' -%}
+    <div class="availability-notice availability-notice--{{ notice_type }}">
+      <div class="availability-notice__icon">
+        {% if notice_type == 'backordered' %}
+          {{- 'icon-backordered.svg' | inline_asset_content -}}
+        {% elsif notice_type == 'special_order' %}
+          {{- 'icon-special-order.svg' | inline_asset_content -}}
+        {% endif %}
+      </div>
+      <div
+        class="availability-notice__content text-block {{ text_block_classes }} {{ block_settings.type_preset | default: 'paragraph' }} spacing-style"
+        style={{ block.shopify_attributes }}
+      >
+        <p>
+          {{ notice_text | escape | newline_to_br }}<br>
+          <span style="font-size: var(--font-size--2xs);">{{ 'content.backorder_ships_together_notice' | t | escape | newline_to_br }}</span>
+        </p> 
+      </div>
+    </div>
+  {%- endif -%}
+
+{% stylesheet %}
+  .availability-notice {
+    display: flex;
+    align-items: flex-start;
+    gap: var(--padding-xs);
+    padding: var(--padding-lg);
+    border-radius: var(--style-border-radius-lg);
+  }
+  
+  .availability-notice--backordered {
+    background-color: #FFFAE3;
+  }
+  
+  .availability-notice--special_order {
+    background-color: #FFFAE3;
+  }
+  
+  .availability-notice--sold_out,
+  .availability-notice--available {
+    display: none !important;
+  }
+  
+  .availability-notice__icon {
+    flex-shrink: 0;
+    width: 60px;
+    height: 60px;
+    color: inherit;
+  }
+  
+  .availability-notice__icon svg {
+    width: 100%;
+    height: 100%;
+  }
+  
+  .availability-notice__content {
+    flex: 1;
+    display: block;
+    text-wrap: balance;
+  }
+  {% endstylesheet %}
+
+{% schema %}
+{
+  "name": "Availability Notice",
+  "tag": null,
+  "settings": []
+}
+{% endschema %}
