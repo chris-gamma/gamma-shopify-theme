@@ -10,12 +10,17 @@
       "
     >
       {%- liquid
+        assign total_special = 0
         for v in product.variants
           if v.available == true and v.inventory_quantity <= 0
-            assign back_or_special_order = true
-            break
+            assign total_special = total_special | plus: 1
           endif
         endfor
+        if total_special == product.variants_count
+          assign back_or_special_order = true
+        else
+          assign back_or_special_order = false
+        endif
       -%}
       {%- if back_or_special_order -%}
         <div
