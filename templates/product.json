@@ -171,18 +171,6 @@
                 "custom_liquid_PXJjqG"
               ]
             },
-            "divider_VJhene": {
-              "type": "_divider",
-              "name": "t:names.divider",
-              "settings": {
-                "thickness": 1,
-                "corner_radius": "square",
-                "width_percent": 100,
-                "padding-block-start": 0,
-                "padding-block-end": 0
-              },
-              "blocks": {}
-            },
             "variant_picker_R3rGDr": {
               "type": "variant-picker",
               "settings": {
@@ -194,6 +182,11 @@
                 "padding-inline-start": 0,
                 "padding-inline-end": 0
               },
+              "blocks": {}
+            },
+            "availability_notice_K4GFda": {
+              "type": "availability-notice",
+              "settings": {},
               "blocks": {}
             },
             "buy_buttons_eYQEYi": {
@@ -553,8 +546,8 @@
           },
           "block_order": [
             "group_icgrde",
-            "divider_VJhene",
             "variant_picker_R3rGDr",
+            "availability_notice_K4GFda",
             "buy_buttons_eYQEYi",
             "text_aEtTtq",
             "accordion_9hLGPg"

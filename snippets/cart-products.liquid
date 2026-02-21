@@ -291,7 +291,17 @@
                         {% endif %}
                       {% endif %}
                     </div>
+                    {% if item.variant.inventory_quantity <= 0 %}
+                      <div class="cart-items__inventory-status">
+                        {% if item.product.tags contains "special order" %}
+                          {{ 'content.product_badge_special_order' | t }}
+                        {% else %}
+                          {{ 'content.product_badge_backorder' | t }}
+                        {% endif %}
+                      </div>
+                    {% endif %}
                   </div>
+
                 </td>
                 <td
                   class="cart-items__quantity"
@@ -626,6 +636,17 @@
   .cart-items__price-unit {
     font-size: var(--font-size--xs);
     padding-block-start: var(--padding-2xs);
+  }
+
+  .cart-items__inventory-status {
+    grid-area: status;
+    min-height: unset;
+    min-width: var(--cart-item-price-width);
+    /* text-align: end; */
+    display: block;
+    font-size: var(--font-size--xs);
+    line-height: var(--line-height);
+    color: #ee2622;
   }
 
   .cart-items__media-container {

@@ -145,6 +145,8 @@
     "taxes_included": "Taxes incluses.",
     "product_badge_sold_out": "Épuisé",
     "product_badge_sale": "Promotion",
+    "product_badge_backorder": "En rupture",
+    "product_badge_special_order": "Commande spéciale",
     "grid_view": {
       "default_view": "Par défaut",
       "grid_fieldset": "Grille de colonnes",
@@ -200,9 +202,12 @@
     "duties_included_taxes_at_checkout_shipping_at_checkout_with_policy_without_discounts_html": "Droits de douane inclus. L’expédition est calculée lors du paiement.",
     "duties_included_taxes_at_checkout_shipping_at_checkout_without_policy_without_discounts": "Droits de douane inclus. L’expédition est calculée lors du paiement.",
     "pickup_available_at_html": "Retrait disponible à <b>{{ location }}</b>",
+    "pickup_available_at_backordered_html": "Le ramassage sera disponible à <b>{{ location }}</b>",
     "pickup_available_in": "Retrait disponible, {{ pickup_time }}",
     "pickup_not_available": "Retrait actuellement non disponible",
     "pickup_ready_in": "{{ pickup_time }}",
+    "pickup_ready_in_backordered": "En rupture de stock, nous vous aviserons dès son arrivée.",
+    "pickup_ready_in_special_order": "Article sur commande spéciale; disponibilité selon le fournisseur. Nous vous aviserons.",
     "taxes_at_checkout_shipping_at_checkout_with_policy_without_discounts_html": "Taxes et <a href=\"{{ link }}\">expédition</a> calculés lors du paiement.",
     "taxes_at_checkout_shipping_at_checkout_without_policy_without_discounts": "Taxes et expédition calculés lors du paiement.",
     "taxes_included_shipping_at_checkout_with_policy_without_discounts_html": "Taxes incluses. L’expédition est calculée lors du paiement.",
@@ -267,8 +272,12 @@
     "items_added_to_cart": {
       "one": "1 article ajouté au panier",
       "other": "{{ count }} articles ajoutés au panier",
-      "many": "{{ count }} articles ajoutés au panier"
-    }
+      "many": "{{ count }} articles ajoutés au panier",
+    },
+        // Backorder and special order notices for product pages
+    "backorder_notice": "Cet article est en rupture de stock, et les délais varient selon la disponibilité du fournisseur.",
+    "special_order_notice": "Cet article est offert seulement sur commande spéciale, et les délais varient selon la disponibilité du fournisseur.",
+    "backorder_ships_together_notice": "Toute votre commande est expédiée ensemble, et votre carte est débitée seulement à l’envoi. Contactez‑nous si vous préférez des envois séparés (frais en sus) ou pour une mise à jour du délai. Cueillette des articles en stock disponible en tout temps."
   },
   "gift_cards": {
     "issued": {
