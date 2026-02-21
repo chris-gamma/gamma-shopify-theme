@@ -26,7 +26,7 @@
         <div
           class="
             product-badges__badge product-badges__badge--rectangle
-            {% if product.tags contains "special order" %} color-{{ settings.badge_sale_color_scheme }}{% else %} color-{{ settings.badge_sold_out_color_scheme }}{% endif %}
+            {% if product.tags contains "special order" %} color-{{ settings.badge_sold_out_color_scheme }}{% else %} color-{{ settings.badge_sold_out_color_scheme }}{% endif %}
           "
         >
           {%- if product.tags contains "special order" -%}
