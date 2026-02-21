@@ -272,7 +272,13 @@
           <div class="pickup-availability__column">
             <span class="svg-wrapper">
               {% if pick_up_availabilities.first.available %}
-                {{- 'icon-available.svg' | inline_asset_content -}}
+                {%  if inventory_quantity > 0 %}
+                  {{- 'icon-available.svg' | inline_asset_content -}}
+                {% elsif product.tags contains "special order" %}
+                  {{- 'icon-special-order.svg' | inline_asset_content -}}
+                {% else %}
+                  {{- 'icon-backordered.svg' | inline_asset_content -}}
+                {% endif %}
               {% else %}
                 {{- 'icon-unavailable.svg' | inline_asset_content -}}
               {% endif %}
@@ -280,12 +286,27 @@
           </div>
           <div class="pickup-availability__column">
             {% if pick_up_availabilities.first.available %}
-              <p class="pickup-location__text-sm">
-                {{ 'content.pickup_available_at_html' | t: location: pick_up_availabilities.first.location.name }}
-              </p>
-              <p class="pickup-location__text-xs">
-                {{ 'content.pickup_ready_in' | t: pickup_time: pick_up_availabilities.first.pick_up_time }}
-              </p>
+              {% if inventory_quantity > 0 %}
+                <p class="pickup-location__text-sm">
+                  {{ 'content.pickup_available_at_html' | t: location: pick_up_availabilities.first.location.name }}
+                </p>
+                <p class="pickup-location__text-xs">
+                  {{ 'content.pickup_ready_in' | t: pickup_time: pick_up_availabilities.first.pick_up_time }}
+                </p>
+              {% else %}
+                <p class="pickup-location__text-sm">
+                  {{ 'content.pickup_available_at_backordered_html' | t: location: pick_up_availabilities.first.location.name }}
+                </p>
+                {% if product.tags contains "special order" %}
+                  <p class="pickup-location__text-xs">
+                    {{ 'content.pickup_ready_in_special_order' | t }}
+                  </p>
+                {% else %}
+                  <p class="pickup-location__text-xs">
+                    {{ 'content.pickup_ready_in_backordered' | t }}
+                  </p>
+                {% endif %}
+              {% endif %}
             {% else %}
               <p class="pickup-location__text-sm">
                 {{ 'content.pickup_not_available' | t }}
@@ -338,9 +359,21 @@
               <div class="pickup-location__address-wrapper">
                 <span class="pickup-location__availability-wrapper">
                   {% if pick_up_availability.available %}
-                    {{- 'icon-available.svg' | inline_asset_content -}}
-                    {% assign pickup_time = pick_up_availability.pick_up_time | downcase %}
-                    {{ 'content.pickup_available_in' | t: pickup_time: pickup_time }}
+                    {%  if inventory_quantity > 0 %}
+                      {{- 'icon-available.svg' | inline_asset_content -}}
+                    {% elsif product.tags contains "special order" %}
+                      {{- 'icon-special-order.svg' | inline_asset_content -}}
+                    {% else %}
+                      {{- 'icon-backordered.svg' | inline_asset_content -}}
+                    {% endif %}
+                    {% if inventory_quantity > 0 %}
+                      {% assign pickup_time = pick_up_availability.pick_up_time | downcase %}
+                      {{ 'content.pickup_available_in' | t: pickup_time: pickup_time }}
+                    {% elsif product.tags contains "special order" %}
+                      {{ 'content.pickup_ready_in_special_order' | t }}
+                    {% else %}
+                      {{ 'content.pickup_ready_in_backordered' | t }}
+                    {% endif %}
                   {% else %}
                     {{- 'icon-unavailable.svg' | inline_asset_content -}}
                     {{ 'content.pickup_not_available' | t }}
