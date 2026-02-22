@@ -100,6 +100,8 @@
   endif
 
   assign sorted_media = '' | split: ','
+  # Exclude media if it has a langcode suffix and that suffix does not match the current langcode.
+  assign suffixes = 'en,_en,fr,_fr' | split: ','
   if selected_variant_media
     assign sorted_media = sorted_media | concat: selected_product.media | where: 'id', selected_variant_media.id
 
@@ -108,13 +110,44 @@
         continue
       endif
 
+      # Exclude media if it has a langcode suffix and that suffix does not match the current langcode.
+      if media.preview_image
+        assign clean = media.preview_image.src | split: '?' | first | url_decode | split: '/' | last
+        assign parts = clean | split: '.'
+        assign count = parts.size | minus: 1
+        assign filename = parts | slice: 0, count | join: '.' | downcase
+        assign file_langcode = filename | split: '-' | last | strip
+        if suffixes contains file_langcode
+          if file_langcode != localization.language.iso_code
+            continue
+          endif
+        endif
+      endif
+
       if media.id != selected_variant_media.id
         assign found_media = selected_product.media | where: 'id', media.id
         assign sorted_media = sorted_media | concat: found_media
       endif
     endfor
   else
-    assign sorted_media = selected_product.media
+    # assign sorted_media = selected_product.media
+    # Exclude media if it has a langcode suffix and that suffix does not match the current langcode.
+    for media in selected_product.media
+      if media.preview_image
+        assign clean = media.preview_image.src | split: '?' | first | url_decode | split: '/' | last
+        assign parts = clean | split: '.'
+        assign count = parts.size | minus: 1
+        assign filename = parts | slice: 0, count | join: '.' | downcase
+        assign file_langcode = filename | split: '-' | last | strip
+        if suffixes contains file_langcode
+          if file_langcode != localization.language.iso_code
+            continue
+          endif
+        endif
+      endif
+      assign found_media = selected_product.media | where: 'id', media.id
+      assign sorted_media = sorted_media | concat: found_media
+    endfor
   endif
   assign has_image_drop = sorted_media | has: 'media_type', 'image'
 
