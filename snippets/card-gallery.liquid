@@ -106,6 +106,9 @@
         assign max_visible_slide_count = 2
       endif
 
+      # Exclude media if it has a langcode suffix and that suffix does not match the current langcode.
+      assign suffixes = 'en,_en,fr,_fr' | split: ','
+
       capture slides
         for media in media_list_to_show
           assign loading = 'lazy'
@@ -132,6 +135,19 @@
           endunless
           if hidden == false and visible_slide_count > max_visible_slide_count
             continue
+          endif
+          # Exclude media if it has a langcode suffix and that suffix does not match the current langcode.
+          if media.preview_image
+            assign clean = media.preview_image.src | split: '?' | first | url_decode | split: '/' | last
+            assign parts = clean | split: '.'
+            assign count = parts.size | minus: 1
+            assign filename = parts | slice: 0, count | join: '.' | downcase
+            assign file_langcode = filename | split: '-' | last | strip
+            if suffixes contains file_langcode
+              if file_langcode != localization.language.iso_code
+                continue
+              endif
+            endif
           endif
 
           if forloop.first and section.index == null or section.index < 5

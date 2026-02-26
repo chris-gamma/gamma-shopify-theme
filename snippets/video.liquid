@@ -43,7 +43,7 @@
 {% if video_from_url %}
   {% liquid
     if video_type == 'youtube'
-      assign video_src = 'https://www.youtube.com/embed/VIDEO_ID?' | replace: 'VIDEO_ID', video
+      assign video_src = 'https://www.youtube-nocookie.com/embed/VIDEO_ID?' | replace: 'VIDEO_ID', video
 
       if video_autoplay == false and video_preview_image != blank
         assign video_src = video_src | append: '&autoplay=1'

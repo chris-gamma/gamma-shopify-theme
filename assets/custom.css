@@ -75,3 +75,8 @@ span:focus svg[data-icon-type="unchecked"] path {
 #shopify-pc__banner__btn-decline {
   display: none !important;
 }
+
+/* Prevent videos from cropping in product media thumbnails */
+deferred-media[class] :is(.deferred-media__poster-button img, .deferred-media__poster-button ~ video) {
+  object-fit: contain;
+}
