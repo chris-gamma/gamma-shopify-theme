@@ -1,0 +1,70 @@
+{%- liquid
+  if product.metafields.custom.battery_system and product.metafields.custom.battery_system.value != blank
+    assign bat_sys = product.metafields.custom.battery_system.value
+  endif
+-%}
+{%- if bat_sys -%}
+  <div class="product-system-badges">
+    <span class="product-system-badges-battery-system">
+      {%- if bat_sys.collection -%}
+        <a href="{{ bat_sys.collection.value.url }}" class="product-system-badges-collection-link">
+      {%- endif -%}
+      {%- if bat_sys.icon -%}
+        <span class="product-system-badges-system-icon" style="width: {{ block.settings.icon_width }}px;">
+          {%- render 'image', image: bat_sys.icon, height: block.settings.icon_width -%}
+        </span>
+      {%- endif -%}
+      {%- if bat_sys.system_type -%}
+        <span class="product-system-badges-system-type">{{ bat_sys.system_type }}</span>
+      {%- endif -%}
+      {%- if bat_sys.collection -%}
+        </a>
+      {%- endif -%}
+    </span>
+  </div>
+{%- endif -%}
+
+{% stylesheet %}
+  .product-system-badges {
+    display: inline-flex;
+    align-items: center;
+  }
+
+  .product-system-badges-collection-link {
+    display: block;
+  }
+
+  .product-system-badges-collection-link:hover,
+  .product-system-badges-collection-link:focus {
+    color: var(--color-primary-hover)
+  }
+
+  .product-system-badges-system-icon {
+    display: inline-block;
+    vertical-align: middle;
+  }
+
+  .product-system-badges-system-type {
+    margin-left: var(--margin-sm);
+  }
+{% endstylesheet %}
+
+{% schema %}
+{
+  "name": "t:names.product_system_badges",
+  "settings": [
+    {
+      "type": "number",
+      "id": "icon_width",
+      "label": "Icon width (px)",
+      "default": 60
+    }
+  ],
+  "presets": [
+    {
+      "name": "Product system badges",
+      "settings": { "icon_width": 60 }
+    }
+  ]
+}
+{% endschema %}

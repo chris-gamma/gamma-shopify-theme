@@ -156,19 +156,16 @@
                   },
                   "blocks": {}
                 },
-                "custom_liquid_PXJjqG": {
-                  "type": "custom-liquid",
-                  "name": "Product system badges",
-                  "settings": {
-                    "custom_liquid": "{%- render 'system-badges' -%}"
-                  },
+                "product_system_badges_JfD3Kf": {
+                  "type": "product-system-badges",
+                  "settings": {},
                   "blocks": {}
                 }
               },
               "block_order": [
                 "text_xpVMaM",
                 "price_tVjtKg",
-                "custom_liquid_PXJjqG"
+                "product_system_badges_JfD3Kf"
               ]
             },
             "variant_picker_R3rGDr": {
