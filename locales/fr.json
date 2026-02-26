@@ -275,9 +275,9 @@
       "many": "{{ count }} articles ajoutés au panier",
     },
         // Backorder and special order notices for product pages
-    "backorder_notice": "Cet article est en rupture de stock, et les délais varient selon la disponibilité du fournisseur.",
-    "special_order_notice": "Cet article est offert seulement sur commande spéciale, et les délais varient selon la disponibilité du fournisseur.",
-    "backorder_ships_together_notice": "Toute votre commande est expédiée ensemble, et votre carte est débitée seulement à l’envoi. Contactez‑nous si vous préférez des envois séparés (frais en sus) ou pour une mise à jour du délai. Cueillette des articles en stock disponible en tout temps."
+    "backorder_notice_html": "<strong>Cet article est en rupture de stock.</strong>\nLes délais varient selon la disponibilité du fournisseur.",
+    "special_order_notice_html": "<strong>Cet article est offert seulement sur commande spéciale.</strong>\nLes délais varient selon la disponibilité du fournisseur.",
+    "backorder_ships_together_notice": "Si votre commande comprend un article en rupture de stock ou sur commande spéciale, nous expédierons tout ensemble. Si vous préférez des envois séparés, faites‑nous simplement signe (des frais supplémentaires s’appliquent). Les articles en stock sont toujours disponibles pour le ramassage en magasin."
   },
   "gift_cards": {
     "issued": {
