@@ -316,9 +316,9 @@
     "recipient_form_error": "There was an error with the form submission",
     "product_custom_property_character_count": "{{ used_chars }}/{{ max_chars }} characters used",
     // Backorder and special order notices for product pages
-    "backorder_notice": "This item is backordered, and shipping times depend on supplier availability.",
-    "special_order_notice": "This item is available by special order only, and shipping times depend on supplier availability.",
-    "backorder_ships_together_notice": "Your entire order ships together, and your card is only charged when it ships. Contact us if you prefer split shipments (extra fees apply), or for an updated delivery ETA. Pickup of in-stock items is available anytime."
+    "backorder_notice_html": "<strong>This item is backordered.</strong>\nShipping times depend on supplier availability.",
+    "special_order_notice_html": "<strong>This item is available by special order only.</strong>\nShipping times depend on supplier availability.",
+    "backorder_ships_together_notice": "If your order has a backorder or special order, we'll ship everything together. If you'd like separate shipments, just let us know (extra charges apply). In-stock items are always available for local pickup."
   },
   "fields": {
     // Separates min and max values in price range filter

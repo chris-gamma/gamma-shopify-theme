@@ -223,6 +223,26 @@
     endif
   -%}
 
+  {%- liquid
+    assign show_backorder_notice = false
+    for item in cart.items
+      if item.tags contains 'special order'
+        assign show_backorder_notice = true
+        break
+      elsif item.variant.inventory_management == 'shopify' and item.variant.inventory_policy == 'continue' and item.variant.inventory_quantity <= 0
+        assign show_backorder_notice = true
+        break
+      endif
+    endfor
+  -%}
+  {%- if show_backorder_notice -%}
+    <div class="cart-backorder-notice">
+      <span class="cart-backorder-notice__text cart-primary-typography">
+        {{- 'content.backorder_ships_together_notice' | t -}}
+      </span>
+    </div>
+  {%- endif -%}
+
   <div class="cart-totals__container{% if settings.show_installments %} cart-totals__container--has-installments{% endif %}">
     <span
       class="cart-totals__item cart-totals__total"
@@ -600,5 +620,10 @@
     .cart-summary--extend {
       height: 100%;
     }
+  }
+
+  .cart-backorder-notice {
+    font-size: var(--font-size--2xs);
+    color: rgb(var(--color-foreground-rgb) / var(--opacity-subdued-text));
   }
 {% endstylesheet %}
