@@ -318,7 +318,14 @@
     // Backorder and special order notices for product pages
     "backorder_notice_html": "<strong>This item is backordered.</strong>\nShipping times depend on supplier availability.",
     "special_order_notice_html": "<strong>This item is available by special order only.</strong>\nShipping times depend on supplier availability.",
-    "backorder_ships_together_notice": "If your order has a backorder or special order, we'll ship everything together. If you'd like separate shipments, just let us know (extra charges apply). In-stock items are always available for local pickup."
+    "backorder_ships_together_notice": "If your order has a backorder or special order, we'll ship everything together. If you'd like separate shipments, just let us know (extra charges apply). In-stock items are always available for local pickup.",
+    "hours_table_monday": "Monday",
+    "hours_table_tuesday": "Tuesday",
+    "hours_table_wednesday": "Wednesday",
+    "hours_table_thursday": "Thursday",
+    "hours_table_friday": "Friday",
+    "hours_table_saturday": "Saturday",
+    "hours_table_sunday": "Sunday",
   },
   "fields": {
     // Separates min and max values in price range filter

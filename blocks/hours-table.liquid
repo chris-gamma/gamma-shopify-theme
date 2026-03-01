@@ -1,0 +1,246 @@
+{% comment %}
+  Hours Table Block
+{% endcomment %}
+
+{%- liquid
+  assign block_settings = block.settings
+
+  assign all_store_hours = metaobjects.store_hours
+  if block.settings.force_hours != blank
+    if block_settings.force_hours.force_off == false
+      assign current_store_hours = all_store_hours[block_settings.force_hours]
+    endif
+  elsif block_settings.automatically_find_holidays
+    # Find the first store_hours metaobject with both a start date and end date bounding the current date.
+    for hours in all_store_hours.values
+      if hours.force_off
+        continue
+      endif
+      if hours.display_start != blank
+        assign start_dt = hours.display_start | date: '%s' | plus: 0
+      else
+        continue
+      endif
+      if hours.display_end != blank
+        assign end_dt = hours.display_end | date: '%s' | plus: 0
+      else
+        # Automatically expire holidays after one week if an end date is not set.
+        assign end_dt = start_dt | plus: 604800
+      endif
+      assign current_dt = 'now' | date: '%s' | plus: 0
+      if current_dt > start_dt and current_dt < end_dt
+        assign current_store_hours = hours
+        break
+      else
+        continue
+      endif
+    endfor
+  endif
+  if current_store_hours == blank
+    if block_settings.default_hours != blank
+      assign current_store_hours = all_store_hours[block_settings.default_hours]
+    else
+      assign current_store_hours = all_store_hours['regular-hours']
+    endif
+  endif
+-%}
+
+<div class="hours-table-wrapper">
+  <table class="hours-table {% if block_settings.block_size == 'mini' %}hours-table-mini{% endif %}">
+    {%- if current_store_hours.show_holiday_hours_notice -%}
+      <caption class="holiday-hours-notice {% if block_settings.block_size == 'mini' %}hours-table-mini{% endif %}">
+        <p>{{ current_store_hours.holiday_hours_notice }}</p>
+      </caption>
+    {%- endif -%}
+    <tbody>
+      <tr>
+        <th class="{% if current_store_hours.highlight_monday %}holiday-hours-head{% else %}hours-head{% endif %}">
+          {{ 'content.hours_table_monday' | t }}
+        </th>
+        <td class="{% if current_store_hours.highlight_monday %}holiday-hours-value{% endif %}">
+          {{ current_store_hours.monday }}
+        </td>
+      </tr>
+      <tr>
+        <th class="{% if current_store_hours.highlight_tuesday %}holiday-hours-head{% else %}hours-head{% endif %}">
+          {{ 'content.hours_table_tuesday' | t }}
+        </th>
+        <td class="{% if current_store_hours.highlight_tuesday %}holiday-hours-value{% endif %}">
+          {{ current_store_hours.tuesday }}
+        </td>
+      </tr>
+      <tr>
+        <th class="{% if current_store_hours.highlight_wednesday %}holiday-hours-head{% else %}hours-head{% endif %}">
+          {{ 'content.hours_table_wednesday' | t }}
+        </th>
+        <td class="{% if current_store_hours.highlight_wednesday %}holiday-hours-value{% endif %}">
+          {{ current_store_hours.wednesday }}
+        </td>
+      </tr>
+      <tr>
+        <th class="{% if current_store_hours.highlight_thursday %}holiday-hours-head{% else %}hours-head{% endif %}">
+          {{ 'content.hours_table_thursday' | t }}
+        </th>
+        <td class="{% if current_store_hours.highlight_thursday %}holiday-hours-value{% endif %}">
+          {{ current_store_hours.thursday }}
+        </td>
+      </tr>
+      <tr>
+        <th class="{% if current_store_hours.highlight_friday %}holiday-hours-head{% else %}hours-head{% endif %}">
+          {{ 'content.hours_table_friday' | t }}
+        </th>
+        <td class="{% if current_store_hours.highlight_friday %}holiday-hours-value{% endif %}">
+          {{ current_store_hours.friday }}
+        </td>
+      </tr>
+      <tr>
+        <th class="{% if current_store_hours.highlight_saturday %}holiday-hours-head{% else %}hours-head{% endif %}">
+          {{ 'content.hours_table_saturday' | t }}
+        </th>
+        <td class="{% if current_store_hours.highlight_saturday %}holiday-hours-value{% endif %}">
+          {{ current_store_hours.saturday }}
+        </td>
+      </tr>
+      <tr>
+        <th class="{% if current_store_hours.highlight_sunday %}holiday-hours-head{% else %}hours-head{% endif %}">
+          {{ 'content.hours_table_sunday' | t }}
+        </th>
+        <td class="{% if current_store_hours.highlight_sunday %}holiday-hours-value{% endif %}">
+          {{ current_store_hours.sunday }}
+        </td>
+      </tr>
+    </tbody>
+  </table>
+</div>
+
+{% stylesheet %}
+  .hours-table {
+    font-size: var(--font-size--base);
+    padding: var(--padding-2xs);
+  }
+
+  .holiday-hours-notice {
+    color: #ee2622;
+    font-size: var(--font-size--2xs);
+    font-weight: bold;
+    text-align: left;
+    padding: 0 var(--padding-2xs);
+  }
+
+  .hours-head {
+    font-weight: bold;
+  }
+
+  .holiday-hours-head {
+    color: #ee2622;
+    font-weight: bold;
+  }
+
+  .holiday-hours-value {
+    color: #ee2622;
+  }
+
+  .hours-table thead {
+    background-color: #f5f5f6;
+    font-weight: bold;
+  }
+
+  .hours-table th,
+  .hours-table td {
+    text-align: start;
+    padding: 0 var(--padding-2xs);
+    border-bottom: 1px solid #ee262299;
+  }
+
+  .hours-table td {
+    padding-left: var(--padding-sm);
+  }
+
+  .hours-table-mini,
+  .hours-table-mini thead,
+  .hours-table-mini tbody,
+  .hours-table-mini th,
+  .hours-table-mini td,
+  .hours-table-mini tr {
+    font-size: var(--font-size--2xs);
+    border: 0;
+    padding: 0 var(--padding-3xs);
+  }
+
+  .hours-table-mini.holiday-hours-notice {
+    font-size: var(--font-size--3xs);
+  }
+
+  @media screen and (max-width: 749px) {
+    .hours-table,
+    .hours-table thead,
+    .hours-table tbody,
+    .hours-table th,
+    .hours-table td,
+    .hours-table tr {
+      /* display: block; */
+      padding: 0 var(--padding-3xs);
+      border-bottom: 0;
+      margin-bottom: 0;
+      font-size: var(--font-size--2xs);
+    }
+
+    .hours-table-mini,
+    .hours-table-mini thead,
+    .hours-table-mini tbody,
+    .hours-table-mini th,
+    .hours-table-mini td,
+    .hours-table-mini tr {
+      font-size: var(--font-size--3xs);
+      border: 0;
+    }
+
+    .holiday-hours-notice {
+      /* display: inline-block; */
+      font-size: var(--font-size--3xs);
+      width: 100%;
+    }
+  }
+{% endstylesheet %}
+
+{% schema %}
+{
+  "name": "Hours table",
+  "settings": [
+    {
+      "type": "select",
+      "id": "block_size",
+      "label": "Size",
+      "options": [
+        { "value": "mini", "label": "Mini" },
+        { "value": "default", "label": "Default" }
+      ],
+      "default": "default"
+    },
+    {
+      "type": "metaobject",
+      "id": "default_hours",
+      "label": "Default store hours",
+      "metaobject_type": "store_hours"
+    },
+    {
+      "type": "checkbox",
+      "id": "automatically_find_holidays",
+      "label": "Automatically find holiday hours",
+      "default": true
+    },
+    {
+      "type": "metaobject",
+      "id": "force_hours",
+      "label": "Force store hours",
+      "metaobject_type": "store_hours"
+    }
+  ],
+  "blocks": [],
+  "presets": [
+    {
+      "name": "Hours table"
+    }
+  ]
+}
+{% endschema %}
