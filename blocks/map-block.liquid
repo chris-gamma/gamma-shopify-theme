@@ -1,0 +1,212 @@
+{% comment %}
+  Map view block
+{% endcomment %}
+
+{%- assign block_settings = block.settings -%}
+{%- assign map_src_url = '//umap.openstreetmap.fr/'
+  | append: request.locale.iso_code
+  | append: '/map/'
+  | append: block_settings.map_src
+  | append: '?scaleControl=false&miniMap=false&scrollWheelZoom=true&zoomControl=true&editMode=disabled&moreControl=false&searchControl=false&tilelayersControl=false&embedControl=false&datalayersControl=false&onLoadPanel=none&captionBar=false&captionMenus=false&homeControl=false&captionControl=false'
+-%}
+<div
+  class="map-frame"
+  style="--map-width: {{ block_settings.map_width }}px; --map-height: {{ block_settings.map_height }}px; --mobile-map-width: {{ block_settings.mobile_map_width }}px; --mobile-map-height: {{ block_settings.mobile_map_height }}px;"
+  data-map-src="{{ map_src_url | escape }}"
+  data-map-initialized="false"
+>
+  {% if block_settings.placeholder_image != blank %}
+    <button
+      type="button"
+      class="map-placeholder-button"
+      aria-label="{{ 'content.view_map' | t | default: 'View map' }}"
+    >
+      {{
+        block_settings.map_placeholder_image
+        | image_url: width: block_settings.map_width
+        | image_tag: class: 'map-placeholder-image', loading: 'lazy'
+      }}
+    </button>
+  {% else %}
+    <button
+      type="button"
+      class="button-secondary map-placeholder-button map-placeholder-fallback"
+    >
+      {{ 'content.view_map' | t | default: 'View map' }}
+    </button>
+  {% endif %}
+
+  <noscript>
+    <iframe
+      class="map-frame"
+      allowfullscreen
+      loading="lazy"
+      src="{{ map_src_url | escape }}"
+    ></iframe>
+  </noscript>
+</div>
+{%- if block_settings.show_directions -%}
+  <br>
+  <div class="map-directions">
+    {%- if block_settings.google_maps_directions -%}
+      <a href="{{ block_settings.google_maps_directions }}" target="_blank" class="link map-directions-link">
+        {{- 'icon-directions.svg' | inline_asset_content -}}
+        {{ 'content.google_maps_directions' | t }}
+      </a>
+    {%- endif -%}
+    {%- if block_settings.apple_maps_directions -%}
+      <a href="{{ block_settings.apple_maps_directions }}" target="_blank" class="link map-directions-link">
+        {{- 'icon-directions.svg' | inline_asset_content -}}
+        {{ 'content.apple_maps_directions' | t }}
+      </a>
+    {%- endif -%}
+  </div>
+{%- endif -%}
+
+{% stylesheet %}
+  .map-directions {
+    display: flex;
+    align-items: center;
+    gap: var(--padding-xs);
+    padding: 0 var(--padding-3xs);
+  }
+
+  .map-frame {
+    width: var(--map-width);
+    height: var(--map-height);
+    border: 0;
+  }
+
+  .map-placeholder-button {
+    width: var(--map-width);
+    height: var(--map-height);
+  }
+
+  .map-directions-link {
+    display: inline-flex;
+    align-items: center;
+    white-space: nowrap;
+    gap: var(--padding-3xs);
+    font-size: var(--font-size--body-sm) !important;
+  }
+
+  .map-directions a svg {
+    width: 20px;
+    height: 20px;
+    flex-shrink: 0;
+  }
+
+  @media screen and (max-width: 749px) {
+    .map-frame {
+      width: var(--mobile-map-width);
+      height: var(--mobile-map-height);
+      border: 0;
+    }
+  }
+{% endstylesheet %}
+
+{% javascript %}
+  (function () {
+    // Find all map containers that have not yet been initialized
+    var containers = document.querySelectorAll('.map-frame[data-map-initialized="false"]');
+
+    containers.forEach(function (container) {
+      var button = container.querySelector('.map-placeholder-button');
+      if (!button) return;
+
+      // Mark as initialized so we do not bind multiple times
+      container.dataset.mapInitialized = 'true';
+
+      button.addEventListener(
+        'click',
+        function () {
+          var src = container.dataset.mapSrc;
+          if (!src) return;
+
+          var iframe = document.createElement('iframe');
+          iframe.className = 'map-frame';
+          iframe.setAttribute('allowfullscreen', '');
+          iframe.setAttribute('loading', 'lazy');
+          iframe.src = src;
+
+          // Replace placeholder with the real iframe
+          container.innerHTML = '';
+          container.appendChild(iframe);
+        },
+        { once: true }
+      );
+    });
+  })();
+{% endjavascript %}
+
+{% schema %}
+{
+  "name": "Map block",
+  "settings": [
+    {
+      "type": "number",
+      "id": "map_width",
+      "label": "Map width (px)",
+      "default": 400
+    },
+    {
+      "type": "number",
+      "id": "map_height",
+      "label": "Map height (px)",
+      "default": 300
+    },
+    {
+      "type": "number",
+      "id": "mobile_map_width",
+      "label": "Mobile map width (px)",
+      "default": 150
+    },
+    {
+      "type": "number",
+      "id": "mobile_map_height",
+      "label": "Mobile map height (px)",
+      "default": 150
+    },
+    {
+      "type": "image_picker",
+      "id": "placeholder_image",
+      "label": "Placeholder image"
+    },
+    {
+      "type": "image_picker",
+      "id": "mobile_placeholder_image",
+      "label": "Mobile placeholder image"
+    },
+    {
+      "type": "text",
+      "id": "map_src",
+      "label": "Map embed code",
+      "default": "carte-location-gamma-map_1369176"
+    },
+    {
+      "type": "checkbox",
+      "id": "show_directions",
+      "label": "Show directions links",
+      "default": true
+    },
+    {
+      "type": "text",
+      "id": "google_maps_directions",
+      "label": "Google Maps directions URL",
+      "default": "https://www.google.com/maps/dir//5840%20Rue%20Saint-Jacques,%20Montr%C3%A9al,%20QC%20H4A%202E9"
+    },
+    {
+      "type": "text",
+      "id": "apple_maps_directions",
+      "label": "Apple Maps directions URL",
+      "default": "http://maps.apple.com/?daddr=5840%20Rue%20Saint-Jacques,%20Montr%C3%A9al,%20QC%20H4A%202E9"
+    }
+  ],
+  "blocks": [],
+  "presets": [
+    {
+      "name": "Map block"
+    }
+  ]
+}
+{% endschema %}
