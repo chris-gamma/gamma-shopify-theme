@@ -11,11 +11,14 @@
     {%- if cart.cart_level_discount_applications.size > 0 -%}
       <span class="cart-totals__item cart-totals__original">
         <span class="cart-totals__original-label">{{ 'content.cart_subtotal' | t }}</span>
+        {%- capture cart_items_subtotal_price -%}
+          {%- render 'qc-money', price: cart.items_subtotal_price -%}
+        {%- endcapture -%}
         <span
           class="cart-totals__original-value cart-secondary-typography"
           data-testid="cart-subtotal-value"
         >
-          {{- cart.items_subtotal_price | money -}}
+          {{- cart_items_subtotal_price -}}
         </span>
       </span>
       <ul
@@ -29,8 +32,11 @@
               {{- 'icon-discount.svg' | inline_asset_content -}}
               {{ discount.title | escape }}
             </span>
+            {%- capture discount_total_allocated_amount -%}
+              {%- render 'qc-money', price: discount.total_allocated_amount -%}
+            {%- endcapture -%}
             <span class="cart-discounts__value cart-secondary-typography"
-              >-{{ discount.total_allocated_amount | money -}}
+              >-{{ discount_total_allocated_amount -}}
             </span>
           </li>
         {%- endfor -%}
@@ -217,9 +223,13 @@
 
   {%- liquid
     if settings.currency_code_enabled_cart_total
-      assign total_price = cart.total_price | money_with_currency
+      capture total_price
+        render 'qc-money', price: cart.total_price, with_currency: true
+      endcapture
     else
-      assign total_price = cart.total_price | money
+      capture total_price
+        render 'qc-money', price: cart.total_price
+      endcapture
     endif
   -%}
 

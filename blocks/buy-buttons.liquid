@@ -133,9 +133,15 @@
                   <span>{{ variant.quantity_rule.min }}+</span>
                   <span>
                     {%- if use_currency -%}
-                      {{- variant.price | money_with_currency | strip -}}
+                      {%- capture variant_price -%}
+                        {%- render 'qc-money', price: variant.price, with_currency: true -%}
+                      {%- endcapture -%}
+                      {{- variant_price | strip -}}
                     {%- else -%}
-                      {{- variant.price | money | strip -}}
+                      {%- capture variant_price -%}
+                        {%- render 'qc-money', price: variant.price -%}
+                      {%- endcapture -%}
+                      {{- variant_price | strip -}}
                     {%- endif -%}
                     /{{ 'content.each_abbreviation' | t -}}
                   </span>
@@ -153,9 +159,15 @@
                     <span>{{ price_break.minimum_quantity }}+</span>
                     <span>
                       {%- if use_currency -%}
-                        {{- price_break.price | money_with_currency | strip -}}
+                        {%- capture price_break_price -%}
+                          {%- render 'qc-money', price: price_break.price, with_currency: true -%}
+                        {%- endcapture -%}
+                        {{- price_break_price | strip -}}
                       {%- else -%}
-                        {{- price_break.price | money | strip -}}
+                        {%- capture price_break_price -%}
+                          {%- render 'qc-money', price: price_break.price -%}
+                        {%- endcapture -%}
+                        {{- price_break_price | strip -}}
                       {%- endif -%}
                       /{{ 'content.each_abbreviation' | t -}}
                     </span>
@@ -179,9 +191,15 @@
                         <span>{{ price_break.minimum_quantity }}+</span>
                         <span>
                           {%- if use_currency -%}
-                            {{- price_break.price | money_with_currency | strip -}}
+                            {%- capture price_break_price -%}
+                              {%- render 'qc-money', price: price_break.price, with_currency: true -%}
+                            {%- endcapture -%}
+                            {{- price_break_price | strip -}}
                           {%- else -%}
-                            {{- price_break.price | money | strip -}}
+                            {%- capture price_break_price -%}
+                              {%- render 'qc-money', price: price_break.price -%}
+                            {%- endcapture -%}
+                            {{- price_break_price | strip -}}
                           {%- endif -%}
                           /{{ 'content.each_abbreviation' | t -}}
                         </span>
@@ -272,9 +290,9 @@
           <div class="pickup-availability__column">
             <span class="svg-wrapper">
               {% if pick_up_availabilities.first.available %}
-                {%  if inventory_quantity > 0 %}
+                {% if inventory_quantity > 0 %}
                   {{- 'icon-available.svg' | inline_asset_content -}}
-                {% elsif product.tags contains "special order" %}
+                {% elsif product.tags contains 'special order' %}
                   {{- 'icon-special-order.svg' | inline_asset_content -}}
                 {% else %}
                   {{- 'icon-backordered.svg' | inline_asset_content -}}
@@ -295,9 +313,12 @@
                 </p>
               {% else %}
                 <p class="pickup-location__text-sm">
-                  {{ 'content.pickup_available_at_backordered_html' | t: location: pick_up_availabilities.first.location.name }}
+                  {{
+                    'content.pickup_available_at_backordered_html'
+                    | t: location: pick_up_availabilities.first.location.name
+                  }}
                 </p>
-                {% if product.tags contains "special order" %}
+                {% if product.tags contains 'special order' %}
                   <p class="pickup-location__text-xs">
                     {{ 'content.pickup_ready_in_special_order' | t }}
                   </p>
@@ -359,9 +380,9 @@
               <div class="pickup-location__address-wrapper">
                 <span class="pickup-location__availability-wrapper">
                   {% if pick_up_availability.available %}
-                    {%  if inventory_quantity > 0 %}
+                    {% if inventory_quantity > 0 %}
                       {{- 'icon-available.svg' | inline_asset_content -}}
-                    {% elsif product.tags contains "special order" %}
+                    {% elsif product.tags contains 'special order' %}
                       {{- 'icon-special-order.svg' | inline_asset_content -}}
                     {% else %}
                       {{- 'icon-backordered.svg' | inline_asset_content -}}
@@ -369,7 +390,7 @@
                     {% if inventory_quantity > 0 %}
                       {% assign pickup_time = pick_up_availability.pick_up_time | downcase %}
                       {{ 'content.pickup_available_in' | t: pickup_time: pickup_time }}
-                    {% elsif product.tags contains "special order" %}
+                    {% elsif product.tags contains 'special order' %}
                       {{ 'content.pickup_ready_in_special_order' | t }}
                     {% else %}
                       {{ 'content.pickup_ready_in_backordered' | t }}

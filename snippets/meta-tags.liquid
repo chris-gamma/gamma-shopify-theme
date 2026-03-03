@@ -72,9 +72,12 @@
 {%- endif -%}
 
 {%- if request.page_type == 'product' -%}
+  {%- capture product_price -%}
+    {%- render 'qc-money', price: product.price -%}
+  {%- endcapture -%}
   <meta
     property="og:price:amount"
-    content="{{ product.price | money_without_currency | strip_html }}"
+    content="{{ product_price | strip_html }}"
   >
   <meta
     property="og:price:currency"

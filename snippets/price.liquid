@@ -59,16 +59,48 @@
   endif
 
   # Format all prices
-  if use_currency
-    assign price = price | money_with_currency
-    assign compare_at_price = compare_at_price | money_with_currency
-    assign price_min = price_min | money_with_currency
-    assign price_max = price_max | money_with_currency
+  # Use built-in filters if locale is 'fr', since currency is formatted for French by default.
+  if request.locale.iso_code == 'fr'
+    if use_currency
+      assign price = price | money_with_currency
+      assign compare_at_price = compare_at_price | money_with_currency
+      assign price_min = price_min | money_with_currency
+      assign price_max = price_max | money_with_currency
+    else
+      assign price = price | money
+      assign compare_at_price = compare_at_price | money
+      assign price_min = price_min | money
+      assign price_max = price_max | money
+    endif
   else
-    assign price = price | money
-    assign compare_at_price = compare_at_price | money
-    assign price_min = price_min | money
-    assign price_max = price_max | money
+    # Format the currency for English readers if locale is not 'fr' (we only have 2)
+    if use_currency
+      capture price
+        render 'qc-money', price: price, with_currency: true
+      endcapture
+      capture compare_at_price
+        render 'qc-money', price: compare_at_price, with_currency: true
+      endcapture
+      capture price_min
+        render 'qc-money', price: price_min, with_currency: true
+      endcapture
+      capture price_max
+        render 'qc-money', price: price_max, with_currency: true
+      endcapture
+    else
+      capture price
+        render 'qc-money', price: price, with_currency: false
+      endcapture
+      capture compare_at_price
+        render 'qc-money', price: compare_at_price, with_currency: false
+      endcapture
+      capture price_min
+        render 'qc-money', price: price_min, with_currency: false
+      endcapture
+      capture price_max
+        render 'qc-money', price: price_max, with_currency: false
+      endcapture
+    endif
   endif
 -%}
 
@@ -113,9 +145,13 @@
   {%- if selected_variant.unit_price and show_unit_price %}
     {%- liquid
       if use_currency
-        assign unit_price = selected_variant.unit_price | money_with_currency
+        capture unit_price
+          render 'qc-money', price: selected_variant.unit_price, with_currency: true
+        endcapture
       else
-        assign unit_price = selected_variant.unit_price | money
+        capture unit_price
+          render 'qc-money', price: selected_variant.unit_price
+        endcapture
       endif
     -%}
     {% render 'unit-price', price: unit_price, measurement: selected_variant.unit_price_measurement %}
