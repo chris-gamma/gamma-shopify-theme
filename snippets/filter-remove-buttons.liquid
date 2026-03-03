@@ -28,15 +28,33 @@
         on:keydown="/removeFilter?form="
       >
         {%- if filter.min_value.value != null and filter.max_value.value != null %}
-          {{- filter.min_value.value | money -}}
+          {%- capture filter_min_value_value -%}
+            {%- render 'qc-money', price: filter.min_value.value -%}
+          {%- endcapture -%}
+          {%- capture filter_max_value_value -%}
+            {%- render 'qc-money', price: filter.max_value.value -%}
+          {%- endcapture -%}
+          {{- filter_min_value_value -}}
           –
-          {{- filter.max_value.value | money -}}
+          {{- filter_max_value_value -}}
         {%- elsif filter.min_value.value != null -%}
-          {{ filter.min_value.value | money }}–{{ filter.range_max | money }}
+          {%- capture filter_min_value_value -%}
+            {%- render 'qc-money', price: filter.min_value.value -%}
+          {%- endcapture -%}
+          {%- capture filter_range_max -%}
+            {%- render 'qc-money', price: filter.range_max -%}
+          {%- endcapture -%}
+          {{ filter_min_value_value }}–{{ filter_range_max }}
         {%- elsif filter.max_value.value != null -%}
-          {{- 0 | money -}}
+          {%- capture zero -%}
+            {%- render 'qc-money', price: 0 -%}
+          {%- endcapture -%}
+          {%- capture filter_max_value_value -%}
+            {%- render 'qc-money', price: filter.max_value.value -%}
+          {%- endcapture -%}
+          {{- zero -}}
           –
-          {{- filter.max_value.value | money -}}
+          {{- filter_max_value_value -}}
         {%- endif -%}
         <span class="svg-wrapper svg-wrapper--smaller">
           {{- 'icon-filters-close.svg' | inline_asset_content -}}

@@ -113,7 +113,7 @@
         assign use_currency = settings.currency_code_enabled_product_pages
       -%}
       {%- capture price_breaks_json -%}
-        [{%- for price_break in variant.quantity_price_breaks -%}{%- unless forloop.first -%},{%- endunless -%}{%- if use_currency -%}{"quantity":{{ price_break.minimum_quantity }},"price":{{ price_break.price | money_with_currency | json }}}{%- else -%}{"quantity":{{ price_break.minimum_quantity }},"price":{{ price_break.price | money | json }}}{%- endif -%}{%- endfor -%}]
+        [{%- for price_break in variant.quantity_price_breaks -%}{%- unless forloop.first -%},{%- endunless -%}{%- if use_currency -%}{%- capture price_break_price -%}{%- render 'qc-money', price: price_break.price, with_currency: true -%}{%- endcapture -%}{"quantity":{{ price_break.minimum_quantity }},"price":{{ price_break_price | json }}}{%- else -%}{%- capture price_break_price -%}{%- render 'qc-money', price: price_break.price -%}{%- endcapture -%}{"quantity":{{ price_break.minimum_quantity }},"price":{{ price_break_price | json }}}{%- endif -%}{%- endfor -%}]
       {%- endcapture -%}
 
       {%- liquid
@@ -132,11 +132,17 @@
           endif
         endfor
       -%}
-
+      
+      {%- capture variant_price -%}
+        {%- render 'qc-money', price: variant.price -%}
+      {%- endcapture -%}
+      {%- capture variant_price_with_currency -%}
+        {%- render 'qc-money', price: variant.price, with_currency: true -%}
+      {%- endcapture -%}
       <price-per-item
         class="price-per-item"
         data-variant-id="{{ variant.id }}"
-        data-variant-price="{%- if use_currency -%}{{ variant.price | money_with_currency | escape }}{%- else -%}{{ variant.price | money | escape }}{%- endif -%}"
+        data-variant-price="{%- if use_currency -%}{{ variant_price_with_currency | escape }}{%- else -%}{{ variant_price | escape }}{%- endif -%}"
         data-min-quantity="{{ variant.quantity_rule.min | default: 1 }}"
         data-price-breaks="{{ price_breaks_json | strip | escape }}"
         data-at-text="{{ 'content.price_at' | t | escape }}"
@@ -149,9 +155,15 @@
         >
           {{- 'content.price_at' | t }}
           {%- if use_currency -%}
-            {{- display_price | money_with_currency -}}
+            {%- capture display_price -%}
+              {%- render 'qc-money', price: display_price, with_currency: true -%}
+            {%- endcapture -%}
+            {{- display_price -}}
           {%- else -%}
-            {{- display_price | money -}}
+            {%- capture display_price -%}
+              {%- render 'qc-money', price: display_price -%}
+            {%- endcapture -%}
+            {{- display_price -}}
           {%- endif -%}
           /
           {{- 'content.each_abbreviation' | t }}

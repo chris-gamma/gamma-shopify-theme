@@ -38,25 +38,36 @@
       <span class="facets__label">{{ filter.label }}</span>
       <facet-status-component class="facets__status">
         <template ref="moneyFormat">{{ shop.money_format }}</template>
-
         <span
           class="hide-when-empty"
           ref="facetStatus"
           data-currency="{{ localization.country.currency.iso_code }}"
-          data-range-max="{{ filter.range_max | money_without_currency }}"
+          data-range-max="{{ filter.range_max }}"
         >
           {%- if filter.min_value.value != null or filter.max_value.value != null %}
+            {%- capture filter_range_max -%}
+              {%- render 'qc-money', price: filter.range_max -%}
+            {%- endcapture -%}
+            {%- capture filter_min_value_value -%}
+              {%- render 'qc-money', price: filter.min_value.value -%}
+            {%- endcapture -%}
+            {%- capture filter_max_value_value -%}
+              {%- render 'qc-money', price: filter.max_value.value -%}
+            {%- endcapture -%}
             {%- if filter.min_value.value != null and filter.max_value.value != null %}
-              {{- filter.min_value.value | money | strip_html -}}
+              {{- filter_min_value_value | strip_html -}}
               –
-              {{- filter.max_value.value | money | strip_html -}}
+              {{- filter_max_value_value | strip_html -}}
             {%- elsif filter.min_value.value != null -%}
-              {{ filter.min_value.value | money | strip_html }}–{{ filter.range_max | money | strip_html }}
+              {{ filter_min_value_value | strip_html }}–{{ filter_range_max | strip_html }}
 
             {%- elsif filter.max_value.value != null -%}
-              {{- 0 | money | strip_html -}}
+              {%- capture zero -%}
+                {%- render 'qc-money', price: 0 -%}
+              {%- endcapture -%}
+              {{- zero | strip_html -}}
               –
-              {{- filter.max_value.value | money | strip_html -}}
+              {{- filter_max_value_value | strip_html -}}
             {%- endif -%}
           {%- endif -%}
         </span>
@@ -73,6 +84,12 @@
     >
       {% assign min_input_max_value = filter.max_value.value | default: filter.range_max %}
       {% assign max_input_min_value = filter.min_value.value | default: 0 %}
+      {%- capture min_input_max_value_formatted -%}
+        {%- render 'qc-money', price: min_input_max_value -%}
+      {%- endcapture -%}
+      {%- capture max_input_min_value_formatted -%}
+        {%- render 'qc-money', price: max_input_min_value -%}
+      {%- endcapture -%}
 
       <price-facet-component
         class="
@@ -96,13 +113,16 @@
                 name="{{ filter.min_value.param_name }}"
                 id="{{ filter.label | escape }}-GTE"
                 {%- if filter.min_value.value -%}
-                  value="{{ filter.min_value.value | money_without_currency }}"
+                  {%- capture filter_min_value_value -%}
+                    {%- render 'qc-money', price: filter.min_value.value -%}
+                  {%- endcapture -%}
+                  value="{{ filter_min_value_value }}"
                 {%- endif -%}
                 type="text"
                 inputmode="decimal"
                 placeholder="0"
                 data-min="0"
-                data-max="{{ min_input_max_value | money_without_currency }}"
+                data-max="{{ min_input_max_value_formatted }}"
                 ref="minInput"
                 autocomplete="off"
               >
@@ -118,18 +138,27 @@
             <div class="price-facet__separator">{{ 'fields.separator' | t }}</div>
 
             <div class="field price-facet__field">
+              {%- capture filter_range_max -%}
+                {%- render 'qc-money', price: filter.range_max -%}
+              {%- endcapture -%}
+              {%- capture filter_min_value_value -%}
+                {%- render 'qc-money', price: filter.min_value.value -%}
+              {%- endcapture -%}
+              {%- capture filter_max_value_value -%}
+                {%- render 'qc-money', price: filter.max_value.value -%}
+              {%- endcapture -%}
               <input
                 class="field__input price-facet__input"
                 name="{{ filter.max_value.param_name }}"
                 id="{{ filter.label | escape }}-LTE"
                 {%- if filter.max_value.value -%}
-                  value="{{ filter.max_value.value | money_without_currency }}"
+                  value="{{ filter_max_value_value }}"
                 {%- endif -%}
                 type="text"
                 inputmode="decimal"
-                placeholder="{{ filter.range_max | money_without_currency }}"
-                data-min="{{ max_input_min_value | money_without_currency }}"
-                data-max="{{ filter.range_max | money_without_currency }}"
+                placeholder="{{ filter_range_max }}"
+                data-min="{{ max_input_min_value_formatted }}"
+                data-max="{{ filter_range_max }}"
                 ref="maxInput"
                 autocomplete="off"
               >
@@ -151,7 +180,9 @@
             {%- endif %}
           "
         >
-          {%- assign formatted_highest_price = filter.range_max | money -%}
+          {%- capture formatted_highest_price -%}
+            {%- render 'qc-money', price: filter.range_max -%}
+          {%- endcapture -%}
           {{ 'content.price_filter_html' | t: price: formatted_highest_price }}
         </div>
 

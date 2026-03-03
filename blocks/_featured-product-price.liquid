@@ -3,9 +3,13 @@
   assign block_settings = block.settings
 
   if settings.currency_code_enabled_product_cards
-    assign price_min = product.price_min | money_with_currency
+    capture price_min
+      render 'qc-money', price: product.price_min, with_currency: true
+    endcapture
   else
-    assign price_min = product.price_min | money
+    capture price_min
+      render 'qc-money', price: product.price_min
+    endcapture
   endif
 
   if product.price_varies

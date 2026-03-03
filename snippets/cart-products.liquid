@@ -78,7 +78,10 @@
             role="caption"
           >
             {{ 'content.cart_total' | t }}
-            <span>{{ cart.total_price | money_with_currency }}</span>
+            {%- capture cart_total_price -%}
+              {%- render 'qc-money', price: cart_total.price, with_currency: true -%}
+            {%- endcapture -%}
+            <span>{{ cart_total_price }}</span>
           </caption>
 
           <thead
@@ -267,13 +270,22 @@
                     <div>
                       {% if item.original_price != item.final_price %}
                         <span class="visually-hidden">{{ 'content.price_sale' | t }}</span>
-                        <span>{{ item.final_price | money }}</span>
+                        {%- capture item_final_price -%}
+                          {%- render 'qc-money', price: item.final_price -%}
+                        {%- endcapture -%}
+                        <span>{{ item_final_price }}</span>
                         <span class="visually-hidden">{{ 'content.price_regular' | t }}</span>
                         <s class="compare-at-price">
                           {% if item.variant.compare_at_price > item.original_price %}
-                            {{ item.variant.compare_at_price | money }}
+                            {%- capture item_variant_compare_at_price -%}
+                              {%- render 'qc-money', price: item.variant.compare_at_price -%}
+                            {%- endcapture -%}
+                            {{ item_variant_compare_at_price }}
                           {% else %}
-                            {{ item.original_price | money }}
+                            {%- capture item_original_price -%}
+                              {%- render 'qc-money', price: item.original_price -%}
+                            {%- endcapture -%}
+                            {{ item_original_price }}
                           {% endif %}
                         </s>
                       {% else %}
@@ -283,17 +295,23 @@
                           <span class="visually-hidden">{{ 'content.price' | t }}</span>
                         {% endif %}
 
-                        <span>{{ item.original_price | money }}</span>
+                        {%- capture item_original_price -%}
+                          {%- render 'qc-money', price: item.original_price -%}
+                        {%- endcapture -%}
+                        <span>{{ item_original_price }}</span>
 
                         {% if item.variant.compare_at_price > item.original_price %}
                           <span class="visually-hidden">{{ 'content.price_regular' | t }}</span>
-                          <s class="compare-at-price">{{ item.variant.compare_at_price | money }}</s>
+                          {%- capture item_variant_compare_at_price -%}
+                          {%- render 'qc-money', price: item.variant.compare_at_price -%}
+                        {%- endcapture -%}
+                          <s class="compare-at-price">{{ item_variant_compare_at_price }}</s>
                         {% endif %}
                       {% endif %}
                     </div>
                     {% if item.variant.inventory_quantity <= 0 %}
                       <div class="cart-items__inventory-status">
-                        {% if item.product.tags contains "special order" %}
+                        {% if item.product.tags contains 'special order' %}
                           {{ 'content.product_badge_special_order' | t }}
                         {% else %}
                           {{ 'content.product_badge_backorder' | t }}
@@ -301,7 +319,6 @@
                       </div>
                     {% endif %}
                   </div>
-
                 </td>
                 <td
                   class="cart-items__quantity"
@@ -364,11 +381,19 @@
                 </td>
                 {%- liquid
                   if settings.currency_code_enabled_cart_items
-                    assign price = item.final_line_price | money_with_currency
-                    assign unit_price = item.unit_price | money_with_currency
+                    capture price
+                      render 'qc-money', price: item.final_line_price, with_currency: true
+                    endcapture
+                    capture unit_price
+                      render 'qc-money', price: item.unit_price, with_currency: true
+                    endcapture
                   else
-                    assign price = item.final_line_price | money
-                    assign unit_price = item.unit_price | money
+                    capture price
+                      render 'qc-money', price: item.final_line_price
+                    endcapture
+                    capture unit_price
+                      render 'qc-money', price: item.unit_price
+                    endcapture
                   endif
                 -%}
                 <td
@@ -568,7 +593,6 @@
     display: block;
   }
 
-
   .cart-items__variant {
     display: inline;
   }
@@ -631,7 +655,6 @@
     font-size: var(--font-size--sm);
     line-height: var(--line-height);
   }
-
 
   .cart-items__price-unit {
     font-size: var(--font-size--xs);
