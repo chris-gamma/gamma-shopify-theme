@@ -9,6 +9,12 @@
   | append: block_settings.map_src
   | append: '?scaleControl=false&miniMap=false&scrollWheelZoom=true&zoomControl=true&editMode=disabled&moreControl=false&searchControl=false&tilelayersControl=false&embedControl=false&datalayersControl=false&onLoadPanel=none&captionBar=false&captionMenus=false&homeControl=false&captionControl=false'
 -%}
+{%- liquid
+  if block_settings.placeholder_image != blank
+    assign placeholder_image = block_settings.placeholder_image | image_url: width: block_settings.map_width
+    assign mobile_placeholder_image = block_settings.mobile_placeholder_image | image_url: width: block_settings.mobile_map_width
+  endif
+-%}
 <div
   class="map-frame"
   style="--map-width: {{ block_settings.map_width }}px; --map-height: {{ block_settings.map_height }}px; --mobile-map-width: {{ block_settings.mobile_map_width }}px; --mobile-map-height: {{ block_settings.mobile_map_height }}px;"
@@ -20,12 +26,8 @@
       type="button"
       class="map-placeholder-button"
       aria-label="{{ 'content.view_map' | t | default: 'View map' }}"
+      style="--placeholder-image: url({{ placeholder_image }}); --mobile-placeholder-image: url({{ mobile_placeholder_image }});"
     >
-      {{
-        block_settings.map_placeholder_image
-        | image_url: width: block_settings.map_width
-        | image_tag: class: 'map-placeholder-image', loading: 'lazy'
-      }}
     </button>
   {% else %}
     <button
@@ -80,6 +82,9 @@
   .map-placeholder-button {
     width: var(--map-width);
     height: var(--map-height);
+    border: 0;
+    padding: 0;
+    background-image: var(--placeholder-image);
   }
 
   .map-directions-link {
@@ -101,6 +106,10 @@
       width: var(--mobile-map-width);
       height: var(--mobile-map-height);
       border: 0;
+    }
+
+    .map-placeholder-button {
+      background-image: var(--mobile-placeholder-image);
     }
   }
 {% endstylesheet %}

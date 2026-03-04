@@ -152,6 +152,98 @@
         "padding-block-end": 36
       }
     },
+    "section_QnwykV": {
+      "type": "section",
+      "blocks": {
+        "text_3bA6GU": {
+          "type": "text",
+          "name": "t:names.text",
+          "settings": {
+            "text": "<p><strong>Gamma Equipment Rental</strong><br/>5840 Rue Saint-Jacques<br/>Montréal, Québec  H4A 2E9</p><p><a href=\"tel:+15144815631\" target=\"_blank\" title=\"Call (514) 481-5631\">(514) 481-5631</a> <br/><a href=\"mailto:info@locationgamma.com\" target=\"_blank\" title=\"Email info@locationgamma.com\">info@locationgamma.com</a></p>",
+            "width": "fit-content",
+            "max_width": "none",
+            "alignment": "left",
+            "type_preset": "rte",
+            "font": "var(--font-body--family)",
+            "font_size": "1rem",
+            "line_height": "normal",
+            "letter_spacing": "normal",
+            "case": "none",
+            "wrap": "pretty",
+            "color": "var(--color-foreground)",
+            "background": false,
+            "background_color": "#00000026",
+            "corner_radius": 0,
+            "padding-block-start": 0,
+            "padding-block-end": 0,
+            "padding-inline-start": 0,
+            "padding-inline-end": 12
+          },
+          "blocks": {}
+        },
+        "map_block_JQJEXA": {
+          "type": "map-block",
+          "name": "Map block",
+          "settings": {
+            "map_width": 150,
+            "map_height": 150,
+            "mobile_map_width": 150,
+            "mobile_map_height": 150,
+            "placeholder_image": "shopify://shop_images/map-placeholder-footer-w150.webp",
+            "mobile_placeholder_image": "shopify://shop_images/map-placeholder-footer-w150.webp",
+            "map_src": "carte-location-gamma-map_1369176",
+            "show_directions": true,
+            "google_maps_directions": "https://www.google.com/maps/dir//5840%20Rue%20Saint-Jacques,%20Montr%C3%A9al,%20QC%20H4A%202E9",
+            "apple_maps_directions": "http://maps.apple.com/?daddr=5840%20Rue%20Saint-Jacques,%20Montr%C3%A9al,%20QC%20H4A%202E9"
+          },
+          "blocks": {}
+        },
+        "hours_table_3JUhVT": {
+          "type": "hours-table",
+          "name": "Hours table",
+          "settings": {
+            "block_size": "mini",
+            "default_hours": "",
+            "automatically_find_holidays": true,
+            "force_hours": ""
+          },
+          "blocks": {}
+        }
+      },
+      "block_order": [
+        "text_3bA6GU",
+        "map_block_JQJEXA",
+        "hours_table_3JUhVT"
+      ],
+      "name": "Footer - Store info",
+      "settings": {
+        "content_direction": "row",
+        "vertical_on_mobile": false,
+        "horizontal_alignment": "flex-start",
+        "vertical_alignment": "flex-start",
+        "align_baseline": false,
+        "horizontal_alignment_flex_direction_column": "flex-start",
+        "vertical_alignment_flex_direction_column": "center",
+        "gap": 12,
+        "section_width": "page-width",
+        "section_height": "",
+        "section_height_custom": 50,
+        "color_scheme": "scheme-2",
+        "background_media": "none",
+        "video_position": "cover",
+        "background_image_position": "cover",
+        "border": "none",
+        "border_width": 1,
+        "border_opacity": 100,
+        "border_radius": 0,
+        "toggle_overlay": false,
+        "overlay_color": "#00000026",
+        "overlay_style": "solid",
+        "gradient_direction": "to top",
+        "padding-block-start": 0,
+        "padding-block-end": 8
+      }
+    },
     "utilities": {
       "type": "footer-utilities",
       "blocks": {
@@ -209,6 +301,7 @@
   },
   "order": [
     "footer",
+    "section_QnwykV",
     "utilities"
   ]
 }
