@@ -12,7 +12,17 @@
 {%- liquid
   if block_settings.placeholder_image != blank
     assign placeholder_image = block_settings.placeholder_image | image_url: width: block_settings.map_width
+  else
+    if block_settings.mobile_placeholder_image != blank
+      assign placeholder_image = block_settings.mobile_placeholder_image | image_url: width: block_settings.map_width
+    endif
+  endif
+  if block_settings.mobile_placeholder_image != blank
     assign mobile_placeholder_image = block_settings.mobile_placeholder_image | image_url: width: block_settings.mobile_map_width
+  else
+    if block_settings.placeholder_image != blank
+      assign mobile_placeholder_image = block_settings.placeholder_image | image_url: width: block_settings.mobile_map_width
+    endif
   endif
 -%}
 <div
@@ -21,22 +31,21 @@
   data-map-src="{{ map_src_url | escape }}"
   data-map-initialized="false"
 >
-  {% if block_settings.placeholder_image != blank %}
+  {%- if placeholder_image != blank -%}
     <button
       type="button"
       class="map-placeholder-button"
       aria-label="{{ 'content.view_map' | t | default: 'View map' }}"
       style="--placeholder-image: url({{ placeholder_image }}); --mobile-placeholder-image: url({{ mobile_placeholder_image }});"
-    >
-    </button>
-  {% else %}
+    ></button>
+  {%- else -%}
     <button
       type="button"
       class="button-secondary map-placeholder-button map-placeholder-fallback"
     >
-      {{ 'content.view_map' | t | default: 'View map' }}
+      {{ 'content.view_map' | t | default: 'Voir carte' }}
     </button>
-  {% endif %}
+  {%- endif -%}
 
   <noscript>
     <iframe
@@ -48,7 +57,6 @@
   </noscript>
 </div>
 {%- if block_settings.show_directions -%}
-  <br>
   <div class="map-directions">
     {%- if block_settings.google_maps_directions -%}
       <a href="{{ block_settings.google_maps_directions }}" target="_blank" class="link map-directions-link">
@@ -77,6 +85,18 @@
     width: var(--map-width);
     height: var(--map-height);
     border: 0;
+  }
+
+  .map-frame iframe {
+    opacity: 0;
+  }
+
+  .map-frame.map-loaded iframe {
+    opacity: 1;
+  }
+
+  .map-frame.map-loaded button {
+    display: none;
   }
 
   .map-placeholder-button {
@@ -109,6 +129,10 @@
     }
 
     .map-placeholder-button {
+      width: var(--mobile-map-width);
+      height: var(--mobile-map-height);
+      border: 0;
+      padding: 0;
       background-image: var(--mobile-placeholder-image);
     }
   }
@@ -116,35 +140,71 @@
 
 {% javascript %}
   (function () {
-    // Find all map containers that have not yet been initialized
+    var COOKIE_NAME = 'gamma_map_iframes_enabled';
+    var COOKIE_VALUE = '1';
+    var COOKIE_MAX_AGE_SECONDS = 60 * 60 * 24 * 365; // 1 year
+
+    function hasMapCookie() {
+      return document.cookie.split(';').some(function (cookie) {
+        return cookie.trim().indexOf(COOKIE_NAME + '=') === 0;
+      });
+    }
+
+    function setMapCookie() {
+      document.cookie =
+        COOKIE_NAME +
+        '=' +
+        COOKIE_VALUE +
+        '; path=/; max-age=' +
+        COOKIE_MAX_AGE_SECONDS;
+    }
+
     var containers = document.querySelectorAll('.map-frame[data-map-initialized="false"]');
 
-    containers.forEach(function (container) {
-      var button = container.querySelector('.map-placeholder-button');
-      if (!button) return;
+    function initContainer(container) {
+      if (container.dataset.mapInitialized === 'true') return;
 
-      // Mark as initialized so we do not bind multiple times
+      var button = container.querySelector('.map-placeholder-button');
+      var src = container.dataset.mapSrc;
+      if (!src) return;
+
       container.dataset.mapInitialized = 'true';
 
-      button.addEventListener(
-        'click',
-        function () {
-          var src = container.dataset.mapSrc;
-          if (!src) return;
+      var iframe = document.createElement('iframe');
+      iframe.className = 'map-frame';
+      iframe.setAttribute('allowfullscreen', '');
+      iframe.setAttribute('loading', 'lazy');
+      iframe.src = src;
 
-          var iframe = document.createElement('iframe');
-          iframe.className = 'map-frame';
-          iframe.setAttribute('allowfullscreen', '');
-          iframe.setAttribute('loading', 'lazy');
-          iframe.src = src;
+      container.appendChild(iframe);
 
-          // Replace placeholder with the real iframe
-          container.innerHTML = '';
-          container.appendChild(iframe);
-        },
-        { once: true }
-      );
-    });
+      iframe.addEventListener('load', function () {
+        container.classList.add('map-loaded');
+        if (button) {
+          button.remove();
+        }
+      });
+    }
+
+    // If cookie already set, initialize all maps right away
+    if (hasMapCookie()) {
+      containers.forEach(initContainer);
+    } else {
+      // Otherwise wait for first click, then set cookie and initialize all
+      containers.forEach(function (container) {
+        var button = container.querySelector('.map-placeholder-button');
+        if (!button) return;
+
+        button.addEventListener(
+          'click',
+          function () {
+            setMapCookie();
+            containers.forEach(initContainer);
+          },
+          { once: true }
+        );
+      });
+    }
   })();
 {% endjavascript %}
 
@@ -168,13 +228,13 @@
       "type": "number",
       "id": "mobile_map_width",
       "label": "Mobile map width (px)",
-      "default": 150
+      "default": 320
     },
     {
       "type": "number",
       "id": "mobile_map_height",
       "label": "Mobile map height (px)",
-      "default": 150
+      "default": 240
     },
     {
       "type": "image_picker",

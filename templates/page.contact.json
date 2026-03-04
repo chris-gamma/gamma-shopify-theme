@@ -38,6 +38,197 @@
           },
           "blocks": {}
         },
+        "group_9kerQP": {
+          "type": "group",
+          "name": "t:names.group",
+          "settings": {
+            "content_direction": "row",
+            "vertical_on_mobile": true,
+            "horizontal_alignment": "flex-start",
+            "vertical_alignment": "flex-start",
+            "align_baseline": false,
+            "horizontal_alignment_flex_direction_column": "flex-start",
+            "vertical_alignment_flex_direction_column": "center",
+            "gap": 12,
+            "width": "fill",
+            "custom_width": 100,
+            "width_mobile": "fill",
+            "custom_width_mobile": 100,
+            "height": "fit",
+            "custom_height": 100,
+            "inherit_color_scheme": true,
+            "color_scheme": "",
+            "background_media": "none",
+            "video_position": "cover",
+            "background_image_position": "cover",
+            "border": "none",
+            "border_width": 1,
+            "border_opacity": 100,
+            "border_radius": 0,
+            "toggle_overlay": false,
+            "overlay_color": "#00000026",
+            "overlay_style": "solid",
+            "gradient_direction": "to top",
+            "link": "",
+            "open_in_new_tab": false,
+            "placeholder": "",
+            "padding-block-start": 0,
+            "padding-block-end": 0,
+            "padding-inline-start": 0,
+            "padding-inline-end": 0
+          },
+          "blocks": {
+            "group_zXwXNw": {
+              "type": "group",
+              "name": "t:names.group",
+              "settings": {
+                "content_direction": "column",
+                "vertical_on_mobile": true,
+                "horizontal_alignment": "flex-start",
+                "vertical_alignment": "center",
+                "align_baseline": false,
+                "horizontal_alignment_flex_direction_column": "flex-start",
+                "vertical_alignment_flex_direction_column": "center",
+                "gap": 12,
+                "width": "fill",
+                "custom_width": 100,
+                "width_mobile": "fill",
+                "custom_width_mobile": 100,
+                "height": "fit",
+                "custom_height": 100,
+                "inherit_color_scheme": true,
+                "color_scheme": "",
+                "background_media": "none",
+                "video_position": "cover",
+                "background_image_position": "cover",
+                "border": "none",
+                "border_width": 1,
+                "border_opacity": 100,
+                "border_radius": 0,
+                "toggle_overlay": false,
+                "overlay_color": "#00000026",
+                "overlay_style": "solid",
+                "gradient_direction": "to top",
+                "link": "",
+                "open_in_new_tab": false,
+                "placeholder": "",
+                "padding-block-start": 0,
+                "padding-block-end": 0,
+                "padding-inline-start": 0,
+                "padding-inline-end": 0
+              },
+              "blocks": {
+                "text_H7MedM": {
+                  "type": "text",
+                  "name": "t:names.text",
+                  "settings": {
+                    "text": "<p><strong>Gamma Equipment Rental</strong><br/>5840 Rue Saint-Jacques<br/>Montréal, Québec  H4A 2E9</p><p><a href=\"tel:+15144815631\" target=\"_blank\" title=\"Call (514) 481-5631\">(514) 481-5631</a> <br/><a href=\"mailto:info@locationgamma.com\" target=\"_blank\" title=\"Email info@locationgamma.com\">info@locationgamma.com</a></p>",
+                    "width": "fit-content",
+                    "max_width": "normal",
+                    "alignment": "left",
+                    "type_preset": "rte",
+                    "font": "var(--font-body--family)",
+                    "font_size": "1rem",
+                    "line_height": "normal",
+                    "letter_spacing": "normal",
+                    "case": "none",
+                    "wrap": "pretty",
+                    "color": "var(--color-foreground)",
+                    "background": false,
+                    "background_color": "#00000026",
+                    "corner_radius": 0,
+                    "padding-block-start": 0,
+                    "padding-block-end": 0,
+                    "padding-inline-start": 0,
+                    "padding-inline-end": 0
+                  },
+                  "blocks": {}
+                },
+                "hours_table_hinqxW": {
+                  "type": "hours-table",
+                  "name": "Hours table",
+                  "settings": {
+                    "block_size": "default",
+                    "default_hours": "",
+                    "automatically_find_holidays": true,
+                    "force_hours": ""
+                  },
+                  "blocks": {}
+                }
+              },
+              "block_order": [
+                "text_H7MedM",
+                "hours_table_hinqxW"
+              ]
+            },
+            "group_p4YGUf": {
+              "type": "group",
+              "name": "t:names.group",
+              "settings": {
+                "content_direction": "column",
+                "vertical_on_mobile": true,
+                "horizontal_alignment": "flex-start",
+                "vertical_alignment": "center",
+                "align_baseline": false,
+                "horizontal_alignment_flex_direction_column": "flex-start",
+                "vertical_alignment_flex_direction_column": "center",
+                "gap": 12,
+                "width": "fill",
+                "custom_width": 100,
+                "width_mobile": "fill",
+                "custom_width_mobile": 100,
+                "height": "fit",
+                "custom_height": 100,
+                "inherit_color_scheme": true,
+                "color_scheme": "",
+                "background_media": "none",
+                "video_position": "cover",
+                "background_image_position": "cover",
+                "border": "none",
+                "border_width": 1,
+                "border_opacity": 100,
+                "border_radius": 0,
+                "toggle_overlay": false,
+                "overlay_color": "#00000026",
+                "overlay_style": "solid",
+                "gradient_direction": "to top",
+                "link": "",
+                "open_in_new_tab": false,
+                "placeholder": "",
+                "padding-block-start": 0,
+                "padding-block-end": 0,
+                "padding-inline-start": 0,
+                "padding-inline-end": 0
+              },
+              "blocks": {
+                "map_block_iL8rCJ": {
+                  "type": "map-block",
+                  "name": "Map block",
+                  "settings": {
+                    "map_width": 400,
+                    "map_height": 300,
+                    "mobile_map_width": 320,
+                    "mobile_map_height": 240,
+                    "placeholder_image": "shopify://shop_images/carte-statique-grande.webp",
+                    "mobile_placeholder_image": "shopify://shop_images/carte-statique-moyenne.webp",
+                    "map_src": "carte-location-gamma-map_1369176",
+                    "show_directions": true,
+                    "google_maps_directions": "https://www.google.com/maps/dir//5840%20Rue%20Saint-Jacques,%20Montr%C3%A9al,%20QC%20H4A%202E9",
+                    "apple_maps_directions": "http://maps.apple.com/?daddr=5840%20Rue%20Saint-Jacques,%20Montr%C3%A9al,%20QC%20H4A%202E9"
+                  },
+                  "blocks": {}
+                }
+              },
+              "block_order": [
+                "map_block_iL8rCJ"
+              ]
+            }
+          },
+          "block_order": [
+            "group_zXwXNw",
+            "group_p4YGUf"
+          ]
+        },
         "content": {
           "type": "text",
           "name": "t:names.content",
@@ -67,6 +258,7 @@
       },
       "block_order": [
         "title",
+        "group_9kerQP",
         "content"
       ],
       "custom_css": [],
