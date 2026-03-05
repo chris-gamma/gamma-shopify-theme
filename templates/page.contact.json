@@ -40,7 +40,7 @@
         },
         "group_9kerQP": {
           "type": "group",
-          "name": "t:names.group",
+          "name": "Address, hours & map",
           "settings": {
             "content_direction": "row",
             "vertical_on_mobile": true,
@@ -80,7 +80,7 @@
           "blocks": {
             "group_zXwXNw": {
               "type": "group",
-              "name": "t:names.group",
+              "name": "Address & hours",
               "settings": {
                 "content_direction": "column",
                 "vertical_on_mobile": true,
@@ -122,7 +122,7 @@
                   "type": "text",
                   "name": "t:names.text",
                   "settings": {
-                    "text": "<p><strong>Gamma Equipment Rental</strong><br/>5840 Rue Saint-Jacques<br/>Montréal, Québec  H4A 2E9</p><p><a href=\"tel:+15144815631\" target=\"_blank\" title=\"Call (514) 481-5631\">(514) 481-5631</a> <br/><a href=\"mailto:info@locationgamma.com\" target=\"_blank\" title=\"Email info@locationgamma.com\">info@locationgamma.com</a></p>",
+                    "text": "<p><strong>Gamma Equipment Rental</strong><br/>5840 Rue Saint-Jacques<br/>Montréal, Québec  H4A 2E9<br/><a href=\"tel:+15144815631\" target=\"_blank\" title=\"Call (514) 481-5631\">(514) 481-5631</a> <br/><a href=\"mailto:info@locationgamma.com\" target=\"_blank\" title=\"Email info@locationgamma.com\">info@locationgamma.com</a></p>",
                     "width": "fit-content",
                     "max_width": "normal",
                     "alignment": "left",
@@ -163,14 +163,14 @@
             },
             "group_p4YGUf": {
               "type": "group",
-              "name": "t:names.group",
+              "name": "Map",
               "settings": {
                 "content_direction": "column",
                 "vertical_on_mobile": true,
                 "horizontal_alignment": "flex-start",
                 "vertical_alignment": "center",
                 "align_baseline": false,
-                "horizontal_alignment_flex_direction_column": "flex-start",
+                "horizontal_alignment_flex_direction_column": "center",
                 "vertical_alignment_flex_direction_column": "center",
                 "gap": 12,
                 "width": "fill",
@@ -236,7 +236,7 @@
             "text": "{{ closest.page.content }}",
             "width": "100%",
             "max_width": "none",
-            "alignment": "center",
+            "alignment": "left",
             "type_preset": "rte",
             "font": "var(--font-primary--family)",
             "font_size": "",

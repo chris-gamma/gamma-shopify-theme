@@ -116,7 +116,7 @@
 {% stylesheet %}
   .hours-table {
     font-size: var(--font-size--base);
-    padding: var(--padding-2xs);
+    border-collapse: collapse;
   }
 
   .holiday-hours-notice {
@@ -124,7 +124,7 @@
     font-size: var(--font-size--2xs);
     font-weight: bold;
     text-align: left;
-    padding: 0 var(--padding-2xs);
+    caption-side: bottom;
   }
 
   .hours-head {
@@ -147,13 +147,19 @@
 
   .hours-table th,
   .hours-table td {
+    font-feature-settings: "tnum";
     text-align: start;
-    padding: 0 var(--padding-2xs);
     border-bottom: 1px solid #ee262299;
   }
-
+  
   .hours-table td {
+    font-variant-numeric: tabular-nums;
+    font-feature-settings: "tnum";
+    /* Fallbacks for older browsers if you want to be extra safe: */
+    -moz-font-feature-settings: "tnum";
+    -webkit-font-feature-settings: "tnum";
     padding-left: var(--padding-sm);
+    text-align: right;
   }
 
   .hours-table-mini,
@@ -164,7 +170,6 @@
   .hours-table-mini tr {
     font-size: var(--font-size--2xs);
     border: 0;
-    padding: 0 var(--padding-3xs);
   }
 
   .hours-table-mini.holiday-hours-notice {
@@ -179,7 +184,6 @@
     .hours-table td,
     .hours-table tr {
       /* display: block; */
-      padding: 0 var(--padding-3xs);
       border-bottom: 0;
       margin-bottom: 0;
       font-size: var(--font-size--2xs);
