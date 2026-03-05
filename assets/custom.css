@@ -9,12 +9,12 @@
 /* Style Shopify cookie consent window */
 #shopify-pc__banner,
 #shopify-pc__prefs {
-  font-family: "Inter", sans-serif;
+  font-family: 'Inter', sans-serif;
 }
 /* Style headers */
 #shopify-pc__banner__body-title,
 #shopify-pc__prefs__header-title {
-  font-family: "Oswald", sans-serif;
+  font-family: 'Oswald', sans-serif;
   font-weight: 500;
 }
 /* Style buttons */
@@ -59,16 +59,16 @@
   background-color: #c41f1c;
 }
 #shopify-pc__prefs__header-close svg path,
-span svg[data-icon-type="checked"] path,
-span svg[data-icon-type="unchecked"] path {
+span svg[data-icon-type='checked'] path,
+span svg[data-icon-type='unchecked'] path {
   fill: #ee2622;
 }
 #shopify-pc__prefs__header-close:hover svg path,
 #shopify-pc__prefs__header-close:focus svg path,
-span:hover svg[data-icon-type="checked"] path,
-span:focus svg[data-icon-type="checked"] path,
-span:hover svg[data-icon-type="unchecked"] path,
-span:focus svg[data-icon-type="unchecked"] path {
+span:hover svg[data-icon-type='checked'] path,
+span:focus svg[data-icon-type='checked'] path,
+span:hover svg[data-icon-type='unchecked'] path,
+span:focus svg[data-icon-type='unchecked'] path {
   fill: #c41f1c;
 }
 /* Hide decline button on banner */
@@ -77,7 +77,11 @@ span:focus svg[data-icon-type="unchecked"] path {
 }
 
 /* Prevent videos from cropping in product media thumbnails */
-deferred-media[class] :is(.deferred-media__poster-button img, .deferred-media__poster-button ~ video) {
+deferred-media[class]
+  :is(
+    .deferred-media__poster-button img,
+    .deferred-media__poster-button ~ video
+  ) {
   object-fit: contain;
 }
 
@@ -85,4 +89,20 @@ deferred-media[class] :is(.deferred-media__poster-button img, .deferred-media__p
 .product-details .text-block:not(.text-block--full-width).rte,
 .product-details .text-block:not(.text-block--full-width).paragraph {
   text-wrap: auto;
+}
+
+/* Add a display card for contact page departments */
+.display-card-table {
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(250px, 1fr));
+  gap: var(--gap-2xl);
+  margin-top: var(--margin-sm);
+  margin-bottom: var(--margin-sm);
+}
+
+.display-card {
+  white-space: nowrap;
+  background-color: #f5f5f6;
+  border-radius: var(--style-border-radius-lg);
+  padding: var(--padding-2xl)
 }
