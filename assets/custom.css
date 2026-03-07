@@ -106,3 +106,12 @@ deferred-media[class]
   border-radius: var(--style-border-radius-lg);
   padding: var(--padding-2xl)
 }
+
+/* Footer styling */
+[class*="text_edEKXG"] > p {
+  text-align: left;
+}
+
+[id*="section_QnwykV"] .section-content-wrapper {
+  flex-wrap: wrap;
+}
