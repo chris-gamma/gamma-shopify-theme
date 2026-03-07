@@ -11,12 +11,14 @@
 #shopify-pc__prefs {
   font-family: 'Inter', sans-serif;
 }
+
 /* Style headers */
 #shopify-pc__banner__body-title,
 #shopify-pc__prefs__header-title {
   font-family: 'Oswald', sans-serif;
   font-weight: 500;
 }
+
 /* Style buttons */
 #shopify-pc__banner__btn-manage-prefs,
 #shopify-pc__prefs__header-decline,
@@ -30,6 +32,7 @@
   border-width: 1px;
   border-radius: var(--style-border-radius-buttons-secondary);
 }
+
 #shopify-pc__banner__btn-manage-prefs:hover,
 #shopify-pc__banner__btn-manage-prefs:focus,
 #shopify-pc__prefs__header-decline:hover,
@@ -39,6 +42,7 @@
   color: #ee2622;
   border-color: #ee2622;
 }
+
 #shopify-pc__banner__btn-accept,
 #shopify-pc__prefs__header-accept,
 #shopify-pc__prefs__header-save.primary {
@@ -50,6 +54,7 @@
   border-color: #ee2622;
   border-radius: var(--style-border-radius-buttons-primary);
 }
+
 #shopify-pc__banner__btn-accept:hover,
 #shopify-pc__banner__btn-accept:focus,
 #shopify-pc__prefs__header-accept:hover,
@@ -58,11 +63,13 @@
 #shopify-pc__prefs__header-save.primary:focus {
   background-color: #c41f1c;
 }
+
 #shopify-pc__prefs__header-close svg path,
 span svg[data-icon-type='checked'] path,
 span svg[data-icon-type='unchecked'] path {
   fill: #ee2622;
 }
+
 #shopify-pc__prefs__header-close:hover svg path,
 #shopify-pc__prefs__header-close:focus svg path,
 span:hover svg[data-icon-type='checked'] path,
@@ -71,17 +78,15 @@ span:hover svg[data-icon-type='unchecked'] path,
 span:focus svg[data-icon-type='unchecked'] path {
   fill: #c41f1c;
 }
+
 /* Hide decline button on banner */
 #shopify-pc__banner__btn-decline {
   display: none !important;
 }
 
 /* Prevent videos from cropping in product media thumbnails */
-deferred-media[class]
-  :is(
-    .deferred-media__poster-button img,
-    .deferred-media__poster-button ~ video
-  ) {
+deferred-media[class] :is(.deferred-media__poster-button img,
+  .deferred-media__poster-button ~ video) {
   object-fit: contain;
 }
 
@@ -107,8 +112,35 @@ deferred-media[class]
   padding: var(--padding-2xl)
 }
 
+/* Loading indicator */
+.loading-indicator {
+  position: absolute;
+  inset: 0;
+  display: none;
+  align-items: center;
+  justify-content: center;
+  z-index: 2;
+  background: rgba(255, 255, 255, 0.3);
+}
+
+.loading-indicator::before {
+  content: "";
+  width: 28px;
+  height: 28px;
+  border-radius: 50%;
+  border: 3px solid rgba(0, 0, 0, 0.2);
+  border-top-color: #000;
+  animation: map-loading-spin 0.8s linear infinite;
+}
+
+@keyframes map-loading-spin {
+  to {
+    transform: rotate(360deg);
+  }
+}
+
 /* Footer styling */
-[class*="text_edEKXG"] > p {
+[class*="text_edEKXG"]>p {
   text-align: left;
 }
 
