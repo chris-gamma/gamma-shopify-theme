@@ -7,18 +7,18 @@
   | append: request.locale.iso_code
   | append: '/map/'
   | append: block_settings.map_src
-  | append: '?scaleControl=false&miniMap=false&scrollWheelZoom=true&zoomControl=true&editMode=disabled&moreControl=false&searchControl=false&tilelayersControl=false&embedControl=false&datalayersControl=false&onLoadPanel=none&captionBar=false&captionMenus=false&homeControl=false&captionControl=false'
+  | append: '?scaleControl=false&amp;amp;miniMap=false&amp;amp;scrollWheelZoom=true&amp;amp;zoomControl=true&amp;amp;editMode=disabled&amp;amp;moreControl=false&amp;amp;searchControl=false&amp;amp;tilelayersControl=false&amp;amp;embedControl=false&amp;amp;datalayersControl=false&amp;amp;onLoadPanel=none&amp;amp;captionBar=false&amp;amp;captionMenus=false&amp;amp;homeControl=false&amp;amp;captionControl=false'
 -%}
 {%- liquid
   if block_settings.placeholder_image != blank
-    assign placeholder_image = block_settings.placeholder_image | image_url: width: block_settings.map_width
+    assign placeholder_image = block_settings.placeholder_image | image_url: width: block_settings.placeholder_image.width
   else
     if block_settings.mobile_placeholder_image != blank
       assign placeholder_image = block_settings.mobile_placeholder_image | image_url: width: block_settings.map_width
     endif
   endif
   if block_settings.mobile_placeholder_image != blank
-    assign mobile_placeholder_image = block_settings.mobile_placeholder_image | image_url: width: block_settings.mobile_map_width
+    assign mobile_placeholder_image = block_settings.mobile_placeholder_image | image_url: width: block_settings.mobile_placeholder_image.width
   else
     if block_settings.placeholder_image != blank
       assign mobile_placeholder_image = block_settings.placeholder_image | image_url: width: block_settings.mobile_map_width
@@ -35,17 +35,28 @@
     <button
       type="button"
       class="map-placeholder-button"
-      aria-label="{{ 'content.view_map' | t | default: 'View map' }}"
+      aria-label="{{ 'content.view_map' | t | default: 'Voir carte' }}"
       style="--placeholder-image: url({{ placeholder_image }}); --mobile-placeholder-image: url({{ mobile_placeholder_image }});"
     ></button>
   {%- else -%}
     <button
       type="button"
       class="button-secondary map-placeholder-button map-placeholder-fallback"
+      aria-label="{{ 'content.view_map' | t | default: 'Voir carte' }}"
     >
       {{ 'content.view_map' | t | default: 'Voir carte' }}
     </button>
   {%- endif -%}
+
+  <div class="map-loading-indicator" aria-hidden="true"></div>
+
+  <button
+    type="button"
+    class="map-disable-button"
+    aria-label="{{ 'content.disable_map' | t | default: 'Désactiver les cartes' }}"
+  >
+    {{- 'icon-disable-map.svg' | inline_asset_content -}}
+  </button>
 
   <noscript>
     <iframe
@@ -85,9 +96,16 @@
     width: var(--map-width);
     height: var(--map-height);
     border: 0;
+    position: relative;
+    overflow: hidden;
   }
 
   .map-frame iframe {
+    position: absolute;
+    inset: 0;
+    width: 100%;
+    height: 100%;
+    border: 0;
     opacity: 0;
   }
 
@@ -95,16 +113,75 @@
     opacity: 1;
   }
 
-  .map-frame.map-loaded button {
-    display: none;
-  }
-
   .map-placeholder-button {
-    width: var(--map-width);
-    height: var(--map-height);
+    position: absolute;
+    inset: 0;
+    width: 100%;
+    height: 100%;
     border: 0;
     padding: 0;
     background-image: var(--placeholder-image);
+    background-size: cover;
+    background-position: center;
+    background-repeat: no-repeat;
+    z-index: 1;
+  }
+
+  .map-frame.map-loaded .map-placeholder-button {
+    opacity: 0;
+    pointer-events: none;
+    visibility: hidden;
+  }
+
+  .map-loading-indicator {
+    position: absolute;
+    inset: 0;
+    display: none;
+    align-items: center;
+    justify-content: center;
+    z-index: 2;
+    background: rgba(255, 255, 255, 0.3);
+  }
+
+  .map-loading-indicator::before {
+    content: "";
+    width: 28px;
+    height: 28px;
+    border-radius: 50%;
+    border: 3px solid rgba(0, 0, 0, 0.2);
+    border-top-color: #000;
+    animation: map-loading-spin 0.8s linear infinite;
+  }
+
+  .map-frame.map-loading .map-loading-indicator {
+    display: flex;
+  }
+
+  .map-disable-button {
+    position: absolute;
+    top: 5px;
+    right: 5px;
+    width: 30px;
+    height: 30px;
+    margin: 0;
+    padding: 0;
+    background-color: #ffffff;
+    border: 1px solid rgba(128, 128, 128, 0.5);
+    display: none;
+    align-items: center;
+    justify-content: center;
+    cursor: pointer;
+    z-index: 3;
+  }
+
+  .map-frame.map-loaded .map-disable-button {
+    display: flex;
+  }
+
+  .map-disable-button svg {
+    width: 25px;
+    height: 25px;
+    display: block;
   }
 
   .map-directions-link {
@@ -129,11 +206,13 @@
     }
 
     .map-placeholder-button {
-      width: var(--mobile-map-width);
-      height: var(--mobile-map-height);
-      border: 0;
-      padding: 0;
       background-image: var(--mobile-placeholder-image);
+    }
+  }
+
+  @keyframes map-loading-spin {
+    to {
+      transform: rotate(360deg);
     }
   }
 {% endstylesheet %}
@@ -142,67 +221,85 @@
   (function () {
     var COOKIE_NAME = 'gamma_map_iframes_enabled';
     var COOKIE_VALUE = '1';
-    var COOKIE_MAX_AGE_SECONDS = 60 * 60 * 24 * 365; // 1 year
 
     function hasMapCookie() {
-      return document.cookie.split(';').some(function (cookie) {
-        return cookie.trim().indexOf(COOKIE_NAME + '=') === 0;
-      });
+      var cookie = document.cookie;
+      if (!cookie) return false;
+      var parts = cookie.split(';');
+      for (var i = 0; i < parts.length; i++) {
+        var part = parts[i].trim();
+        if (part.indexOf(COOKIE_NAME + '=') === 0) {
+          return part.substring(COOKIE_NAME.length + 1) === COOKIE_VALUE;
+        }
+      }
+      return false;
     }
 
     function setMapCookie() {
-      document.cookie =
-        COOKIE_NAME +
-        '=' +
-        COOKIE_VALUE +
-        '; path=/; max-age=' +
-        COOKIE_MAX_AGE_SECONDS;
+      document.cookie = COOKIE_NAME + '=' + COOKIE_VALUE + '; path=/';
+    }
+
+    function clearMapCookie() {
+      document.cookie = COOKIE_NAME + '=; path=/; expires=Thu, 01 Jan 1970 00:00:00 GMT';
     }
 
     var containers = document.querySelectorAll('.map-frame[data-map-initialized="false"]');
 
     function initContainer(container) {
       if (container.dataset.mapInitialized === 'true') return;
-
-      var button = container.querySelector('.map-placeholder-button');
       var src = container.dataset.mapSrc;
       if (!src) return;
-
       container.dataset.mapInitialized = 'true';
-
+      container.classList.add('map-loading');
       var iframe = document.createElement('iframe');
-      iframe.className = 'map-frame';
+      iframe.className = 'map-frame-iframe';
       iframe.setAttribute('allowfullscreen', '');
       iframe.setAttribute('loading', 'lazy');
       iframe.src = src;
-
       container.appendChild(iframe);
-
       iframe.addEventListener('load', function () {
+        container.classList.remove('map-loading');
         container.classList.add('map-loaded');
-        if (button) {
-          button.remove();
+      });
+    }
+
+    function disableAllMaps() {
+      clearMapCookie();
+      for (var i = 0; i < containers.length; i++) {
+        var container = containers[i];
+        container.classList.remove('map-loaded');
+        container.classList.remove('map-loading');
+        container.dataset.mapInitialized = 'false';
+        var iframe = container.querySelector('iframe');
+        if (iframe) {
+          iframe.src = 'about:blank';
+          container.removeChild(iframe);
+        }
+      }
+    }
+
+    if (hasMapCookie()) {
+      for (var i = 0; i < containers.length; i++) {
+        initContainer(containers[i]);
+      }
+    }
+
+    for (var j = 0; j < containers.length; j++) {
+      var container = containers[j];
+      var placeholderButton = container.querySelector('.map-placeholder-button');
+      if (!placeholderButton) continue;
+      placeholderButton.addEventListener('click', function () {
+        setMapCookie();
+        for (var k = 0; k < containers.length; k++) {
+          initContainer(containers[k]);
         }
       });
     }
 
-    // If cookie already set, initialize all maps right away
-    if (hasMapCookie()) {
-      containers.forEach(initContainer);
-    } else {
-      // Otherwise wait for first click, then set cookie and initialize all
-      containers.forEach(function (container) {
-        var button = container.querySelector('.map-placeholder-button');
-        if (!button) return;
-
-        button.addEventListener(
-          'click',
-          function () {
-            setMapCookie();
-            containers.forEach(initContainer);
-          },
-          { once: true }
-        );
+    var disableButtons = document.querySelectorAll('.map-disable-button');
+    for (var l = 0; l < disableButtons.length; l++) {
+      disableButtons[l].addEventListener('click', function () {
+        disableAllMaps();
       });
     }
   })();

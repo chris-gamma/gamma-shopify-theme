@@ -1,7 +1,5 @@
 <svg xmlns="http://www.w3.org/2000/svg" width="25" height="25" viewBox="0 0 25 25">
-    <path fill="#ee2622" fill-rule="evenodd"
-        d="M12.5 3a5.5 5.5 0 1 1 0 11a5.5 5.5 0 1 1 0-11Zm-4.5 7H17l-4.5 13ZM12.5 7.5a2 2 0 1 1 0 4a2 2 0 1 1 0-4Z" />
-    <circle cx="12.5" cy="12.5" r="11" fill="none" stroke="#000" stroke-width="3"
-        stroke-linecap="round" />
-    <line x1="5" y1="20" x2="20" y2="5" stroke="#000" stroke-width="3" stroke-linecap="round" />
+  <path fill="#ee2622" fill-rule="evenodd" d="M12.5 5a5 5 0 0 0-5 5c0 3.5 3 7.25 4.44 8.88a0.9 0.9 0 0 0 1.12 0C14.5 17.25 17.5 13.5 17.5 10a5 5 0 0 0-5-5zm0 3a2 2 0 1 1 0 4 2 2 0 0 1 0-4z"/>
+  <circle cx="12.5" cy="12.5" r="11" fill="none" stroke="#000" stroke-width="3" stroke-linecap="round"/>
+  <path d="M5 20L20 5" stroke="#000" stroke-width="3" stroke-linecap="round"/>
 </svg>
