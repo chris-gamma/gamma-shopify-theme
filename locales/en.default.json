@@ -327,8 +327,9 @@
     "hours_table_saturday": "Saturday",
     "hours_table_sunday": "Sunday",
     "view_map": "View map",
+    "disable_map": "Disable maps",
     "google_maps_directions": "Google",
-    "apple_maps_directions": "Apple"
+    "apple_maps_directions": "Apple",
   },
   "fields": {
     // Separates min and max values in price range filter

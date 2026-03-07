@@ -286,6 +286,7 @@
     "hours_table_saturday": "Samedi",
     "hours_table_sunday": "Dimanche",
     "view_map": "Voir carte",
+    "disable_map": "Désactiver les cartes",
     "google_maps_directions": "Google",
     "apple_maps_directions": "Apple"
   },
