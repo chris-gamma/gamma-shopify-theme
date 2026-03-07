@@ -6,39 +6,46 @@
   assign block_settings = block.settings
 
   assign all_store_hours = metaobjects.store_hours
-  if block.settings.force_hours != blank
-    if block_settings.force_hours.force_off == false
-      assign current_store_hours = all_store_hours[block_settings.force_hours]
-    endif
+  assign current_store_hours = nil
+
+  # If a specific hours metaobject is forced and not turned off, use it directly.
+  if block_settings.force_hours != blank and block_settings.force_hours.force_off == false
+    assign current_store_hours = block_settings.force_hours
+
+  # Otherwise, optionally look for a holiday period around the current date.
   elsif block_settings.automatically_find_holidays
+    assign current_dt = 'now' | date: '%s' | plus: 0
+
     # Find the first store_hours metaobject with both a start date and end date bounding the current date.
     for hours in all_store_hours.values
       if hours.force_off
         continue
       endif
-      if hours.display_start != blank
-        assign start_dt = hours.display_start | date: '%s' | plus: 0
-      else
+
+      if hours.display_start == blank
         continue
       endif
+
+      assign start_dt = hours.display_start | date: '%s' | plus: 0
+
       if hours.display_end != blank
         assign end_dt = hours.display_end | date: '%s' | plus: 0
       else
         # Automatically expire holidays after one week if an end date is not set.
         assign end_dt = start_dt | plus: 604800
       endif
-      assign current_dt = 'now' | date: '%s' | plus: 0
-      if current_dt > start_dt and current_dt < end_dt
+
+      if current_dt >= start_dt and current_dt <= end_dt
         assign current_store_hours = hours
         break
-      else
-        continue
       endif
     endfor
   endif
+
+  # Fallback to default or regular hours.
   if current_store_hours == blank
     if block_settings.default_hours != blank
-      assign current_store_hours = all_store_hours[block_settings.default_hours]
+      assign current_store_hours = block_settings.default_hours
     else
       assign current_store_hours = all_store_hours['regular-hours']
     endif
@@ -47,14 +54,14 @@
 
 <div class="hours-table-wrapper">
   <table class="hours-table {% if block_settings.block_size == 'mini' %}hours-table-mini{% endif %}">
-    {%- if current_store_hours.show_holiday_hours_notice != false -%}
+    {%- if current_store_hours.show_holiday_hours_notice and current_store_hours.holiday_hours_notice != blank -%}
       <caption class="holiday-hours-notice {% if block_settings.block_size == 'mini' %}hours-table-mini{% endif %}">
         <p>{{ current_store_hours.holiday_hours_notice }}</p>
       </caption>
     {%- endif -%}
     <tbody>
       <tr>
-        <th class="{% if current_store_hours.highlight_monday %}holiday-hours-head{% else %}hours-head{% endif %}">
+        <th scope="row" class="{% if current_store_hours.highlight_monday %}holiday-hours-head{% else %}hours-head{% endif %}">
           {{ 'content.hours_table_monday' | t }}
         </th>
         <td class="{% if current_store_hours.highlight_monday %}holiday-hours-value{% endif %}">
@@ -62,7 +69,7 @@
         </td>
       </tr>
       <tr>
-        <th class="{% if current_store_hours.highlight_tuesday %}holiday-hours-head{% else %}hours-head{% endif %}">
+        <th scope="row" class="{% if current_store_hours.highlight_tuesday %}holiday-hours-head{% else %}hours-head{% endif %}">
           {{ 'content.hours_table_tuesday' | t }}
         </th>
         <td class="{% if current_store_hours.highlight_tuesday %}holiday-hours-value{% endif %}">
@@ -70,7 +77,7 @@
         </td>
       </tr>
       <tr>
-        <th class="{% if current_store_hours.highlight_wednesday %}holiday-hours-head{% else %}hours-head{% endif %}">
+        <th scope="row" class="{% if current_store_hours.highlight_wednesday %}holiday-hours-head{% else %}hours-head{% endif %}">
           {{ 'content.hours_table_wednesday' | t }}
         </th>
         <td class="{% if current_store_hours.highlight_wednesday %}holiday-hours-value{% endif %}">
@@ -78,7 +85,7 @@
         </td>
       </tr>
       <tr>
-        <th class="{% if current_store_hours.highlight_thursday %}holiday-hours-head{% else %}hours-head{% endif %}">
+        <th scope="row" class="{% if current_store_hours.highlight_thursday %}holiday-hours-head{% else %}hours-head{% endif %}">
           {{ 'content.hours_table_thursday' | t }}
         </th>
         <td class="{% if current_store_hours.highlight_thursday %}holiday-hours-value{% endif %}">
@@ -86,7 +93,7 @@
         </td>
       </tr>
       <tr>
-        <th class="{% if current_store_hours.highlight_friday %}holiday-hours-head{% else %}hours-head{% endif %}">
+        <th scope="row" class="{% if current_store_hours.highlight_friday %}holiday-hours-head{% else %}hours-head{% endif %}">
           {{ 'content.hours_table_friday' | t }}
         </th>
         <td class="{% if current_store_hours.highlight_friday %}holiday-hours-value{% endif %}">
@@ -94,7 +101,7 @@
         </td>
       </tr>
       <tr>
-        <th class="{% if current_store_hours.highlight_saturday %}holiday-hours-head{% else %}hours-head{% endif %}">
+        <th scope="row" class="{% if current_store_hours.highlight_saturday %}holiday-hours-head{% else %}hours-head{% endif %}">
           {{ 'content.hours_table_saturday' | t }}
         </th>
         <td class="{% if current_store_hours.highlight_saturday %}holiday-hours-value{% endif %}">
@@ -102,7 +109,7 @@
         </td>
       </tr>
       <tr>
-        <th class="{% if current_store_hours.highlight_sunday %}holiday-hours-head{% else %}hours-head{% endif %}">
+        <th scope="row" class="{% if current_store_hours.highlight_sunday %}holiday-hours-head{% else %}hours-head{% endif %}">
           {{ 'content.hours_table_sunday' | t }}
         </th>
         <td class="{% if current_store_hours.highlight_sunday %}holiday-hours-value{% endif %}">
@@ -119,12 +126,18 @@
     border-collapse: collapse;
   }
 
-  .holiday-hours-notice {
+  .holiday-hours-notice,
+  .holiday-hours-notice p {
     color: #ee2622;
     font-size: var(--font-size--2xs);
     font-weight: bold;
     text-align: left;
     caption-side: bottom;
+    white-space: normal;
+  }
+
+    .holiday-hours-notice p {
+    margin: 0;
   }
 
   .hours-head {
@@ -148,8 +161,10 @@
   .hours-table th,
   .hours-table td {
     font-feature-settings: "tnum";
+    text-align: left;
     text-align: start;
     border-bottom: 1px solid #ee262299;
+    white-space: nowrap;
   }
   
   .hours-table td {
