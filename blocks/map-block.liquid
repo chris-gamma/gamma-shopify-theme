@@ -48,7 +48,7 @@
     </button>
   {%- endif -%}
 
-  <div class="map-loading-indicator" aria-hidden="true"></div>
+  <div class="loading-indicator" aria-hidden="true"></div>
 
   <button
     type="button"
@@ -133,27 +133,7 @@
     visibility: hidden;
   }
 
-  .map-loading-indicator {
-    position: absolute;
-    inset: 0;
-    display: none;
-    align-items: center;
-    justify-content: center;
-    z-index: 2;
-    background: rgba(255, 255, 255, 0.3);
-  }
-
-  .map-loading-indicator::before {
-    content: "";
-    width: 28px;
-    height: 28px;
-    border-radius: 50%;
-    border: 3px solid rgba(0, 0, 0, 0.2);
-    border-top-color: #000;
-    animation: map-loading-spin 0.8s linear infinite;
-  }
-
-  .map-frame.map-loading .map-loading-indicator {
+  .map-frame.map-loading .loading-indicator {
     display: flex;
   }
 
@@ -207,12 +187,6 @@
 
     .map-placeholder-button {
       background-image: var(--mobile-placeholder-image);
-    }
-  }
-
-  @keyframes map-loading-spin {
-    to {
-      transform: rotate(360deg);
     }
   }
 {% endstylesheet %}
