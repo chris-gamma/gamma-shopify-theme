@@ -147,3 +147,9 @@ deferred-media[class] :is(.deferred-media__poster-button img,
 [id*="section_QnwykV"] .section-content-wrapper {
   flex-wrap: wrap;
 }
+
+/* Bigger, bolder mega menu parent links */
+.mega-menu__link--parent > span {
+  font-size: var(--menu-child-font-size);
+  font-weight: var(--font-accent--weight);
+}
