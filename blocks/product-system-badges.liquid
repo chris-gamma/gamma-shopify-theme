@@ -5,17 +5,24 @@
 -%}
 {%- if bat_sys -%}
   <div class="product-system-badges">
-    <span class="product-system-badges-battery-system">
+    <span class="product-system-badges-battery-system" style="--icon-height: {{ block.settings.icon_height }}px;">
       {%- if bat_sys.collection -%}
         <a href="{{ bat_sys.collection.value.url }}" class="product-system-badges-collection-link">
       {%- endif -%}
-      {%- if bat_sys.icon -%}
-        <span class="product-system-badges-system-icon" style="width: {{ block.settings.icon_width }}px;">
-          {%- render 'image', image: bat_sys.icon, height: block.settings.icon_width -%}
+      {%- if bat_sys.icon_fr and request.locale.iso_code == 'fr' -%}
+        {%- assign bat_sys_icon = bat_sys.icon_fr -%}
+      {%- elsif bat_sys.icon_en and request.locale.iso_code == 'en' -%}
+        {%- assign bat_sys_icon = bat_sys.icon_en -%}
+      {%- elsif bat_sys.icon_en == blank and bat_sys_icon_fr != blank and request.locale.iso_code == 'en' -%}
+        {%- assign bat_sys_icon = bat_sys.icon_fr -%}
+      {%- endif -%}
+      {%- if bat_sys_icon -%}
+        <span class="product-system-badges-system-icon">
+          {%- render 'image', image: bat_sys_icon, height: block.settings.icon_height -%}
         </span>
       {%- endif -%}
       {%- if bat_sys.system_type -%}
-        <span class="product-system-badges-system-type">{{ bat_sys.system_type }}</span>
+        <span class="h6 product-system-badges-system-type">{{ bat_sys.system_type }}</span>
       {%- endif -%}
       {%- if bat_sys.collection -%}
         </a>
@@ -44,8 +51,15 @@
     vertical-align: middle;
   }
 
+  .product-system-badges-system-icon img {
+    height: var(--icon-height);
+    width: auto;
+    max-width: none;
+  }
+
   .product-system-badges-system-type {
-    margin-left: var(--margin-sm);
+    margin-left: var(--margin-xs);
+    opacity: 0.9;
   }
 {% endstylesheet %}
 
@@ -55,15 +69,15 @@
   "settings": [
     {
       "type": "number",
-      "id": "icon_width",
-      "label": "Icon width (px)",
-      "default": 60
+      "id": "icon_height",
+      "label": "Icon height (px)",
+      "default": 30
     }
   ],
   "presets": [
     {
       "name": "Product system badges",
-      "settings": { "icon_width": 60 }
+      "settings": { "icon_height": 30 }
     }
   ]
 }
