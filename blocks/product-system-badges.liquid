@@ -13,7 +13,7 @@
         {%- assign bat_sys_icon = bat_sys.icon_fr -%}
       {%- elsif bat_sys.icon_en and request.locale.iso_code == 'en' -%}
         {%- assign bat_sys_icon = bat_sys.icon_en -%}
-      {%- elsif bat_sys.icon_en == blank and bat_sys_icon_fr != blank and request.locale.iso_code == 'en' -%}
+      {%- elsif bat_sys.icon_fr != blank and request.locale.iso_code == 'en' -%}
         {%- assign bat_sys_icon = bat_sys.icon_fr -%}
       {%- endif -%}
       {%- if bat_sys_icon -%}
