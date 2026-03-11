@@ -7,6 +7,31 @@
   if show_as_accordion == true and block_settings.accordion_dividers == true
     assign dividers_enabled = true
   endif
+
+  # If a French menu exists and we're in the French locale, use that instead.
+  assign menu_handle = block_settings.menu.handle
+
+  if request.locale.iso_code == 'fr' and menu_handle
+    assign suffix = menu_handle | slice: -3, 3
+
+    if suffix == '-en' or suffix == '_en'
+      assign handle_length = menu_handle | size
+      assign base_length = handle_length | minus: 3
+      assign base_handle = menu_handle | slice: 0, base_length
+
+      if suffix == '-en'
+        assign localized_handle = base_handle | append: '-fr'
+      else
+        assign localized_handle = base_handle | append: '_fr'
+      endif
+
+      assign localized_menu = linklists[localized_handle]
+
+      if localized_menu != blank
+        assign menu = localized_menu
+      endif
+    endif
+  endif
 %}
 
 {% if menu != blank or heading != blank %}
