@@ -14,19 +14,45 @@
     "section_QnwykV": {
       "type": "section",
       "blocks": {
+        "email_signup_Cb39zy": {
+          "type": "email-signup",
+          "name": "t:names.email_signup",
+          "settings": {
+            "width": "fill",
+            "custom_width": 100,
+            "inherit_color_scheme": true,
+            "color_scheme": "",
+            "heading": "",
+            "heading_preset": "h3",
+            "border_style": "all",
+            "border_width": 1,
+            "border_radius": 100,
+            "input_type_preset": "paragraph",
+            "style_class": "button",
+            "display_type": "text",
+            "label": "Subscribe",
+            "integrated_button": true,
+            "button_type_preset": "paragraph",
+            "padding-block-start": 0,
+            "padding-block-end": 0,
+            "padding-inline-start": 0,
+            "padding-inline-end": 0
+          },
+          "blocks": {}
+        },
         "group_iEQeFY": {
           "type": "group",
-          "name": "Map & hours blocks",
+          "name": "Details group",
           "settings": {
             "content_direction": "row",
             "vertical_on_mobile": false,
-            "horizontal_alignment": "center",
+            "horizontal_alignment": "flex-start",
             "vertical_alignment": "flex-start",
             "align_baseline": false,
-            "horizontal_alignment_flex_direction_column": "center",
+            "horizontal_alignment_flex_direction_column": "flex-start",
             "vertical_alignment_flex_direction_column": "flex-start",
             "gap": 24,
-            "width": "fit-content",
+            "width": "fill",
             "custom_width": 100,
             "width_mobile": "fill",
             "custom_width_mobile": 100,
@@ -62,7 +88,7 @@
                 "width": "fit-content",
                 "max_width": "normal",
                 "alignment": "left",
-                "type_preset": "custom",
+                "type_preset": "rte",
                 "font": "var(--font-body--family)",
                 "font_size": "0.75rem",
                 "line_height": "normal",
@@ -84,7 +110,7 @@
               "type": "hours-table",
               "name": "Hours table",
               "settings": {
-                "block_size": "mini",
+                "block_size": "default",
                 "default_hours": "regular-hours",
                 "automatically_find_holidays": true,
                 "force_hours": ""
@@ -107,26 +133,250 @@
                 "apple_maps_directions": "http://maps.apple.com/?daddr=5840%20Rue%20Saint-Jacques,%20Montr%C3%A9al,%20QC%20H4A%202E9"
               },
               "blocks": {}
+            },
+            "group_RcQEBr": {
+              "type": "group",
+              "name": "Payment & social info",
+              "settings": {
+                "content_direction": "column",
+                "vertical_on_mobile": true,
+                "horizontal_alignment": "flex-start",
+                "vertical_alignment": "center",
+                "align_baseline": false,
+                "horizontal_alignment_flex_direction_column": "flex-start",
+                "vertical_alignment_flex_direction_column": "flex-start",
+                "gap": 18,
+                "width": "fill",
+                "custom_width": 100,
+                "width_mobile": "fill",
+                "custom_width_mobile": 100,
+                "height": "fit",
+                "custom_height": 100,
+                "inherit_color_scheme": true,
+                "color_scheme": "",
+                "background_media": "none",
+                "video_position": "cover",
+                "background_image_position": "cover",
+                "border": "none",
+                "border_width": 1,
+                "border_opacity": 100,
+                "border_radius": 0,
+                "toggle_overlay": false,
+                "overlay_color": "#00000026",
+                "overlay_style": "solid",
+                "gradient_direction": "to top",
+                "link": "",
+                "open_in_new_tab": false,
+                "placeholder": "",
+                "padding-block-start": 0,
+                "padding-block-end": 0,
+                "padding-inline-start": 0,
+                "padding-inline-end": 0
+              },
+              "blocks": {
+                "group_WVxrYK": {
+                  "type": "group",
+                  "name": "Social links",
+                  "settings": {
+                    "content_direction": "row",
+                    "vertical_on_mobile": true,
+                    "horizontal_alignment": "flex-start",
+                    "vertical_alignment": "center",
+                    "align_baseline": false,
+                    "horizontal_alignment_flex_direction_column": "flex-start",
+                    "vertical_alignment_flex_direction_column": "center",
+                    "gap": 12,
+                    "width": "fill",
+                    "custom_width": 100,
+                    "width_mobile": "fill",
+                    "custom_width_mobile": 100,
+                    "height": "fit",
+                    "custom_height": 100,
+                    "inherit_color_scheme": true,
+                    "color_scheme": "",
+                    "background_media": "none",
+                    "video_position": "cover",
+                    "background_image_position": "cover",
+                    "border": "none",
+                    "border_width": 1,
+                    "border_opacity": 100,
+                    "border_radius": 0,
+                    "toggle_overlay": false,
+                    "overlay_color": "#00000026",
+                    "overlay_style": "solid",
+                    "gradient_direction": "to top",
+                    "link": "",
+                    "open_in_new_tab": false,
+                    "placeholder": "",
+                    "padding-block-start": 0,
+                    "padding-block-end": 0,
+                    "padding-inline-start": 0,
+                    "padding-inline-end": 0
+                  },
+                  "blocks": {
+                    "text_6qAL7t": {
+                      "type": "text",
+                      "name": "t:names.heading",
+                      "settings": {
+                        "text": "<h2>Follow us:</h2>",
+                        "width": "fit-content",
+                        "max_width": "normal",
+                        "alignment": "left",
+                        "type_preset": "h6",
+                        "font": "var(--font-body--family)",
+                        "font_size": "1rem",
+                        "line_height": "normal",
+                        "letter_spacing": "normal",
+                        "case": "none",
+                        "wrap": "pretty",
+                        "color": "var(--color-foreground)",
+                        "background": false,
+                        "background_color": "#00000026",
+                        "corner_radius": 0,
+                        "padding-block-start": 0,
+                        "padding-block-end": 0,
+                        "padding-inline-start": 0,
+                        "padding-inline-end": 0
+                      },
+                      "blocks": {}
+                    },
+                    "social_links_qibgKR": {
+                      "type": "social-links",
+                      "name": "t:names.social_media_links",
+                      "settings": {
+                        "facebook_url": "https://www.facebook.com/GammaEquipmentRentals/",
+                        "instagram_url": "https://www.instagram.com/gammarentals/",
+                        "youtube_url": "",
+                        "tiktok_url": "",
+                        "twitter_url": "",
+                        "threads_url": "",
+                        "linkedin_url": "",
+                        "bluesky_url": "",
+                        "snapchat_url": "",
+                        "pinterest_url": "",
+                        "tumblr_url": "",
+                        "vimeo_url": "",
+                        "custom_url": ""
+                      },
+                      "blocks": {}
+                    }
+                  },
+                  "block_order": [
+                    "text_6qAL7t",
+                    "social_links_qibgKR"
+                  ]
+                },
+                "group_rrCD4M": {
+                  "type": "group",
+                  "name": "Payment icons",
+                  "settings": {
+                    "content_direction": "row",
+                    "vertical_on_mobile": true,
+                    "horizontal_alignment": "flex-start",
+                    "vertical_alignment": "flex-start",
+                    "align_baseline": false,
+                    "horizontal_alignment_flex_direction_column": "flex-start",
+                    "vertical_alignment_flex_direction_column": "center",
+                    "gap": 6,
+                    "width": "fill",
+                    "custom_width": 100,
+                    "width_mobile": "fill",
+                    "custom_width_mobile": 100,
+                    "height": "fit",
+                    "custom_height": 100,
+                    "inherit_color_scheme": true,
+                    "color_scheme": "",
+                    "background_media": "none",
+                    "video_position": "cover",
+                    "background_image_position": "cover",
+                    "border": "none",
+                    "border_width": 1,
+                    "border_opacity": 100,
+                    "border_radius": 0,
+                    "toggle_overlay": false,
+                    "overlay_color": "#00000026",
+                    "overlay_style": "solid",
+                    "gradient_direction": "to top",
+                    "link": "",
+                    "open_in_new_tab": false,
+                    "placeholder": "",
+                    "padding-block-start": 0,
+                    "padding-block-end": 0,
+                    "padding-inline-start": 0,
+                    "padding-inline-end": 0
+                  },
+                  "blocks": {
+                    "text_P78UCP": {
+                      "type": "text",
+                      "name": "t:names.heading",
+                      "settings": {
+                        "text": "<h2>We accept:</h2>",
+                        "width": "fit-content",
+                        "max_width": "normal",
+                        "alignment": "left",
+                        "type_preset": "h6",
+                        "font": "var(--font-body--family)",
+                        "font_size": "1rem",
+                        "line_height": "normal",
+                        "letter_spacing": "normal",
+                        "case": "none",
+                        "wrap": "pretty",
+                        "color": "var(--color-foreground)",
+                        "background": false,
+                        "background_color": "#00000026",
+                        "corner_radius": 0,
+                        "padding-block-start": 0,
+                        "padding-block-end": 0,
+                        "padding-inline-start": 0,
+                        "padding-inline-end": 0
+                      },
+                      "blocks": {}
+                    },
+                    "payment_icons_CcqtQM": {
+                      "type": "payment-icons",
+                      "name": "t:names.payment_icons",
+                      "settings": {
+                        "horizontal_alignment": "flex-start",
+                        "gap": 8,
+                        "padding-block-start": 0,
+                        "padding-block-end": 0,
+                        "padding-inline-start": 0,
+                        "padding-inline-end": 0
+                      },
+                      "blocks": {}
+                    }
+                  },
+                  "block_order": [
+                    "text_P78UCP",
+                    "payment_icons_CcqtQM"
+                  ]
+                }
+              },
+              "block_order": [
+                "group_WVxrYK",
+                "group_rrCD4M"
+              ]
             }
           },
           "block_order": [
             "text_edEKXG",
             "hours_table_VMBGTQ",
-            "map_block_TVxAq9"
+            "map_block_TVxAq9",
+            "group_RcQEBr"
           ]
         },
         "group_WKz3Jw": {
           "type": "group",
-          "name": "Details block",
+          "name": "Menu group",
           "settings": {
             "content_direction": "column",
-            "vertical_on_mobile": true,
-            "horizontal_alignment": "flex-start",
+            "vertical_on_mobile": false,
+            "horizontal_alignment": "space-between",
             "vertical_alignment": "center",
             "align_baseline": false,
-            "horizontal_alignment_flex_direction_column": "flex-start",
-            "vertical_alignment_flex_direction_column": "center",
-            "gap": 12,
+            "horizontal_alignment_flex_direction_column": "center",
+            "vertical_alignment_flex_direction_column": "space-between",
+            "gap": 0,
             "width": "fill",
             "custom_width": 100,
             "width_mobile": "fill",
@@ -155,46 +405,20 @@
             "padding-inline-end": 0
           },
           "blocks": {
-            "email_signup_Eh6baX": {
-              "type": "email-signup",
-              "name": "t:names.email_signup",
+            "group_TkQBAq": {
+              "type": "group",
+              "name": "Footer menu",
               "settings": {
+                "content_direction": "row",
+                "vertical_on_mobile": true,
+                "horizontal_alignment": "space-between",
+                "vertical_alignment": "flex-start",
+                "align_baseline": false,
+                "horizontal_alignment_flex_direction_column": "flex-start",
+                "vertical_alignment_flex_direction_column": "center",
+                "gap": 12,
                 "width": "fill",
                 "custom_width": 100,
-                "inherit_color_scheme": true,
-                "color_scheme": "",
-                "heading": "",
-                "heading_preset": "h3",
-                "border_style": "all",
-                "border_width": 1,
-                "border_radius": 100,
-                "input_type_preset": "paragraph",
-                "style_class": "button",
-                "display_type": "text",
-                "label": "Sign up",
-                "integrated_button": true,
-                "button_type_preset": "paragraph",
-                "padding-block-start": 0,
-                "padding-block-end": 0,
-                "padding-inline-start": 0,
-                "padding-inline-end": 0
-              },
-              "blocks": {}
-            },
-            "group_WciYJJ": {
-              "type": "group",
-              "name": "Social media links block",
-              "settings": {
-                "content_direction": "row",
-                "vertical_on_mobile": true,
-                "horizontal_alignment": "flex-start",
-                "vertical_alignment": "center",
-                "align_baseline": false,
-                "horizontal_alignment_flex_direction_column": "flex-start",
-                "vertical_alignment_flex_direction_column": "center",
-                "gap": 6,
-                "width": "fit-content",
-                "custom_width": 100,
                 "width_mobile": "fill",
                 "custom_width_mobile": 100,
                 "height": "fit",
@@ -221,117 +445,20 @@
                 "padding-inline-end": 0
               },
               "blocks": {
-                "text_na7XjN": {
-                  "type": "text",
-                  "name": "t:names.heading",
+                "menu_L3AgNt": {
+                  "type": "menu",
+                  "name": "Account menu",
                   "settings": {
-                    "text": "<h6>Connect with us:</h6>",
-                    "width": "fit-content",
-                    "max_width": "normal",
-                    "alignment": "left",
-                    "type_preset": "rte",
-                    "font": "var(--font-body--family)",
-                    "font_size": "1rem",
-                    "line_height": "normal",
-                    "letter_spacing": "normal",
-                    "case": "none",
-                    "wrap": "pretty",
-                    "color": "var(--color-foreground)",
-                    "background": false,
-                    "background_color": "#00000026",
-                    "corner_radius": 0,
-                    "padding-block-start": 0,
-                    "padding-block-end": 0,
-                    "padding-inline-start": 0,
-                    "padding-inline-end": 6
-                  },
-                  "blocks": {}
-                },
-                "social_links_k3hfKL": {
-                  "type": "social-links",
-                  "name": "t:names.social_media_links",
-                  "settings": {
-                    "facebook_url": "https://www.facebook.com/GammaEquipmentRentals/",
-                    "instagram_url": "https://www.instagram.com/gammarentals/",
-                    "youtube_url": "",
-                    "tiktok_url": "",
-                    "twitter_url": "",
-                    "threads_url": "",
-                    "linkedin_url": "",
-                    "bluesky_url": "",
-                    "snapchat_url": "",
-                    "pinterest_url": "",
-                    "tumblr_url": "",
-                    "vimeo_url": "",
-                    "custom_url": ""
-                  },
-                  "blocks": {}
-                }
-              },
-              "block_order": [
-                "text_na7XjN",
-                "social_links_k3hfKL"
-              ]
-            },
-            "group_QWYr66": {
-              "type": "group",
-              "name": "Payment info",
-              "settings": {
-                "content_direction": "row",
-                "vertical_on_mobile": true,
-                "horizontal_alignment": "flex-start",
-                "vertical_alignment": "center",
-                "align_baseline": false,
-                "horizontal_alignment_flex_direction_column": "flex-start",
-                "vertical_alignment_flex_direction_column": "center",
-                "gap": 6,
-                "width": "fit-content",
-                "custom_width": 100,
-                "width_mobile": "fill",
-                "custom_width_mobile": 100,
-                "height": "fit",
-                "custom_height": 100,
-                "inherit_color_scheme": true,
-                "color_scheme": "",
-                "background_media": "none",
-                "video_position": "cover",
-                "background_image_position": "cover",
-                "border": "none",
-                "border_width": 1,
-                "border_opacity": 100,
-                "border_radius": 0,
-                "toggle_overlay": false,
-                "overlay_color": "#00000026",
-                "overlay_style": "solid",
-                "gradient_direction": "to top",
-                "link": "",
-                "open_in_new_tab": false,
-                "placeholder": "",
-                "padding-block-start": 0,
-                "padding-block-end": 0,
-                "padding-inline-start": 0,
-                "padding-inline-end": 0
-              },
-              "blocks": {
-                "text_kEFxcQ": {
-                  "type": "text",
-                  "name": "t:names.heading",
-                  "settings": {
-                    "text": "<h6>We accept:</h6>",
-                    "width": "fit-content",
-                    "max_width": "normal",
-                    "alignment": "left",
-                    "type_preset": "rte",
-                    "font": "var(--font-body--family)",
-                    "font_size": "1rem",
-                    "line_height": "normal",
-                    "letter_spacing": "normal",
-                    "case": "none",
-                    "wrap": "pretty",
-                    "color": "var(--color-foreground-heading)",
-                    "background": false,
-                    "background_color": "#00000026",
-                    "corner_radius": 0,
+                    "menu": "footer-account-en",
+                    "heading": "My account",
+                    "menu_spacing": 12,
+                    "show_as_accordion": true,
+                    "accordion_icon": "caret",
+                    "accordion_dividers": true,
+                    "inherit_color_scheme": true,
+                    "color_scheme": "",
+                    "heading_preset": "h4",
+                    "link_preset": "paragraph",
                     "padding-block-start": 0,
                     "padding-block-end": 0,
                     "padding-inline-start": 0,
@@ -339,12 +466,62 @@
                   },
                   "blocks": {}
                 },
-                "payment_icons_gxDckA": {
-                  "type": "payment-icons",
-                  "name": "t:names.payment_icons",
+                "menu_BXbabP": {
+                  "type": "menu",
+                  "name": "Shop",
                   "settings": {
-                    "horizontal_alignment": "flex-start",
-                    "gap": 10,
+                    "menu": "footer-shop-en",
+                    "heading": "Shop",
+                    "menu_spacing": 12,
+                    "show_as_accordion": true,
+                    "accordion_icon": "caret",
+                    "accordion_dividers": true,
+                    "inherit_color_scheme": true,
+                    "color_scheme": "",
+                    "heading_preset": "h4",
+                    "link_preset": "paragraph",
+                    "padding-block-start": 0,
+                    "padding-block-end": 0,
+                    "padding-inline-start": 0,
+                    "padding-inline-end": 0
+                  },
+                  "blocks": {}
+                },
+                "menu_erVKLc": {
+                  "type": "menu",
+                  "name": "Company menu",
+                  "settings": {
+                    "menu": "footer-company-en",
+                    "heading": "Company",
+                    "menu_spacing": 12,
+                    "show_as_accordion": true,
+                    "accordion_icon": "caret",
+                    "accordion_dividers": true,
+                    "inherit_color_scheme": true,
+                    "color_scheme": "",
+                    "heading_preset": "h4",
+                    "link_preset": "paragraph",
+                    "padding-block-start": 0,
+                    "padding-block-end": 0,
+                    "padding-inline-start": 0,
+                    "padding-inline-end": 0
+                  },
+                  "blocks": {}
+                },
+                "menu_L3YACw": {
+                  "type": "menu",
+                  "name": "Legal menu",
+                  "settings": {
+                    "menu": "footer-legal-en",
+                    "heading": "Legal",
+                    "menu_spacing": 12,
+                    "show_as_accordion": true,
+                    "accordion_icon": "caret",
+                    "accordion_dividers": false,
+                    "inherit_color_scheme": true,
+                    "color_scheme": "",
+                    "heading_preset": "h4",
+                    "link_preset": "paragraph",
                     "padding-block-start": 0,
                     "padding-block-end": 0,
                     "padding-inline-start": 0,
@@ -354,32 +531,33 @@
                 }
               },
               "block_order": [
-                "text_kEFxcQ",
-                "payment_icons_gxDckA"
+                "menu_L3AgNt",
+                "menu_BXbabP",
+                "menu_erVKLc",
+                "menu_L3YACw"
               ]
             }
           },
           "block_order": [
-            "email_signup_Eh6baX",
-            "group_WciYJJ",
-            "group_QWYr66"
+            "group_TkQBAq"
           ]
         }
       },
       "block_order": [
+        "email_signup_Cb39zy",
         "group_iEQeFY",
         "group_WKz3Jw"
       ],
       "custom_css": [],
       "name": "Footer",
       "settings": {
-        "content_direction": "row",
+        "content_direction": "column",
         "vertical_on_mobile": false,
         "horizontal_alignment": "center",
         "vertical_alignment": "flex-start",
         "align_baseline": false,
         "horizontal_alignment_flex_direction_column": "flex-start",
-        "vertical_alignment_flex_direction_column": "center",
+        "vertical_alignment_flex_direction_column": "flex-start",
         "gap": 24,
         "section_width": "page-width",
         "section_height": "",
@@ -397,7 +575,7 @@
         "overlay_style": "solid",
         "gradient_direction": "to top",
         "padding-block-start": 36,
-        "padding-block-end": 8
+        "padding-block-end": 12
       }
     },
     "utilities": {
@@ -411,41 +589,12 @@
             "case": "none"
           },
           "blocks": {}
-        },
-        "policy_list": {
-          "type": "footer-policy-list",
-          "settings": {
-            "font_size": "0.75rem",
-            "case": "none"
-          },
-          "blocks": {}
-        },
-        "social_icons": {
-          "type": "social-links",
-          "disabled": true,
-          "settings": {
-            "facebook_url": "https://www.facebook.com/GammaEquipmentRentals/",
-            "instagram_url": "https://www.instagram.com/gammarentals/",
-            "youtube_url": "",
-            "tiktok_url": "",
-            "twitter_url": "",
-            "threads_url": "",
-            "linkedin_url": "",
-            "bluesky_url": "",
-            "snapchat_url": "",
-            "pinterest_url": "",
-            "tumblr_url": "",
-            "vimeo_url": "",
-            "custom_url": ""
-          },
-          "blocks": {}
         }
       },
       "block_order": [
-        "copyright",
-        "policy_list",
-        "social_icons"
+        "copyright"
       ],
+      "name": "Copyright notice",
       "settings": {
         "section_width": "page-width",
         "gap": 24,
