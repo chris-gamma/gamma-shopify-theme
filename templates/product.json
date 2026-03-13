@@ -278,34 +278,17 @@
                     "width": 20
                   },
                   "blocks": {
-                    "text_dE4APd": {
-                      "type": "text",
+                    "custom_liquid_bnznhp": {
+                      "type": "custom-liquid",
+                      "name": "t:names.custom_liquid",
                       "settings": {
-                        "text": "{{ closest.product.metafields.custom.included_in_the_set | metafield_tag }}",
-                        "width": "100%",
-                        "max_width": "normal",
-                        "alignment": "left",
-                        "type_preset": "rte",
-                        "font": "var(--font-body--family)",
-                        "font_size": "1rem",
-                        "line_height": "normal",
-                        "letter_spacing": "normal",
-                        "case": "none",
-                        "wrap": "pretty",
-                        "color": "var(--color-foreground)",
-                        "background": false,
-                        "background_color": "#00000026",
-                        "corner_radius": 0,
-                        "padding-block-start": 0,
-                        "padding-block-end": 0,
-                        "padding-inline-start": 0,
-                        "padding-inline-end": 0
+                        "custom_liquid": "{% assign included_in_the_set = product.selected_or_first_available_variant.metafields.custom.included_in_the_set %}\n\n{% if included_in_the_set != blank %}\n  <div class=\"rte\">{{ included_in_the_set | metafield_tag }}</div>\n{% endif %}"
                       },
                       "blocks": {}
                     }
                   },
                   "block_order": [
-                    "text_dE4APd"
+                    "custom_liquid_bnznhp"
                   ]
                 },
                 "accordion_row_dynamic_4tj6gk": {
@@ -322,7 +305,7 @@
                       "type": "custom-liquid",
                       "name": "Tech specs table",
                       "settings": {
-                        "custom_liquid": "{%- if product.metafields.custom.technical_specifications\n  and product.metafields.custom.technical_specifications.value != blank\n-%}\n  <table class=\"product-specs-table\">\n    <tbody>\n      {%- for spec in product.metafields.custom.technical_specifications.value -%}\n        {%- assign parts = spec | split: ':' -%}\n        {%- assign label = parts | first | strip -%}\n        {%- assign value = parts | slice: 1 | join: ':' | strip -%}\n\n        {%- if label != blank or value != blank -%}\n          <tr>\n            <th scope=\"row\" style=\"text-align:left;\">{{ label }}</th>\n            <td style=\"text-align:left;\">{{ value }}</td>\n          </tr>\n        {%- endif -%}\n      {%- endfor -%}\n    </tbody>\n  </table>\n{%- endif -%}"
+                        "custom_liquid": "{%- assign tech_specs = product.selected_or_first_available_variant.metafields.custom.technical_specifications -%}\n{%- if tech_specs != blank and tech_specs.value != blank -%}\n  <table class=\"table product-specs-table\">\n    <tbody>\n      {%- for spec in tech_specs.value -%}\n        {%- assign parts = spec | split: ':' -%}\n        {%- assign label = parts | first | strip -%}\n        {%- assign value = parts | slice: 1 | join: ':' | strip -%}\n\n        {%- if label != blank or value != blank -%}\n          <tr>\n            <th scope=\"row\" style=\"text-align:left;\">{{ label }}</th>\n            <td style=\"text-align:left;\">{{ value }}</td>\n          </tr>\n        {%- endif -%}\n      {%- endfor -%}\n    </tbody>\n  </table>\n{%- endif -%}"
                       },
                       "blocks": {}
                     }
@@ -341,34 +324,17 @@
                     "width": 20
                   },
                   "blocks": {
-                    "text_gcVrRb": {
-                      "type": "text",
+                    "custom_liquid_WQmjra": {
+                      "type": "custom-liquid",
+                      "name": "t:names.custom_liquid",
                       "settings": {
-                        "text": "{{ closest.product.metafields.custom.gamma_s_advice | metafield_tag }}",
-                        "width": "100%",
-                        "max_width": "normal",
-                        "alignment": "left",
-                        "type_preset": "rte",
-                        "font": "var(--font-body--family)",
-                        "font_size": "1rem",
-                        "line_height": "normal",
-                        "letter_spacing": "normal",
-                        "case": "none",
-                        "wrap": "pretty",
-                        "color": "var(--color-foreground)",
-                        "background": false,
-                        "background_color": "#00000026",
-                        "corner_radius": 0,
-                        "padding-block-start": 0,
-                        "padding-block-end": 0,
-                        "padding-inline-start": 0,
-                        "padding-inline-end": 0
+                        "custom_liquid": "{% assign gammas_advice = product.selected_or_first_available_variant.metafields.custom.gamma_s_advice %}\n\n{% if gammas_advice != blank %}\n  <div class=\"rte\">{{ gammas_advice | metafield_tag }}</div>\n{% endif %}"
                       },
                       "blocks": {}
                     }
                   },
                   "block_order": [
-                    "text_gcVrRb"
+                    "custom_liquid_WQmjra"
                   ]
                 },
                 "accordion_row_dynamic_yeqHPy": {
@@ -381,34 +347,17 @@
                     "width": 20
                   },
                   "blocks": {
-                    "text_PpP4Ki": {
-                      "type": "text",
+                    "custom_liquid_QMCBdf": {
+                      "type": "custom-liquid",
+                      "name": "t:names.custom_liquid",
                       "settings": {
-                        "text": "{{ closest.product.metafields.custom.spare_parts_accessories | metafield_tag }}",
-                        "width": "100%",
-                        "max_width": "normal",
-                        "alignment": "left",
-                        "type_preset": "rte",
-                        "font": "var(--font-body--family)",
-                        "font_size": "1rem",
-                        "line_height": "normal",
-                        "letter_spacing": "normal",
-                        "case": "none",
-                        "wrap": "pretty",
-                        "color": "var(--color-foreground)",
-                        "background": false,
-                        "background_color": "#00000026",
-                        "corner_radius": 0,
-                        "padding-block-start": 0,
-                        "padding-block-end": 0,
-                        "padding-inline-start": 0,
-                        "padding-inline-end": 0
+                        "custom_liquid": "{% assign spare_parts_accessories = product.selected_or_first_available_variant.metafields.custom.spare_parts_accessories %}\n\n{% if spare_parts_accessories != blank %}\n  <div class=\"rte\">{{ spare_parts_accessories | metafield_tag }}</div>\n{% endif %}"
                       },
                       "blocks": {}
                     }
                   },
                   "block_order": [
-                    "text_PpP4Ki"
+                    "custom_liquid_QMCBdf"
                   ]
                 },
                 "accordion_row_dynamic_kYLXxd": {
@@ -421,34 +370,17 @@
                     "width": 20
                   },
                   "blocks": {
-                    "text_EJcW3f": {
-                      "type": "text",
+                    "custom_liquid_pRka6a": {
+                      "type": "custom-liquid",
+                      "name": "t:names.custom_liquid",
                       "settings": {
-                        "text": "{{ closest.product.metafields.custom.manuals_documentation | metafield_tag }}",
-                        "width": "100%",
-                        "max_width": "normal",
-                        "alignment": "left",
-                        "type_preset": "rte",
-                        "font": "var(--font-body--family)",
-                        "font_size": "1rem",
-                        "line_height": "normal",
-                        "letter_spacing": "normal",
-                        "case": "none",
-                        "wrap": "pretty",
-                        "color": "var(--color-foreground)",
-                        "background": false,
-                        "background_color": "#00000026",
-                        "corner_radius": 0,
-                        "padding-block-start": 0,
-                        "padding-block-end": 0,
-                        "padding-inline-start": 0,
-                        "padding-inline-end": 0
+                        "custom_liquid": "{% assign manuals_documentation = product.selected_or_first_available_variant.metafields.custom.manuals_documentation %}\n\n{% if manuals_documentation != blank %}\n  <div class=\"rte\">{{ manuals_documentation | metafield_tag }}</div>\n{% endif %}"
                       },
                       "blocks": {}
                     }
                   },
                   "block_order": [
-                    "text_EJcW3f"
+                    "custom_liquid_pRka6a"
                   ]
                 },
                 "accordion_row_dynamic_YfaL4M": {
@@ -461,34 +393,17 @@
                     "width": 20
                   },
                   "blocks": {
-                    "text_X6YB9t": {
-                      "type": "text",
+                    "custom_liquid_TWEqBD": {
+                      "type": "custom-liquid",
+                      "name": "t:names.custom_liquid",
                       "settings": {
-                        "text": "{{ closest.product.metafields.custom.frequently_asked_questions | metafield_tag }}",
-                        "width": "100%",
-                        "max_width": "normal",
-                        "alignment": "left",
-                        "type_preset": "rte",
-                        "font": "var(--font-body--family)",
-                        "font_size": "1rem",
-                        "line_height": "normal",
-                        "letter_spacing": "normal",
-                        "case": "none",
-                        "wrap": "pretty",
-                        "color": "var(--color-foreground)",
-                        "background": false,
-                        "background_color": "#00000026",
-                        "corner_radius": 0,
-                        "padding-block-start": 0,
-                        "padding-block-end": 0,
-                        "padding-inline-start": 0,
-                        "padding-inline-end": 0
+                        "custom_liquid": "{% assign frequently_asked_questions = product.selected_or_first_available_variant.metafields.custom.frequently_asked_questions %}\n\n{% if frequently_asked_questions != blank %}\n  <div class=\"rte\">{{ frequently_asked_questions | metafield_tag }}</div>\n{% endif %}"
                       },
                       "blocks": {}
                     }
                   },
                   "block_order": [
-                    "text_X6YB9t"
+                    "custom_liquid_TWEqBD"
                   ]
                 },
                 "accordion_row_jhkfRM": {
@@ -501,34 +416,17 @@
                     "width": 20
                   },
                   "blocks": {
-                    "text_4ENCVd": {
-                      "type": "text",
+                    "custom_liquid_DnkxTp": {
+                      "type": "custom-liquid",
+                      "name": "t:names.custom_liquid",
                       "settings": {
-                        "text": "{{ closest.product.metafields.custom.warranty_policy.value.warranty_policy | metafield_tag }}",
-                        "width": "100%",
-                        "max_width": "normal",
-                        "alignment": "left",
-                        "type_preset": "rte",
-                        "font": "var(--font-body--family)",
-                        "font_size": "0.75rem",
-                        "line_height": "tight",
-                        "letter_spacing": "normal",
-                        "case": "none",
-                        "wrap": "pretty",
-                        "color": "var(--color-foreground)",
-                        "background": false,
-                        "background_color": "#00000026",
-                        "corner_radius": 0,
-                        "padding-block-start": 0,
-                        "padding-block-end": 0,
-                        "padding-inline-start": 0,
-                        "padding-inline-end": 0
+                        "custom_liquid": "{% assign warranty_policy_metaobject = product.selected_or_first_available_variant.metafields.custom.warranty_policy.value %}\n\n{% if warranty_policy_metaobject != blank and warranty_policy_metaobject.warranty_policy != blank %}\n  <div class=\"rte\">\n    {{ warranty_policy_metaobject.warranty_policy | metafield_tag }}\n  </div>\n{% endif %}"
                       },
                       "blocks": {}
                     }
                   },
                   "block_order": [
-                    "text_4ENCVd"
+                    "custom_liquid_DnkxTp"
                   ]
                 },
                 "accordion_row_zi3qrq": {
@@ -541,34 +439,17 @@
                     "width": 20
                   },
                   "blocks": {
-                    "text_8iThKC": {
-                      "type": "text",
+                    "custom_liquid_jMEDDD": {
+                      "type": "custom-liquid",
+                      "name": "t:names.custom_liquid",
                       "settings": {
-                        "text": "{{ closest.product.metafields.custom.return_exchange_policy.value.policy_text | metafield_tag }}",
-                        "width": "100%",
-                        "max_width": "normal",
-                        "alignment": "left",
-                        "type_preset": "rte",
-                        "font": "var(--font-body--family)",
-                        "font_size": "0.75rem",
-                        "line_height": "normal",
-                        "letter_spacing": "normal",
-                        "case": "none",
-                        "wrap": "pretty",
-                        "color": "var(--color-foreground)",
-                        "background": false,
-                        "background_color": "#00000026",
-                        "corner_radius": 0,
-                        "padding-block-start": 0,
-                        "padding-block-end": 0,
-                        "padding-inline-start": 0,
-                        "padding-inline-end": 0
+                        "custom_liquid": "{% assign return_exchange_policy_metaobject = product.selected_or_first_available_variant.metafields.custom.return_exchange_policy.value %}\n\n{% if return_exchange_policy_metaobject != blank and return_exchange_policy_metaobject.policy_text != blank %}\n  <div class=\"rte\">\n    {{ return_exchange_policy_metaobject.policy_text | metafield_tag }}\n  </div>\n{% endif %}"
                       },
                       "blocks": {}
                     }
                   },
                   "block_order": [
-                    "text_8iThKC"
+                    "custom_liquid_jMEDDD"
                   ]
                 }
               },
