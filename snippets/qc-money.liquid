@@ -6,24 +6,18 @@
 {%- enddoc -%}
 
 {%- liquid
-  assign with_currency = with_currency | default: false
   if request.locale.iso_code == 'fr'
     if with_currency
-      assign price = price | money_with_currency
+      echo price | money_with_currency
     else
-      assign price = price | money
+      echo price | money
     endif
   else
     # Format the currency for English readers if locale is not 'fr' (we only have 2)
+    echo '$'
+    echo price | money_without_currency | replace: ',', '.' | replace: ' ', ','
     if with_currency
-      assign cur_code = ' CAD'
-    else
-      assign cur_code = ''
+      echo ' CAD'
     endif
-    assign price = price | money
-    assign price = price | replace: ' $', ''
-    assign price = price | replace: ',', '.' | replace: ' ', ','
-    assign price = '$' | append: price | append: cur_code
   endif
 -%}
-{{ price }}
