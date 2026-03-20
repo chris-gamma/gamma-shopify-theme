@@ -1,0 +1,440 @@
+{% liquid
+  assign block_settings = block.settings
+
+  assign desktop_width = '100%'
+  if block_settings.desktop_width == 'custom'
+    assign desktop_width = block_settings.desktop_custom_width | append: '%'
+  endif
+
+  assign mobile_width = '100%'
+  if block_settings.mobile_width == 'custom'
+    assign mobile_width = block_settings.mobile_custom_width | append: '%'
+  endif
+
+  assign search_label = 'content.search_input_label' | t
+  assign search_text = 'content.search' | t
+  assign search_placeholder = 'content.search_input_placeholder' | t
+
+  assign input_id = 'SearchBoxInput-' | append: section.id | append: '-' | append: block.id
+  assign form_id = 'SearchBoxForm-' | append: section.id | append: '-' | append: block.id
+  assign background_opacity = block_settings.background_transparency | times: 0.01
+%}
+
+<search-box-block
+  class="search-box-block spacing-style"
+  style="
+    --search-box-width-desktop: {{ desktop_width }};
+    --search-box-width-mobile: {{ mobile_width }};
+    --search-box-background-opacity: {{ background_opacity }};
+    {% render 'spacing-style', settings: block_settings %}
+  "
+  {{ block.shopify_attributes }}
+>
+  <div class="search-box">
+    <form
+      id="{{ form_id }}"
+      class="search-box__form"
+      action="{{ routes.search_url }}"
+      method="get"
+      role="search"
+      aria-label="{{ search_text | escape }}"
+      data-search-box-form
+    >
+      <div class="search-box__input-group search-box__input-group--integrated">
+        <span class="search-box__icon" aria-hidden="true">
+          {{ 'icon-search.svg' | inline_asset_content }}
+        </span>
+
+        <label class="visually-hidden" for="{{ input_id }}">
+          {{ search_label }}
+        </label>
+
+        <input
+          id="{{ input_id }}"
+          class="search-box__input search-input"
+          type="search"
+          name="q"
+          value=""
+          placeholder="{{ search_placeholder | escape }}"
+          autocomplete="off"
+          autocorrect="off"
+          autocapitalize="off"
+          spellcheck="false"
+          enterkeyhint="search"
+          aria-label="{{ search_label | escape }}"
+          data-search-box-input
+        >
+      </div>
+    </form>
+  </div>
+</search-box-block>
+
+{% stylesheet %}
+  .search-box-block {
+    display: block;
+    width: var(--search-box-width-desktop);
+    max-width: 100%;
+    min-width: 0;
+  }
+
+  .search-box,
+  .search-box__form,
+  .search-box__input-group {
+    width: 100%;
+    min-width: 0;
+  }
+
+  .search-box {
+    border: var(--style-border-width) solid var(--color-white);
+    border-radius: 100px;
+    background-color: rgb(0 0 0 / var(--search-box-background-opacity));
+  }
+
+  .search-box__input-group,
+  .search-box__icon {
+    display: flex;
+    align-items: center;
+  }
+
+  .search-box__input-group {
+    flex-wrap: nowrap;
+    gap: 0;
+    min-inline-size: 0;
+    border: 0;
+    background-color: transparent;
+    box-shadow: none;
+  }
+
+  .search-box__icon {
+    justify-content: center;
+    flex: 0 0 auto;
+    inline-size: max(44px, var(--minimum-touch-target));
+    block-size: max(44px, var(--minimum-touch-target));
+    color: rgb(var(--color-foreground-rgb));
+    pointer-events: none;
+  }
+
+  .search-box__icon > svg {
+    width: 22px;
+    height: 22px;
+  }
+
+  .search-box .search-box__input.search-input {
+    flex: 1 1 auto;
+    min-width: 0;
+    width: auto;
+    border: 0;
+    border-radius: 0;
+    background: transparent;
+    box-shadow: none;
+    color: rgb(var(--color-foreground-rgb));
+    padding-block: var(--padding-lg);
+    padding-inline: 0 var(--padding-xs);
+    white-space: nowrap;
+  }
+
+  .search-box__input::placeholder {
+    color: rgb(var(--color-foreground-rgb) / var(--opacity-70));
+  }
+
+  .search-box__input[type='search']::-webkit-search-decoration,
+  .search-box__input[type='search']::-webkit-search-cancel-button,
+  .search-box__input[type='search']::-webkit-search-results-button,
+  .search-box__input[type='search']::-webkit-search-results-decoration {
+    display: none;
+  }
+
+  @media screen and (max-width: 749px) {
+    .search-box-block {
+      width: var(--search-box-width-mobile);
+    }
+  }
+{% endstylesheet %}
+
+{% javascript %}
+  /**
+   * @typedef {HTMLElement & {
+   *   showDialog?: () => void
+   * }} SearchModalElement
+   */
+
+  /**
+   * @typedef {HTMLElement & {
+   *   search?: (event?: { inputType?: string }) => void
+   * }} PredictiveSearchElement
+   */
+
+  if (!customElements.get('search-box-block')) {
+    customElements.define(
+      'search-box-block',
+      class SearchBoxBlock extends HTMLElement {
+        connectedCallback() {
+          if (this.abortController) return;
+
+          /** @type {HTMLFormElement | null} */
+          const form = this.querySelector('[data-search-box-form]');
+          /** @type {HTMLInputElement | null} */
+          const searchInput = this.querySelector('[data-search-box-input]');
+
+          if (!form || !searchInput) return;
+
+          this.form = form;
+          this.searchInput = searchInput;
+          this.abortController = new AbortController();
+
+          const { signal } = this.abortController;
+
+          this.searchInput.addEventListener('beforeinput', this.handleBeforeInput, { signal });
+          this.searchInput.addEventListener('paste', this.handlePaste, { signal });
+          this.form.addEventListener('submit', this.handleSubmit, { signal });
+        }
+
+        disconnectedCallback() {
+          this.abortController?.abort();
+          this.abortController = null;
+        }
+
+        /**
+         * @param {InputEvent} event
+         */
+        handleBeforeInput = (event) => {
+          if (event.isComposing) return;
+
+          let value = '';
+
+          switch (event.inputType) {
+            case 'insertText':
+            case 'insertReplacementText':
+              value = event.data || '';
+              break;
+            default:
+              return;
+          }
+
+          if (!value) return;
+
+          event.preventDefault();
+          this.openSearchModal(value);
+        };
+
+        /**
+         * @param {ClipboardEvent} event
+         */
+        handlePaste = (event) => {
+          const value = event.clipboardData?.getData('text/plain') || '';
+
+          if (!value) return;
+
+          event.preventDefault();
+          this.openSearchModal(value);
+        };
+
+        /**
+         * @param {SubmitEvent} event
+         */
+        handleSubmit = (event) => {
+          event.preventDefault();
+          this.openSearchModal(this.searchInput?.value || '');
+        };
+
+        /**
+         * @param {string} [value]
+         */
+        openSearchModal(value = '') {
+          const query = value ?? '';
+
+          /** @type {SearchModalElement | null} */
+          const searchModal = document.getElementById('search-modal');
+          /** @type {HTMLInputElement | null} */
+          const modalInput = searchModal?.querySelector('input.search-input[name="q"]') || null;
+          /** @type {PredictiveSearchElement | null} */
+          const predictiveSearch = searchModal?.querySelector('predictive-search-component') || null;
+          /** @type {HTMLButtonElement | null} */
+          const modalResetButton = searchModal?.querySelector('.predictive-search__reset-button') || null;
+
+          if (this.searchInput) {
+            this.searchInput.value = '';
+          }
+
+          if (!searchModal || !modalInput) return;
+
+          if (typeof searchModal.showDialog === 'function') {
+            searchModal.showDialog();
+          } else {
+            /** @type {HTMLDialogElement | null} */
+            const dialog = searchModal.querySelector('dialog');
+
+            if (dialog && !dialog.open && typeof dialog.showModal === 'function') {
+              dialog.showModal();
+            }
+          }
+
+          requestAnimationFrame(() => {
+            requestAnimationFrame(() => {
+              modalInput.value = query;
+
+              if (modalResetButton) {
+                modalResetButton.hidden = query.length === 0;
+              }
+
+              modalInput.focus();
+
+              try {
+                modalInput.setSelectionRange(query.length, query.length);
+              } catch (_) {
+                /* no-op */
+              }
+
+              try {
+                modalInput.dispatchEvent(
+                  new InputEvent('input', {
+                    bubbles: true,
+                    inputType: query ? 'insertText' : 'insertReplacementText',
+                    data: query || null,
+                  })
+                );
+              } catch (_) {
+                if (predictiveSearch && typeof predictiveSearch.search === 'function') {
+                  predictiveSearch.search({
+                    inputType: query ? 'insertText' : 'insertReplacementText',
+                  });
+                }
+              }
+            });
+          });
+        }
+      }
+    );
+  }
+{% endjavascript %}
+
+{% schema %}
+{
+  "name": "Search box",
+  "tag": null,
+  "settings": [
+    {
+      "type": "header",
+      "content": "Desktop width"
+    },
+    {
+      "type": "select",
+      "id": "desktop_width",
+      "label": "Desktop width",
+      "options": [
+        {
+          "value": "fill",
+          "label": "Fill width"
+        },
+        {
+          "value": "custom",
+          "label": "Custom"
+        }
+      ],
+      "default": "custom"
+    },
+    {
+      "type": "range",
+      "id": "desktop_custom_width",
+      "label": "Desktop custom width",
+      "min": 20,
+      "max": 100,
+      "step": 1,
+      "unit": "%",
+      "default": 60,
+      "visible_if": "{{ block.settings.desktop_width == 'custom' }}"
+    },
+    {
+      "type": "header",
+      "content": "Mobile width"
+    },
+    {
+      "type": "select",
+      "id": "mobile_width",
+      "label": "Mobile width",
+      "options": [
+        {
+          "value": "fill",
+          "label": "Fill width"
+        },
+        {
+          "value": "custom",
+          "label": "Custom"
+        }
+      ],
+      "default": "fill"
+    },
+    {
+      "type": "range",
+      "id": "mobile_custom_width",
+      "label": "Mobile custom width",
+      "min": 20,
+      "max": 100,
+      "step": 1,
+      "unit": "%",
+      "default": 100,
+      "visible_if": "{{ block.settings.mobile_width == 'custom' }}"
+    },
+    {
+      "type": "range",
+      "id": "background_transparency",
+      "label": "Background transparency",
+      "min": 0,
+      "max": 100,
+      "step": 1,
+      "unit": "%",
+      "default": 50
+    },
+    {
+      "type": "header",
+      "content": "Padding"
+    },
+    {
+      "type": "range",
+      "id": "padding-block-start",
+      "label": "Top",
+      "min": 0,
+      "max": 100,
+      "step": 1,
+      "unit": "px",
+      "default": 0
+    },
+    {
+      "type": "range",
+      "id": "padding-block-end",
+      "label": "Bottom",
+      "min": 0,
+      "max": 100,
+      "step": 1,
+      "unit": "px",
+      "default": 0
+    },
+    {
+      "type": "range",
+      "id": "padding-inline-start",
+      "label": "Left",
+      "min": 0,
+      "max": 100,
+      "step": 1,
+      "unit": "px",
+      "default": 0
+    },
+    {
+      "type": "range",
+      "id": "padding-inline-end",
+      "label": "Right",
+      "min": 0,
+      "max": 100,
+      "step": 1,
+      "unit": "px",
+      "default": 0
+    }
+  ],
+  "presets": [
+    {
+      "name": "Search box",
+      "category": "Forms"
+    }
+  ]
+}
+{% endschema %}
