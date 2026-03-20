@@ -38,25 +38,18 @@
           },
           "blocks": {}
         },
-        "button_H9gpTf": {
-          "type": "button",
-          "name": "t:names.button",
+        "search_box_F4JgK5": {
+          "type": "search-box",
+          "name": "Search box",
           "settings": {
-            "label": "Explore our top picks",
-            "link": "shopify://collections/gammas-top-picks",
-            "open_in_new_tab": false,
-            "style_class": "button-secondary",
-            "width": "fit-content",
-            "custom_width": 100,
-            "width_mobile": "fit-content",
-            "custom_width_mobile": 100
+            "padding-block-start": 24,
           },
-          "blocks": {}
+          "blocks": {},
         }
       },
       "block_order": [
         "text_YLPk4p",
-        "button_H9gpTf"
+        "search_box_F4JgK5"
       ],
       "name": "t:names.hero",
       "settings": {
