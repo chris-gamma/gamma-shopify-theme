@@ -19,6 +19,19 @@
 
     {% content_for 'block', id: 'heading', type: '_heading', text: heading_text %}
     {% content_for 'block', id: 'search', type: '_search-input' %}
+
+    {% if search.performed and search.terms != blank %}
+      <div class="spacing-style">
+        <a
+          class="button-secondary"
+          href="https://www.locationgamma.com/{% if request.locale.iso_code == 'fr' %}fr/{% endif %}?post_type=gamma_product&s={{ search.terms | url_encode }}"
+          target="_blank"
+          rel="noopener noreferrer"
+        >
+          {{ 'content.rental_search_link' | t }}
+        </a>
+      </div>
+    {% endif %}
   </div>
 </div>
 
