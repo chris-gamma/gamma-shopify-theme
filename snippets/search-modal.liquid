@@ -35,6 +35,10 @@
       data-testid="{{ 'search-component--modal' }}"
       role="search"
       aria-label="{{ 'content.search_input_label' | t }}"
+      data-legacy-base-uri="https://www.locationgamma.com/{% if request.locale.iso_code == 'fr' %}fr/{% endif %}"
+      data-legacy-header-title="{{ 'content.rental_search_header' | t }}"
+      data-legacy-view-more-text="{{ 'actions.show_more' | t }}"
+      data-legacy-per-page="4"
     >
       <form
         action="{{ routes.search_url }}"
