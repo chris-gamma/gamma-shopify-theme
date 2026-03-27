@@ -331,6 +331,7 @@
     "google_maps_directions": "Google",
     "apple_maps_directions": "Apple",
     "rental_search_header": "Rentals",
+    "rental_search_link": "Search for rentals"
   },
   "fields": {
     // Separates min and max values in price range filter
