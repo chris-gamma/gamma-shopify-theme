@@ -4,6 +4,7 @@ import { sectionRenderer } from '@theme/section-renderer';
 import { morph } from '@theme/morph';
 import { RecentlyViewed } from '@theme/recently-viewed-products';
 import { DialogCloseEvent, DialogOpenEvent, DialogComponent } from '@theme/dialog';
+import { LEGACY_RENTALS_ENABLED, fetchLegacyRentals, DEFAULT_LEGACY_API_BASE_URI } from './predictive-search-legacy.js';
 
 /**
  * A custom element that allows the user to search for resources available on the store.
@@ -29,6 +30,13 @@ class PredictiveSearchComponent extends Component {
   #activeFetch = null;
 
   #emptyStateLoaded = false;
+
+  #legacyRequestToken = 0;
+
+  /**
+   * @type {AbortController | null}
+   */
+  #legacyAbortController = null;
 
   /**
    * Get the dialog component.
@@ -85,6 +93,10 @@ class PredictiveSearchComponent extends Component {
   disconnectedCallback() {
     super.disconnectedCallback();
     this.#controller.abort();
+    if (this.#legacyAbortController) {
+      this.#legacyAbortController.abort();
+      this.#legacyAbortController = null;
+    }
   }
 
   /**
@@ -306,6 +318,28 @@ class PredictiveSearchComponent extends Component {
     });
   }
 
+  #toggleViewAllForLegacyOnly() {
+    const viewAllButton = this.querySelector('.predictive-search__search-button');
+    if (!(viewAllButton instanceof HTMLElement)) return;
+
+    const { predictiveSearchResults } = this.refs;
+    const root =
+      predictiveSearchResults.querySelector('.predictive-search-results__inner') ||
+      predictiveSearchResults;
+
+    const legacyWrapper = root.querySelector('[data-legacy-rentals="true"]');
+    const hasLegacy =
+      legacyWrapper instanceof HTMLElement &&
+      legacyWrapper.querySelectorAll('.predictive-search-results__card').length > 0;
+
+    const hasNonLegacy =
+      Array.from(root.querySelectorAll('.predictive-search-results__card')).filter(
+        (card) => !card.closest('[data-legacy-rentals="true"]')
+      ).length > 0;
+
+    viewAllButton.hidden = hasLegacy && !hasNonLegacy;
+  }
+
   /**
    * Fetch search results using the section renderer and update the results container.
    * @param {string} searchTerm - The term to search for
@@ -331,6 +365,8 @@ class PredictiveSearchComponent extends Component {
         morph(predictiveSearchResults, resultsMarkup);
 
         this.#resetScrollPositions();
+        this.#toggleViewAllForLegacyOnly();
+        this.#updateLegacyRentals(searchTerm);
       })
       .catch((error) => {
         if (abortController.signal.aborted) return;
@@ -376,9 +412,204 @@ class PredictiveSearchComponent extends Component {
     return abortController;
   }
 
+  /**
+   * @param {string} searchTerm
+   */
+  #updateLegacyRentals(searchTerm) {
+    if (!LEGACY_RENTALS_ENABLED) return;
+
+    const trimmed = searchTerm.trim();
+    if (!trimmed || trimmed.length < 3) return;
+
+    const { predictiveSearchResults } = this.refs;
+    if (!predictiveSearchResults) return;
+
+    const currentToken = ++this.#legacyRequestToken;
+    const baseUri = this.dataset.legacyBaseUri;
+
+    const parsedMaxResults = parseInt(this.dataset.legacyPerPage || '', 10);
+    const perPage = parsedMaxResults > 0 ? parsedMaxResults : 10;
+
+    if (this.#legacyAbortController) {
+      this.#legacyAbortController.abort();
+    }
+
+    const controller = new AbortController();
+    this.#legacyAbortController = controller;
+
+    fetchLegacyRentals(trimmed, baseUri, controller.signal, perPage)
+      .then((legacyResults) => {
+        if (!legacyResults) {
+          this.#toggleViewAllForLegacyOnly();
+          return;
+        }
+        if (controller.signal.aborted) return;
+        if (currentToken !== this.#legacyRequestToken) return;
+
+        this.#renderLegacyRentals(legacyResults, trimmed);
+        this.#toggleViewAllForLegacyOnly();
+      })
+      .catch(() => {
+        if (controller.signal.aborted) return;
+        this.#toggleViewAllForLegacyOnly();
+        // ignore legacy API errors
+      });
+  }
+
+  /**
+   * @param {{ resources: { results: { rentals: any; }; }; }} legacyResults
+   * @param {any} searchTerm
+   */
+  #renderLegacyRentals(legacyResults, searchTerm) {
+    const { predictiveSearchResults } = this.refs;
+    if (!predictiveSearchResults) return;
+
+    const root =
+      predictiveSearchResults.querySelector('.predictive-search-results__inner') ||
+      predictiveSearchResults;
+
+    const existing = root.querySelector('[data-legacy-rentals="true"]');
+    if (existing && existing.parentNode) {
+      existing.parentNode.removeChild(existing);
+    }
+
+    const rentals =
+      legacyResults &&
+      legacyResults.resources &&
+      legacyResults.resources.results &&
+      Array.isArray(legacyResults.resources.results.rentals)
+        ? legacyResults.resources.results.rentals
+        : [];
+
+    if (!rentals.length) {
+      return;
+    }
+
+    const headerTitleText = this.dataset.legacyHeaderTitle || 'Locations';
+
+    const noResultsEl = root.querySelector('.predictive-search-results__no-results');
+    if (noResultsEl instanceof HTMLElement) {
+      noResultsEl.classList.add('removing');
+      onAnimationEnd(noResultsEl, () => {
+        if (noResultsEl.parentNode) {
+          noResultsEl.parentNode.removeChild(noResultsEl);
+        }
+      });
+    }
+
+    const wrapper = document.createElement('div');
+    wrapper.className = 'predictive-search-results__products';
+    wrapper.setAttribute('data-legacy-rentals', 'true');
+
+    const header = document.createElement('h4');
+    header.className = 'predictive-search-results__title';
+    header.textContent = headerTitleText;
+
+    const viewMoreText = this.dataset.legacyViewMoreText || '';
+    if (viewMoreText) {
+      const viewMoreLink = document.createElement('a');
+      viewMoreLink.className = 'link button-unstyled';
+      viewMoreLink.textContent = viewMoreText;
+      viewMoreLink.target = '_blank';
+      viewMoreLink.rel = 'noopener noreferrer';
+
+      try {
+        const url = new URL(this.dataset.legacyBaseUri || DEFAULT_LEGACY_API_BASE_URI);
+        url.searchParams.set('post_type', 'gamma_product');
+        url.searchParams.set('s', searchTerm || '');
+        viewMoreLink.href = url.toString();
+      } catch (_error) {
+        viewMoreLink.href = '#';
+      }
+
+      header.appendChild(viewMoreLink);
+    }
+
+    wrapper.appendChild(header);
+
+    const list = document.createElement('ul');
+    list.className =
+      'predictive-search-results__list predictive-search-results__wrapper-products list-unstyled';
+    list.setAttribute('role', 'listbox');
+    list.setAttribute('aria-label', headerTitleText);
+    wrapper.appendChild(list);
+
+    rentals.forEach((/** @type {{ link: string; title: string | null; image: { url: string; alt: any; }; }} */ item) => {
+      if (!item || !item.link || !item.title) return;
+
+      const card = document.createElement('li');
+      card.className =
+        'predictive-search-results__card predictive-search-results__card--product predictive-search-results__card--rental';
+      card.setAttribute('data-resource-type', 'rental');
+      card.setAttribute('role', 'option');
+
+      const cardInner = document.createElement('div');
+      cardInner.className = 'resource-card';
+      card.appendChild(cardInner);
+
+      const cardLink = document.createElement('a');
+      cardLink.className = 'resource-card__link';
+      cardLink.href = item.link;
+      cardLink.target = '_blank';
+      cardLink.rel = 'noopener noreferrer';
+      cardInner.appendChild(cardLink);
+
+      const media = document.createElement('div');
+      media.className = 'resource-card__media';
+      media.style.backgroundColor = '#ffffff';
+      media.style.setProperty('--resource-card-aspect-ratio', '4 / 5');
+      cardInner.appendChild(media);
+
+      if (item.image && item.image.url) {
+        const img = document.createElement('img');
+        img.className = 'resource-card__image';
+        img.src = item.image.url;
+        img.alt = item.image.alt || item.title;
+        img.loading = 'lazy';
+        img.style.objectFit = 'contain';
+        media.appendChild(img);
+      }
+
+      const content = document.createElement('div');
+      content.className = 'resource-card__content';
+      cardInner.appendChild(content);
+
+      const title = document.createElement('p');
+      title.className = 'resource-card__title paragraph';
+      title.textContent = item.title;
+      content.appendChild(title);
+
+      list.appendChild(card);
+    });
+
+    const productsSection = root.querySelector('#predictive-search-products');
+    if (productsSection && productsSection.parentNode) {
+      productsSection.parentNode.insertBefore(wrapper, productsSection);
+    } else {
+      const firstResultsBlock = root.querySelector(
+        '#predictive-search-products, ' +
+          '.predictive-search-results__wrapper-products, ' +
+          '.predictive-search-results__wrapper-queries, ' +
+          '.predictive-search-results__list'
+      );
+
+      if (firstResultsBlock && firstResultsBlock.parentNode) {
+        firstResultsBlock.parentNode.insertBefore(wrapper, firstResultsBlock);
+      } else {
+        root.appendChild(wrapper);
+      }
+    }
+  }
+
   #resetSearch = async () => {
     const { predictiveSearchResults, searchInput } = this.refs;
     const emptySectionId = 'predictive-search-empty';
+
+    this.#legacyRequestToken += 1;
+    if (this.#legacyAbortController) {
+      this.#legacyAbortController.abort();
+      this.#legacyAbortController = null;
+    }
 
     this.#currentIndex = -1;
     searchInput.value = '';
@@ -422,6 +653,7 @@ class PredictiveSearchComponent extends Component {
 
     morph(predictiveSearchResults, parsedEmptySectionMarkup);
     this.#resetScrollPositions();
+    this.#toggleViewAllForLegacyOnly();
   };
 }
 

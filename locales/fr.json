@@ -297,7 +297,8 @@
     "view_map": "Voir carte",
     "disable_map": "Désactiver les cartes",
     "google_maps_directions": "Google",
-    "apple_maps_directions": "Apple"
+    "apple_maps_directions": "Apple",
+    "rental_search_header": "Locations",
   },
   "gift_cards": {
     "issued": {
