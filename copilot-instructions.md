@@ -1,0 +1,1 @@
+/home/chris/shopify/gamma-theme/gamma-theme/AGENTS.md
