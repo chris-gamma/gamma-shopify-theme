@@ -1,1 +1,41 @@
+# =============================================================================
+# .gitattributes — Gamma Shopify Theme
+# =============================================================================
+
+# Normalize all tracked text files to LF on commit.
+# This keeps line endings consistent across Linux, macOS, and Windows.
+* text=auto eol=lf
+
+# Tell GitHub that *.json files in this repo use JSON-with-comments (JSONC)
+# syntax. This keeps language classification stable for theme JSON files.
 *.json linguist-language=jsonc
+
+# Prevent repository infrastructure from appearing in git archive exports
+# (e.g., if a tarball of the theme is ever generated for distribution).
+.github/             export-ignore
+.gitignore           export-ignore
+.gitattributes       export-ignore
+.shopifyignore       export-ignore
+shopify.theme.toml   export-ignore
+pyrightconfig.json   export-ignore
+.theme-check.yml     export-ignore
+*.md                 export-ignore
+
+# ---------------------------------------------------------------------------
+# Merge driver: config/settings_data.json
+#
+# This file holds live merchant/store settings managed via the Shopify theme
+# editor. During Git merges and upstream Horizon syncs, the local (ours)
+# version should be preserved to avoid overwriting store-specific settings.
+#
+# IMPORTANT — this rule requires local Git configuration to activate:
+#   git config merge.ours.driver true
+#
+# Without that command, Git silently falls back to a standard merge on this
+# file. See the Setup section in README.md for the required one-time step.
+#
+# This rule protects the file during Git merges only. It does NOT affect
+# Shopify CLI push/pull behavior. config/settings_data.json remains fully
+# deployable and is not excluded from any CLI environment.
+# ---------------------------------------------------------------------------
+config/settings_data.json merge=ours

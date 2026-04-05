@@ -1,0 +1,13 @@
+{
+  "hooks": {
+    "PostToolUse": [
+      {
+        "type": "command",
+        "command": "python3 .github/scripts/copilot-hooks/log_theme_actions.py",
+        "windows": "py -3 .github/scripts/copilot-hooks/log_theme_actions.py",
+        "cwd": ".",
+        "timeout": 10
+      }
+    ]
+  }
+}

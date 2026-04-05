@@ -1,0 +1,5 @@
+# Exact locale files that may remain tracked in this repo.
+locales/en.default.json
+locales/en.default.schema.json
+locales/fr.json
+locales/fr.schema.json

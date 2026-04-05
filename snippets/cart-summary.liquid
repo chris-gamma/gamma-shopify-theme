@@ -236,10 +236,12 @@
   {%- liquid
     assign show_backorder_notice = false
     for item in cart.items
-      if item.tags contains 'special order'
-        assign show_backorder_notice = true
-        break
-      elsif item.variant.inventory_management == 'shopify' and item.variant.inventory_policy == 'continue' and item.variant.inventory_quantity <= 0
+      capture inventory_status
+        render 'inventory-status', product: item.product, variant: item.variant
+      endcapture
+      assign inventory_status = inventory_status | strip
+
+      if inventory_status != blank
         assign show_backorder_notice = true
         break
       endif

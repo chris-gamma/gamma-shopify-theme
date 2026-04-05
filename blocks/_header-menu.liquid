@@ -1,6 +1,9 @@
 {%- doc -%}
   Renders a header menu block.
 
+  When the storefront locale is French and the `main-menu-fr` link list exists,
+  this block uses that menu instead of the configured menu setting.
+
   @param {string} [variant] - What version of the menu to render. Defaults to header menu.
   @param {string} [transparent] - Show a transparent menu
 {%- enddoc -%}
@@ -520,6 +523,11 @@
     &:hover {
       color: var(--menu-parent-active-font-color);
     }
+  }
+
+  .mega-menu__link--parent > span {
+    font-size: var(--menu-child-font-size);
+    font-weight: var(--font-accent--weight);
   }
 
   @media screen and (max-width: 989px) {

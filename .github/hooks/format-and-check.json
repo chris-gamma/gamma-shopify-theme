@@ -1,0 +1,13 @@
+{
+  "hooks": {
+    "PostToolUse": [
+      {
+        "type": "command",
+        "command": "python3 .github/scripts/copilot-hooks/format_and_check_theme_edits.py",
+        "windows": "py -3 .github/scripts/copilot-hooks/format_and_check_theme_edits.py",
+        "cwd": ".",
+        "timeout": 120
+      }
+    ]
+  }
+}

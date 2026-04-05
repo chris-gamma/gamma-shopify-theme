@@ -315,6 +315,7 @@ export async function fetchLegacyRentals(
   }
 
   var base = apiBaseUri || DEFAULT_LEGACY_API_BASE_URI;
+
   var cacheKey = base + '\n' + value + '\n' + perPage;
 
   if (cacheKey === lastLegacyQueryKey && lastLegacyQueryResult) {
@@ -347,7 +348,7 @@ export async function fetchLegacyRentals(
       // Keep this lightweight; only used when debugging.
       // eslint-disable-next-line no-console
       console.debug(
-        '[LegacyRentals] Fetch #%s for \"%s\" (%s)\n%s',
+        '[LegacyRentals] Fetch #%s for "%s" (%s)\n%s',
         legacyRequestCount,
         value,
         base,

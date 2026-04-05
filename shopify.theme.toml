@@ -1,2 +1,31 @@
+# =============================================================================
+# shopify.theme.toml — Gamma Shopify Theme
+#
+# Shopify CLI environment configuration. The default environment targets the
+# dev theme, so bare commands (e.g. shopify theme dev) are safe. Always pass
+# -e production explicitly when pushing to the live store.
+#
+# Theme IDs are Shopify numeric theme identifiers, not secrets. They are safe
+# to commit.
+#
+# config/settings_data.json is intentionally NOT excluded from any environment.
+# It is part of the deployed theme and must remain pushable. Git-merge
+# protection for this file is handled separately in .gitattributes.
+# =============================================================================
+
 [environments.default]
+# Bare CLI commands (no -e flag) target the dev theme. This makes the default
+# behaviour safe for day-to-day development.
 store = "location-gamma.myshopify.com"
+theme_id = "152420548781"
+
+[environments.production]
+# Live store theme — serves the production Gamma storefront.
+# Push to this environment only from a protected deployment branch.
+store = "location-gamma.myshopify.com"
+theme_id = "152421925037"
+
+[environments.dev]
+# Development / preview theme — safe for iterative development and testing.
+store = "location-gamma.myshopify.com"
+theme_id = "152420548781"

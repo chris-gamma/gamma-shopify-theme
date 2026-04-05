@@ -1,1 +1,11 @@
+# =============================================================================
+# .theme-check.yml — Gamma Shopify Theme
+#
+# Theme Check configuration. The theme root is the repo root (no build step).
+# Run via: shopify theme check --path .
+# Also run in CI: .github/workflows/upstream-sync-guardrails.yml
+# =============================================================================
+
 extends: theme-check:recommended
+root: .
+ignore: ['.cursor/rules/**']

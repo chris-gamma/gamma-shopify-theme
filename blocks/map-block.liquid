@@ -13,18 +13,15 @@
   {% content_for 'block', type: 'map-block' %}
 {% enddoc %}
 
-{% comment %}
-  Map view block
-{% endcomment %}
-
-{%- assign block_settings = block.settings -%}
-{%- assign map_src_url = '//umap.openstreetmap.fr/'
-  | append: request.locale.iso_code
-  | append: '/map/'
-  | append: block_settings.map_src
-  | append: '?scaleControl=false&amp;amp;miniMap=false&amp;amp;scrollWheelZoom=true&amp;amp;zoomControl=true&amp;amp;editMode=disabled&amp;amp;moreControl=false&amp;amp;searchControl=false&amp;amp;tilelayersControl=false&amp;amp;embedControl=false&amp;amp;datalayersControl=false&amp;amp;onLoadPanel=none&amp;amp;captionBar=false&amp;amp;captionMenus=false&amp;amp;homeControl=false&amp;amp;captionControl=false'
--%}
 {%- liquid
+  assign block_settings = block.settings
+  assign map_locale = 'en'
+  if request.locale.iso_code == 'fr' or request.locale.iso_code == 'fr-CA'
+    assign map_locale = 'fr'
+  endif
+
+  assign map_src_url = '//umap.openstreetmap.fr/' | append: map_locale | append: '/map/' | append: block_settings.map_src | append: '?scaleControl=false&amp;amp;miniMap=false&amp;amp;scrollWheelZoom=true&amp;amp;zoomControl=true&amp;amp;editMode=disabled&amp;amp;moreControl=false&amp;amp;searchControl=false&amp;amp;tilelayersControl=false&amp;amp;embedControl=false&amp;amp;datalayersControl=false&amp;amp;onLoadPanel=none&amp;amp;captionBar=false&amp;amp;captionMenus=false&amp;amp;homeControl=false&amp;amp;captionControl=false'
+
   if block_settings.placeholder_image != blank
     assign placeholder_image = block_settings.placeholder_image | image_url: width: block_settings.placeholder_image.width
   else
@@ -45,21 +42,22 @@
   style="--map-width: {{ block_settings.map_width }}px; --map-height: {{ block_settings.map_height }}px; --mobile-map-width: {{ block_settings.mobile_map_width }}px; --mobile-map-height: {{ block_settings.mobile_map_height }}px;"
   data-map-src="{{ map_src_url | escape }}"
   data-map-initialized="false"
+  {{ block.shopify_attributes }}
 >
   {%- if placeholder_image != blank -%}
     <button
       type="button"
       class="map-placeholder-button"
-      aria-label="{{ 'content.view_map' | t | default: 'Voir carte' }}"
+      aria-label="{{ 'content.view_map' | t }}"
       style="--placeholder-image: url({{ placeholder_image }}); --mobile-placeholder-image: url({{ mobile_placeholder_image }});"
     ></button>
   {%- else -%}
     <button
       type="button"
       class="button-secondary map-placeholder-button map-placeholder-fallback"
-      aria-label="{{ 'content.view_map' | t | default: 'Voir carte' }}"
+      aria-label="{{ 'content.view_map' | t }}"
     >
-      {{ 'content.view_map' | t | default: 'Voir carte' }}
+      {{ 'content.view_map' | t }}
     </button>
   {%- endif -%}
 
@@ -68,7 +66,7 @@
   <button
     type="button"
     class="map-disable-button"
-    aria-label="{{ 'content.disable_map' | t | default: 'Désactiver les cartes' }}"
+    aria-label="{{ 'content.disable_map' | t }}"
   >
     {{- 'icon-disable-map.svg' | inline_asset_content -}}
   </button>
@@ -85,13 +83,13 @@
 {%- if block_settings.show_directions -%}
   <div class="map-directions">
     {%- if block_settings.google_maps_directions -%}
-      <a href="{{ block_settings.google_maps_directions }}" target="_blank" class="link map-directions-link">
+      <a href="{{ block_settings.google_maps_directions }}" target="_blank" rel="noopener noreferrer" class="link map-directions-link">
         {{- 'icon-directions.svg' | inline_asset_content -}}
         {{ 'content.google_maps_directions' | t }}
       </a>
     {%- endif -%}
     {%- if block_settings.apple_maps_directions -%}
-      <a href="{{ block_settings.apple_maps_directions }}" target="_blank" class="link map-directions-link">
+      <a href="{{ block_settings.apple_maps_directions }}" target="_blank" rel="noopener noreferrer" class="link map-directions-link">
         {{- 'icon-directions.svg' | inline_asset_content -}}
         {{ 'content.apple_maps_directions' | t }}
       </a>
@@ -152,6 +150,26 @@
     display: flex;
   }
 
+  .loading-indicator {
+    position: absolute;
+    inset: 0;
+    display: none;
+    align-items: center;
+    justify-content: center;
+    z-index: 2;
+    background: rgba(255, 255, 255, 0.3);
+  }
+
+  .loading-indicator::before {
+    content: '';
+    width: 28px;
+    height: 28px;
+    border-radius: 50%;
+    border: 3px solid rgba(0, 0, 0, 0.2);
+    border-top-color: #000;
+    animation: loading-spin 0.8s linear infinite;
+  }
+
   .map-disable-button {
     position: absolute;
     top: 5px;
@@ -202,6 +220,12 @@
 
     .map-placeholder-button {
       background-image: var(--mobile-placeholder-image);
+    }
+  }
+
+  @keyframes loading-spin {
+    to {
+      transform: rotate(360deg);
     }
   }
 {% endstylesheet %}

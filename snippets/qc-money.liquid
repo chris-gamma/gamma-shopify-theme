@@ -1,19 +1,19 @@
 {%- doc -%}
-  This snippet is used to render a localized price.
+  Renders Gamma's localized money output, preserving the custom English CAD formatting.
 
   @param {number} price - The price to render
   @param {boolean} [with_currency] - Render the price with the currency code
 {%- enddoc -%}
 
 {%- liquid
-  if request.locale.iso_code == 'fr'
+  if request.locale.iso_code == 'fr' or request.locale.iso_code == 'fr-CA'
     if with_currency
       echo price | money_with_currency
     else
       echo price | money
     endif
   else
-    # Format the currency for English readers if locale is not 'fr' (we only have 2)
+    # Format the currency for English readers when the locale is not French.
     echo '$'
     echo price | money_without_currency | replace: ',', '.' | replace: ' ', ','
     if with_currency

@@ -66,7 +66,10 @@
   endif
 -%}
 
-<div class="hours-table-wrapper">
+<div
+  class="hours-table-wrapper"
+  {{ block.shopify_attributes }}
+>
   <table class="hours-table {% if block_settings.block_size == 'mini' %}hours-table-mini{% endif %}">
     {%- if current_store_hours.show_holiday_hours_notice and current_store_hours.holiday_hours_notice != blank -%}
       <caption class="holiday-hours-notice {% if block_settings.block_size == 'mini' %}hours-table-mini{% endif %}">
