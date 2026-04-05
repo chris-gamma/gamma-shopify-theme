@@ -79,7 +79,7 @@
           >
             {{ 'content.cart_total' | t }}
             {%- capture cart_total_price -%}
-              {%- render 'qc-money', price: cart_total.price, with_currency: true -%}
+              {%- render 'qc-money', price: cart.total_price, with_currency: true -%}
             {%- endcapture -%}
             <span>{{ cart_total_price }}</span>
           </caption>
