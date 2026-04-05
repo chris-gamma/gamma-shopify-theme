@@ -1,0 +1,12 @@
+{% doc %}
+  Renders a rich text custom-data field using the metafield_tag filter.
+  Use this for metafield rich text fields to preserve formatting, links, and structures.
+
+  @param {object} field - A rich text field from a metaobject
+
+  @example
+  {% render 'scs-richtext', field: metaobject.banner_text %}
+{% enddoc %}
+{% if field != blank %}
+  {{ field | metafield_tag }}
+{% endif %}

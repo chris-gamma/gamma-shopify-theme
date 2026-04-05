@@ -162,12 +162,22 @@
                     "icon_height": 30
                   },
                   "blocks": {}
+                },
+                "scs-banner-j5ktT3": {
+                  "type": "scs-product-sale-banner",
+                  "settings": {
+                    "show_image": true,
+                    "image_height": 88,
+                    "compact_spacing": false
+                  },
+                  "blocks": {}
                 }
               },
               "block_order": [
                 "text_xpVMaM",
                 "price_tVjtKg",
-                "product_system_badges_JfD3Kf"
+                "product_system_badges_JfD3Kf",
+                "scs-banner-j5ktT3"
               ]
             },
             "variant_picker_R3rGDr": {
@@ -287,9 +297,7 @@
                       "blocks": {}
                     }
                   },
-                  "block_order": [
-                    "custom_liquid_bnznhp"
-                  ]
+                  "block_order": ["custom_liquid_bnznhp"]
                 },
                 "accordion_row_dynamic_4tj6gk": {
                   "type": "_accordion-row-dynamic",
@@ -310,9 +318,7 @@
                       "blocks": {}
                     }
                   },
-                  "block_order": [
-                    "custom_liquid_aXhjLC"
-                  ]
+                  "block_order": ["custom_liquid_aXhjLC"]
                 },
                 "accordion_row_dynamic_CJp3JR": {
                   "type": "_accordion-row-dynamic",
@@ -333,9 +339,7 @@
                       "blocks": {}
                     }
                   },
-                  "block_order": [
-                    "custom_liquid_WQmjra"
-                  ]
+                  "block_order": ["custom_liquid_WQmjra"]
                 },
                 "accordion_row_dynamic_yeqHPy": {
                   "type": "_accordion-row-dynamic",
@@ -356,9 +360,7 @@
                       "blocks": {}
                     }
                   },
-                  "block_order": [
-                    "custom_liquid_QMCBdf"
-                  ]
+                  "block_order": ["custom_liquid_QMCBdf"]
                 },
                 "accordion_row_dynamic_kYLXxd": {
                   "type": "_accordion-row-dynamic",
@@ -379,9 +381,7 @@
                       "blocks": {}
                     }
                   },
-                  "block_order": [
-                    "custom_liquid_pRka6a"
-                  ]
+                  "block_order": ["custom_liquid_pRka6a"]
                 },
                 "accordion_row_dynamic_YfaL4M": {
                   "type": "_accordion-row-dynamic",
@@ -402,9 +402,7 @@
                       "blocks": {}
                     }
                   },
-                  "block_order": [
-                    "custom_liquid_TWEqBD"
-                  ]
+                  "block_order": ["custom_liquid_TWEqBD"]
                 },
                 "accordion_row_jhkfRM": {
                   "type": "_accordion-row-dynamic",
@@ -425,9 +423,7 @@
                       "blocks": {}
                     }
                   },
-                  "block_order": [
-                    "custom_liquid_DnkxTp"
-                  ]
+                  "block_order": ["custom_liquid_DnkxTp"]
                 },
                 "accordion_row_zi3qrq": {
                   "type": "_accordion-row-dynamic",
@@ -448,9 +444,7 @@
                       "blocks": {}
                     }
                   },
-                  "block_order": [
-                    "custom_liquid_jMEDDD"
-                  ]
+                  "block_order": ["custom_liquid_jMEDDD"]
                 }
               },
               "block_order": [
@@ -606,9 +600,7 @@
           ]
         }
       },
-      "block_order": [
-        "text_w7K9Gh"
-      ],
+      "block_order": ["text_w7K9Gh"],
       "name": "Complementary products",
       "settings": {
         "product": "{{ closest.product }}",
@@ -747,9 +739,7 @@
           ]
         }
       },
-      "block_order": [
-        "text_cbcgyb"
-      ],
+      "block_order": ["text_cbcgyb"],
       "name": "t:names.product_recommendations",
       "settings": {
         "product": "{{ closest.product }}",

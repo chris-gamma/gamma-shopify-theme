@@ -1216,5 +1216,38 @@
     "what_is_return_policy": "What is the return policy?",
     "when_will_order_arrive": "When will I get my order?",
     "where_are_products_made": "Where are your products manufactured?"
+  },
+  "scs": {
+    "banner_block": {
+      "name": "Sales banner",
+      "settings": {
+        "show_image": "Show image",
+        "image_height": "Image height",
+        "compact_spacing": "Use compact spacing"
+      }
+    },
+    "index_section": {
+      "name": "Sales index",
+      "settings": {
+        "heading": "Heading",
+        "body": "Body",
+        "campaigns_per_page": "Campaigns per page",
+        "show_ended_campaigns": "Show ended campaigns",
+        "color_scheme": "Color scheme",
+        "padding_top": "Top padding",
+        "padding_bottom": "Bottom padding"
+      }
+    },
+    "campaign_section": {
+      "name": "Sales campaign",
+      "settings": {
+        "show_image": "Show image",
+        "hero_image_height": "Hero image height",
+        "group_by_offer": "Group products by offer",
+        "color_scheme": "Color scheme",
+        "padding_top": "Top padding",
+        "padding_bottom": "Bottom padding"
+      }
+    }
   }
 }

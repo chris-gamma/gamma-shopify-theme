@@ -1,0 +1,157 @@
+{% doc %}
+  Resolves and renders the product campaign banner.
+
+  @param {product} product - The current product
+  @param {boolean} show_image - Whether the banner image should render
+  @param {number} image_height - Banner image height in pixels
+  @param {boolean} compact_spacing - Whether to use the compact spacing variant
+
+  @example
+  {% render 'scs-banner-content', product: product, show_image: true, image_height: 88, compact_spacing: false %}
+{% enddoc %}
+{% liquid
+  assign now_ts = 'now' | date: '%s' | plus: 0
+  assign winning_campaign = blank
+  assign winning_campaign_end_ts = 9999999999
+
+  for candidate_campaign in shop.metaobjects.sales_campaigns.values
+    assign campaign_start_ts = 0
+    assign campaign_end_ts = 0
+    assign campaign_is_active = false
+
+    if candidate_campaign.start_date != blank and candidate_campaign.start_date.value != blank
+      assign campaign_start_ts = candidate_campaign.start_date.value | date: '%s' | plus: 0
+    endif
+
+    if candidate_campaign.end_date != blank and candidate_campaign.end_date.value != blank
+      assign campaign_end_ts = candidate_campaign.end_date.value | date: '%s' | plus: 0
+      if campaign_end_ts > now_ts
+        if campaign_start_ts == 0 or campaign_start_ts <= now_ts
+          assign campaign_is_active = true
+        endif
+      endif
+    endif
+
+    if campaign_is_active == false
+      continue
+    endif
+
+    assign campaign_applies = false
+
+    if candidate_campaign.sale_collection != blank and candidate_campaign.sale_collection.value != blank
+      for product_collection in product.collections
+        if product_collection.id == candidate_campaign.sale_collection.value.id
+          assign campaign_applies = true
+          break
+        endif
+      endfor
+    endif
+
+    if campaign_applies == false
+      if candidate_campaign.offers != blank and candidate_campaign.offers.value != blank
+        for candidate_offer in candidate_campaign.offers.value
+          if candidate_offer.products != blank and candidate_offer.products.value != blank
+            for offered_product in candidate_offer.products.value
+              if offered_product.id == product.id
+                assign campaign_applies = true
+                break
+              endif
+            endfor
+          endif
+
+          if campaign_applies
+            break
+          endif
+        endfor
+      endif
+    endif
+
+    if campaign_applies
+      if campaign_end_ts < winning_campaign_end_ts
+        assign winning_campaign = candidate_campaign
+        assign winning_campaign_end_ts = campaign_end_ts
+      endif
+    endif
+  endfor
+
+  if winning_campaign != blank
+    assign matched_offer = blank
+
+    if winning_campaign.offers != blank and winning_campaign.offers.value != blank
+      for ordered_offer in winning_campaign.offers.value
+        assign ordered_offer_matches = false
+
+        if ordered_offer.products != blank and ordered_offer.products.value != blank
+          for ordered_offer_product in ordered_offer.products.value
+            if ordered_offer_product.id == product.id
+              assign ordered_offer_matches = true
+              break
+            endif
+          endfor
+        endif
+
+        if ordered_offer_matches
+          assign matched_offer = ordered_offer
+          break
+        endif
+      endfor
+    endif
+
+    assign campaign_root = routes.root_url
+    assign campaign_root_last_char = campaign_root | slice: -1
+    if campaign_root_last_char != '/'
+      assign campaign_root = campaign_root | append: '/'
+    endif
+    assign campaign_page_url = campaign_root | append: 'pages/promotions/' | append: winning_campaign.system.handle
+
+    assign banner_body_field = winning_campaign.banner_text
+    assign banner_image = blank
+    assign banner_image_url = campaign_page_url
+
+    if matched_offer != blank
+      if matched_offer.offer_description != blank
+        assign banner_body_field = matched_offer.offer_description
+
+        if matched_offer.offer_image != blank and matched_offer.offer_image.value != blank
+          assign banner_image = matched_offer.offer_image.value
+        endif
+
+        if matched_offer.offer_image_link != blank and matched_offer.offer_image_link.value != blank
+          assign banner_image_url = matched_offer.offer_image_link.value
+        elsif winning_campaign.sale_image_link != blank and winning_campaign.sale_image_link.value != blank
+          assign banner_image_url = winning_campaign.sale_image_link.value
+        endif
+      endif
+    endif
+  endif
+%}
+{% if winning_campaign != blank and banner_body_field != blank %}
+  <div class="scs-banner{% if compact_spacing %} scs-banner--compact{% endif %}" data-scs-banner>
+    {% if show_image and banner_image != blank %}
+      <div class="scs-banner__media-layout">
+        <div class="scs-banner__image-wrap">
+          {% if banner_image_url != blank %}
+            <a class="scs-banner__image-link" href="{{ banner_image_url }}">
+              {% render 'image', image: banner_image, height: image_height %}
+            </a>
+          {% else %}
+            <span class="scs-banner__image-placeholder">
+              {% render 'image', image: banner_image, height: image_height %}
+            </span>
+          {% endif %}
+        </div>
+        <div class="scs-banner__content">
+          <div class="scs-banner__body rte">
+            {% render 'scs-richtext', field: banner_body_field %}
+          </div>
+        </div>
+      </div>
+    {% else %}
+      <div class="scs-banner__content">
+        <div class="scs-banner__body rte">
+          {% render 'scs-richtext', field: banner_body_field %}
+        </div>
+      </div>
+    {% endif %}
+  </div>
+{% endif %}

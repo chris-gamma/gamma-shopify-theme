@@ -379,5 +379,25 @@
       "default_title": "Default Title",
       "sticky_add_to_cart": "Quick add to cart bar"
     }
+  },
+  "scs": {
+    "storefront": {
+      "banner": {
+      },
+      "index": {
+        "view_sale": "View sale"
+      },
+      "detail": {
+      },
+      "grouping": {
+        "other_deals": "Other deals"
+      },
+      "loading": {
+        "more_products": "Loading more products…"
+      },
+      "empty": {
+        "no_collection": "No sale collection is connected to this campaign"
+      }
+    }
   }
 }

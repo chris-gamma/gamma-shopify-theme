@@ -1,0 +1,77 @@
+{% doc %}
+  Renders a campaign card for the promotions landing page.
+
+  @param {metaobject} campaign - The campaign metaobject
+
+  @example
+  {% render 'scs-campaign-card', campaign: campaign %}
+{% enddoc %}
+{% liquid
+  assign campaign_root = routes.root_url
+  assign campaign_root_last_char = campaign_root | slice: -1
+  if campaign_root_last_char != '/'
+    assign campaign_root = campaign_root | append: '/'
+  endif
+  assign campaign_page_url = campaign_root | append: 'pages/promotions/' | append: campaign.system.handle
+
+  assign card_image = blank
+  if campaign.sale_image != blank and campaign.sale_image.value != blank
+    assign card_image = campaign.sale_image.value
+  endif
+
+  if card_image == blank
+    if campaign.offers != blank and campaign.offers.value != blank
+      for offer in campaign.offers.value
+        if offer.offer_image != blank and offer.offer_image.value != blank
+          assign card_image = offer.offer_image.value
+          break
+        endif
+      endfor
+    endif
+  endif
+%}
+<article class="scs-card scs-card--campaign" data-scs-campaign-card>
+  {% if card_image != blank %}
+    <a class="scs-card__media" href="{{ campaign_page_url }}">
+      {% render 'image', image: card_image, height: 280 %}
+    </a>
+  {% endif %}
+  <div class="scs-card__content">
+    <h2 class="scs-card__title">
+      <a href="{{ campaign_page_url }}">{{ campaign.sale_name.value }}</a>
+    </h2>
+    {% if campaign.sale_list_text != blank %}
+      <div class="scs-card__body rte">{% render 'scs-richtext', field: campaign.sale_list_text %}</div>
+    {% elsif campaign.banner_text != blank %}
+      <div class="scs-card__body rte">{% render 'scs-richtext', field: campaign.banner_text %}</div>
+    {% endif %}
+    <p class="scs-card__cta">
+      <a href="{{ campaign_page_url }}">{{ 'scs.storefront.index.view_sale' | t }}</a>
+    </p>
+  </div>
+</article>
+{% stylesheet %}
+  .scs-card--campaign {
+    transition: opacity 200ms ease-in-out;
+  }
+
+  .scs-card--campaign:hover {
+    opacity: 0.95;
+  }
+
+  .scs-card__media {
+    display: block;
+  }
+
+  .scs-card__media a {
+    display: block;
+  }
+
+  .scs-card__body :is(p, ul, ol) {
+    margin: 0 0 0.5rem;
+  }
+
+  .scs-card__body :is(p, ul, ol):last-child {
+    margin-bottom: 0;
+  }
+{% endstylesheet %}

@@ -1,0 +1,106 @@
+{% doc %}
+  Renders the product-level campaign banner.
+
+  @example
+  {% content_for 'block', type: 'scs-product-sale-banner', id: 'scs-product-sale-banner' %}
+{% enddoc %}
+{% render 'scs-banner-content',
+  product: product,
+  show_image: block.settings.show_image,
+  image_height: block.settings.image_height,
+  compact_spacing: block.settings.compact_spacing
+%}
+{% stylesheet %}
+  .scs-banner {
+    display: grid;
+    gap: 0.75rem;
+    padding: 0.875rem 1rem;
+    border: 1px solid rgba(0, 0, 0, 0.12);
+    border-radius: 0.75rem;
+    background: rgba(0, 0, 0, 0.02);
+  }
+
+  .scs-banner--compact {
+    padding: 0.75rem 0.875rem;
+  }
+
+  .scs-banner__media-layout {
+    display: grid;
+    grid-template-columns: auto minmax(0, 1fr);
+    gap: 0.875rem;
+    align-items: center;
+  }
+
+  .scs-banner__image-wrap {
+    display: block;
+    width: min(80px, 20vw);
+    max-width: 80px;
+    flex-shrink: 0;
+  }
+
+  .scs-banner__image-link,
+  .scs-banner__image-placeholder {
+    display: block;
+    border-radius: 0.5rem;
+    overflow: hidden;
+  }
+
+  .scs-banner__image-link img,
+  .scs-banner__image-placeholder img {
+    width: 100%;
+    height: auto;
+  }
+
+  .scs-banner__body :is(p, ul, ol) {
+    margin: 0;
+  }
+
+  .scs-banner__body :is(strong, em, a) {
+    color: inherit;
+  }
+
+  @media screen and (max-width: 749px) {
+    .scs-banner__media-layout {
+      gap: 0.75rem;
+    }
+
+    .scs-banner__image-wrap {
+      width: min(64px, 18vw);
+      max-width: 64px;
+    }
+  }
+{% endstylesheet %}
+{% schema %}
+{
+  "name": "t:scs.banner_block.name",
+  "settings": [
+    {
+      "type": "checkbox",
+      "id": "show_image",
+      "label": "t:scs.banner_block.settings.show_image",
+      "default": true
+    },
+    {
+      "type": "range",
+      "id": "image_height",
+      "label": "t:scs.banner_block.settings.image_height",
+      "min": 40,
+      "max": 220,
+      "step": 2,
+      "unit": "px",
+      "default": 88
+    },
+    {
+      "type": "checkbox",
+      "id": "compact_spacing",
+      "label": "t:scs.banner_block.settings.compact_spacing",
+      "default": false
+    }
+  ],
+  "presets": [
+    {
+      "name": "t:scs.banner_block.name"
+    }
+  ]
+}
+{% endschema %}

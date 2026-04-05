@@ -366,6 +366,24 @@
       "post": "Publier le commentaire",
       "success_moderated": "Commentaire publié, en attente de modération",
       "success": "Commentaire publié"
-    }
-  }
+    }  },
+  "scs": {
+    "storefront": {
+      "banner": {
+      },
+      "index": {
+        "view_sale": "Voir la promotion"
+      },
+      "detail": {
+      },
+      "grouping": {
+        "other_deals": "Autres promotions"
+      },
+      "loading": {
+        "more_products": "Chargement d’autres produits…"
+      },
+      "empty": {
+        "no_collection": "Aucune collection promotionnelle n’est liée à cette campagne"
+      }
+    }  }
 }

@@ -1,0 +1,608 @@
+{% liquid
+  assign campaign = metaobject
+  assign sale_collection = campaign.sale_collection.value
+  assign grouped_mode = section.settings.group_by_offer
+  assign products_per_page = 20
+
+  assign campaign_image = blank
+  assign campaign_image_url = blank
+  if campaign.sale_image != blank and campaign.sale_image.value != blank
+    assign campaign_image = campaign.sale_image.value
+  endif
+  if campaign.sale_image_link != blank and campaign.sale_image_link.value != blank
+    assign campaign_image_url = campaign.sale_image_link.value
+  endif
+
+  assign campaign_description = blank
+  if campaign.sale_list_text != blank
+    assign campaign_description = campaign.sale_list_text
+  elsif campaign.banner_text != blank
+    assign campaign_description = campaign.banner_text
+  endif
+
+  assign show_campaign_lead = false
+  if section.settings.show_image and campaign_image != blank
+    assign show_campaign_lead = true
+  endif
+  if campaign_description != blank
+    assign show_campaign_lead = true
+  endif
+%}
+<div class="section-background color-{{ section.settings.color_scheme }}"></div>
+
+<section
+  class="section section--page-width scs-campaign-header-section color-{{ section.settings.color_scheme }}"
+  style="--padding-block-start: {{ section.settings.padding-block-start }}px; --padding-block-end: {{ section.settings.padding-block-end }}px;"
+>
+  <div class="scs-campaign-header">
+    <h1 class="scs-campaign__title">{{ campaign.sale_name.value }}</h1>
+
+    {% if show_campaign_lead %}
+      <div class="scs-campaign__lead{% if campaign_image == blank or section.settings.show_image == false %} scs-campaign__lead--text-only{% endif %}">
+        {% if section.settings.show_image and campaign_image != blank %}
+          <div class="scs-campaign__image">
+            {% if campaign_image_url != blank %}
+              <a href="{{ campaign_image_url }}">
+                {% render 'image', image: campaign_image, height: section.settings.hero_image_height %}
+              </a>
+            {% else %}
+              {% render 'image', image: campaign_image, height: section.settings.hero_image_height %}
+            {% endif %}
+          </div>
+        {% endif %}
+        {% if campaign_description != blank %}
+          <div class="scs-campaign__body rte">
+            {% render 'scs-richtext', field: campaign_description %}
+          </div>
+        {% endif %}
+      </div>
+    {% endif %}
+  </div>
+</section>
+
+<div class="scs-campaign-content">
+  {% if sale_collection == blank %}
+    <div class="scs-empty">
+      <p>{{ 'scs.storefront.empty.no_collection' | t }}</p>
+    </div>
+  {% elsif sale_collection.products_count == 0 %}
+    <div class="scs-empty">
+      <p>{{ 'content.no_products_found' | t }}</p>
+    </div>
+  {% elsif grouped_mode %}
+
+    <section class="section section--page-width color-{{ section.settings.color_scheme }}">
+      <div class="scs-campaign-content__inner">
+
+    {%- comment -%}
+      Grouped mode: render each offer's products in its own section, then catch anything
+      unmatched in an "Other deals" group at the end.
+
+      Offer groups iterate offer.products.value directly, so all offer products appear
+      regardless of which page of the collection we're on.
+
+      IMPORTANT: content_for 'block' with closest.product must be inside a {% capture %}
+      block to render correctly. This matches main-collection.liquid and
+      main-collection-list.liquid. Variable assignments (seen_product_ids) inside capture
+      persist to the outer scope — only {% render %} creates variable isolation.
+
+      Cards use a shared block id ('product-card') so the merchant configures the card
+      layout once in the theme editor, same as the main collection page.
+    {%- endcomment -%}
+
+    {% capture product_card_size %}{% render 'util-product-grid-card-size', section: section %}{% endcapture %}
+    {% assign product_card_size = product_card_size | strip %}
+
+    {% style %}
+      @media screen and (min-width: 750px) {
+        .product-grid--{{ section.id }}:is(.product-grid--grid) {
+          --product-grid-columns-desktop: repeat(auto-fill, minmax({{ product_card_size }}, 1fr));
+        }
+      }
+    {% endstyle %}
+
+    {% assign seen_product_ids = '|' %}
+    {% assign rendered_offer_groups = 0 %}
+
+    {% if campaign.offers != blank and campaign.offers.value != blank %}
+      {% for offer in campaign.offers.value %}
+        {% if offer.products != blank and offer.products.value != blank %}
+          {% assign group_grid_id = 'scs-grid-' | append: section.id | append: '-' | append: offer.system.handle %}
+
+          {% capture group_children %}
+            {% for op in offer.products.value %}
+              {% capture token %}|{{ op.id }}|{% endcapture %}
+              {% unless seen_product_ids contains token %}
+                {% assign seen_product_ids = seen_product_ids | append: token %}
+                <li
+                  id="{{ section.id }}-{{ op.id }}"
+                  class="product-grid__item"
+                  data-product-id="{{ op.id }}"
+                  ref="cards[]"
+                >
+                  {% # theme-check-disable %}
+                  {% content_for 'block', type: '_product-card', id: 'product-card', closest.product: op %}
+                  {% # theme-check-enable %}
+                </li>
+              {% endunless %}
+            {% endfor %}
+          {% endcapture %}
+
+          {% assign group_children_stripped = group_children | strip %}
+          {% if group_children_stripped != '' %}
+            {% assign rendered_offer_groups = rendered_offer_groups | plus: 1 %}
+
+            <section class="scs-group" data-scs-group-key="{{ offer.system.handle }}">
+              <header class="scs-group__header">
+                <h2 class="scs-group__title">{{ offer.offer_name.value }}</h2>
+                {% assign has_offer_image = false %}
+                {% if offer.offer_image != blank and offer.offer_image.value != blank %}
+                  {% assign has_offer_image = true %}
+                {% endif %}
+                {% if has_offer_image or offer.offer_description != blank %}
+                  <div class="scs-group__lead{% unless has_offer_image %} scs-group__lead--text-only{% endunless %}">
+                    {% if has_offer_image %}
+                      <div class="scs-group__image">
+                        {% render 'image', image: offer.offer_image.value, height: 180 %}
+                      </div>
+                    {% endif %}
+                    {% if offer.offer_description != blank %}
+                      <div class="scs-group__body rte">
+                        {% render 'scs-richtext', field: offer.offer_description %}
+                      </div>
+                    {% endif %}
+                  </div>
+                {% endif %}
+              </header>
+
+              <div
+                class="scs-group__grid"
+                style="
+                  --product-grid-gap-mobile: {{ section.settings.columns_gap_vertical | at_most: 12 }}px {{ section.settings.columns_gap_horizontal | at_most: 12 }}px;
+                  --product-grid-gap-desktop: {{ section.settings.columns_gap_vertical }}px {{ section.settings.columns_gap_horizontal }}px;
+                "
+              >
+                <ul
+                  id="{{ group_grid_id }}"
+                  class="product-grid product-grid--{{ section.id }} product-grid--{{ section.settings.layout_type }}{% if section.settings.mobile_product_card_size == 'large' %} product-grid-mobile--large{% endif %}"
+                  role="list"
+                  data-product-card-size="{{ section.settings.product_card_size }}"
+                  style="--mobile-columns: {% if section.settings.mobile_product_card_size == 'large' %}1{% else %}2{% endif %};"
+                >
+                  {{ group_children }}
+                </ul>
+              </div>
+            </section>
+          {% endif %}
+        {% endif %}
+      {% endfor %}
+    {% endif %}
+
+    {%- comment -%}
+      Other deals: paginated collection products not matched to any offer above.
+      The heading is omitted when no named offer groups were rendered (this is the only group).
+    {%- endcomment -%}
+    {% paginate sale_collection.products by products_per_page %}
+      {% capture other_children %}
+        {% for current_product in sale_collection.products %}
+          {% capture token %}|{{ current_product.id }}|{% endcapture %}
+          {% unless seen_product_ids contains token %}
+            {% assign seen_product_ids = seen_product_ids | append: token %}
+            <li
+              id="{{ section.id }}-{{ current_product.id }}"
+              class="product-grid__item"
+              data-page="{{ paginate.current_page }}"
+              data-product-id="{{ current_product.id }}"
+              ref="cards[]"
+            >
+              {% # theme-check-disable %}
+              {% content_for 'block', type: '_product-card', id: 'product-card', closest.product: current_product %}
+              {% # theme-check-enable %}
+            </li>
+          {% endunless %}
+        {% endfor %}
+      {% endcapture %}
+
+      {% assign other_children_stripped = other_children | strip %}
+      {% if other_children_stripped != '' %}
+        {% assign no_offer_grid_id = 'scs-grid-' | append: section.id | append: '-no-offer' %}
+
+        <section class="scs-group scs-group--no-offer" data-scs-group-key="no-offer">
+          {% if rendered_offer_groups > 0 %}
+            <header class="scs-group__header">
+              <h2 class="scs-group__title">{{ 'scs.storefront.grouping.other_deals' | t }}</h2>
+            </header>
+          {% endif %}
+
+          <div
+            class="scs-group__grid"
+            style="
+              --product-grid-gap-mobile: {{ section.settings.columns_gap_vertical | at_most: 12 }}px {{ section.settings.columns_gap_horizontal | at_most: 12 }}px;
+              --product-grid-gap-desktop: {{ section.settings.columns_gap_vertical }}px {{ section.settings.columns_gap_horizontal }}px;
+            "
+          >
+            <ul
+              id="{{ no_offer_grid_id }}"
+              class="product-grid product-grid--{{ section.id }} product-grid--{{ section.settings.layout_type }}{% if section.settings.mobile_product_card_size == 'large' %} product-grid-mobile--large{% endif %}"
+              role="list"
+              data-product-card-size="{{ section.settings.product_card_size }}"
+              style="--mobile-columns: {% if section.settings.mobile_product_card_size == 'large' %}1{% else %}2{% endif %};"
+            >
+              {{ other_children }}
+            </ul>
+          </div>
+
+          {% render 'pagination-controls', paginate: paginate %}
+        </section>
+      {% endif %}
+    {% endpaginate %}
+
+      </div>
+    </section>
+
+  {% else %}
+
+    {%- comment -%}
+      Ungrouped mode: standard collection grid with filters + infinite scroll.
+      Matches the structure used in main-collection.liquid.
+    {%- endcomment -%}
+
+    <results-list
+      class="section product-grid-container color-{{ section.settings.color_scheme }}"
+      style="--padding-block-start: 0px; --padding-block-end: {{ section.settings.padding-block-end }}px;"
+      section-id="{{ section.id }}"
+      infinite-scroll="{{ section.settings.enable_infinite_scroll }}"
+    >
+      <div class="collection-wrapper grid gap-style{% if section.settings.product_grid_width == 'full-width' %} collection-wrapper--grid-full-width{% endif %}">
+        {% content_for 'block',
+          type: 'filters',
+          id: 'filters',
+          results: sale_collection,
+          results_size: sale_collection.products_count
+        %}
+
+        {% paginate sale_collection.products by products_per_page %}
+          {% capture children %}
+            {% for current_product in sale_collection.products %}
+              <li
+                id="{{ section.id }}-{{ current_product.id }}"
+                class="product-grid__item product-grid__item--{{ forloop.index0 }}"
+                data-page="{{ paginate.current_page }}"
+                data-product-id="{{ current_product.id }}"
+                ref="cards[]"
+              >
+                {% # theme-check-disable %}
+                {% content_for 'block', type: '_product-card', id: 'product-card', closest.product: current_product %}
+                {% # theme-check-enable %}
+              </li>
+            {% endfor %}
+          {% endcapture %}
+
+          {% render 'product-grid',
+            section: section,
+            children: children,
+            products: sale_collection.products,
+            paginate: paginate,
+            enable_infinite_scroll: section.settings.enable_infinite_scroll
+          %}
+        {% endpaginate %}
+      </div>
+    </results-list>
+
+  {% endif %}
+</div>
+
+{% stylesheet %}
+  .scs-campaign-header-section {
+    padding-block-start: var(--padding-block-start);
+    padding-block-end: var(--padding-block-end);
+  }
+
+  .scs-campaign-header {
+    padding-inline: var(--padding-inline-start) var(--padding-inline-end);
+    padding-block-end: 2rem;
+  }
+
+  .scs-campaign__title {
+    margin: 0 0 1rem;
+  }
+
+  .scs-campaign__lead {
+    display: grid;
+    gap: 1rem;
+    grid-template-columns: minmax(0, 180px) minmax(0, 1fr);
+    align-items: start;
+  }
+
+  .scs-campaign__lead--text-only {
+    display: block;
+  }
+
+  .scs-campaign__image {
+    border-radius: 0.5rem;
+    overflow: hidden;
+  }
+
+  .scs-campaign__image a {
+    display: block;
+  }
+
+  .scs-campaign__image img {
+    width: 100%;
+    height: auto;
+  }
+
+  .scs-campaign__body :is(p, ul, ol) {
+    margin: 0;
+  }
+
+  .scs-group {
+    margin-top: 1.5rem;
+    border: 1px solid rgba(0, 0, 0, 0.12);
+    border-radius: 0.75rem;
+    background: rgba(0, 0, 0, 0.02);
+    overflow: hidden;
+  }
+
+  .scs-group--no-offer {
+    margin-top: 1.5rem;
+  }
+
+  .scs-group__header {
+    padding: 1rem 1rem 0;
+  }
+
+  .scs-group__title {
+    margin: 0;
+  }
+
+  .scs-group__lead {
+    display: grid;
+    gap: 1rem;
+    grid-template-columns: minmax(0, 180px) minmax(0, 1fr);
+    align-items: start;
+    margin-top: 0.75rem;
+  }
+
+  .scs-group__lead--text-only {
+    display: block;
+  }
+
+  .scs-group__image {
+    border-radius: 0.5rem;
+    overflow: hidden;
+  }
+
+  .scs-group__body :is(p, ul, ol) {
+    margin: 0;
+  }
+
+  .scs-group__grid {
+    container-type: inline-size;
+    container-name: product-grid;
+    padding: 1rem;
+  }
+
+  .scs-group .product-grid {
+    --product-grid-gap: var(--product-grid-gap-mobile);
+    display: grid;
+    grid-template-columns: repeat(var(--mobile-columns, 2), 1fr);
+    gap: var(--product-grid-gap);
+    list-style: none;
+    margin: 0;
+    padding: 0;
+
+    @media screen and (min-width: 750px) {
+      --product-grid-gap: var(--product-grid-gap-desktop);
+      grid-template-columns: var(--product-grid-columns-desktop, repeat(auto-fill, minmax(250px, 1fr)));
+    }
+  }
+
+  .scs-group .pagination {
+    margin-block-start: 1.5rem;
+  }
+
+  .scs-empty {
+    padding: 2rem 0;
+    text-align: center;
+  }
+
+  @media screen and (max-width: 749px) {
+    .scs-campaign__lead {
+      grid-template-columns: 1fr;
+    }
+
+    .scs-group__lead {
+      grid-template-columns: 1fr;
+    }
+
+    .scs-group__grid {
+      padding: 0.75rem;
+    }
+  }
+{% endstylesheet %}
+
+{% schema %}
+{
+  "name": "t:scs.campaign_section.name",
+  "settings": [
+    {
+      "type": "checkbox",
+      "id": "show_image",
+      "label": "t:scs.campaign_section.settings.show_image",
+      "default": true
+    },
+    {
+      "type": "range",
+      "id": "hero_image_height",
+      "label": "t:scs.campaign_section.settings.hero_image_height",
+      "min": 80,
+      "max": 300,
+      "step": 10,
+      "unit": "px",
+      "default": 180
+    },
+    {
+      "type": "checkbox",
+      "id": "group_by_offer",
+      "label": "t:scs.campaign_section.settings.group_by_offer",
+      "default": true
+    },
+    {
+      "type": "color_scheme",
+      "id": "color_scheme",
+      "label": "t:scs.campaign_section.settings.color_scheme",
+      "default": "scheme-1"
+    },
+    {
+      "type": "select",
+      "id": "layout_type",
+      "label": "t:settings.type",
+      "options": [
+        {
+          "value": "grid",
+          "label": "t:options.grid"
+        },
+        {
+          "value": "organic",
+          "label": "t:options.editorial"
+        }
+      ],
+      "default": "grid"
+    },
+    {
+      "type": "select",
+      "id": "product_card_size",
+      "label": "t:settings.card_size",
+      "options": [
+        {
+          "value": "small",
+          "label": "t:options.small"
+        },
+        {
+          "value": "medium",
+          "label": "t:options.medium"
+        },
+        {
+          "value": "large",
+          "label": "t:options.large"
+        },
+        {
+          "value": "extra-large",
+          "label": "t:options.extra_large"
+        }
+      ],
+      "default": "medium"
+    },
+    {
+      "type": "select",
+      "id": "mobile_product_card_size",
+      "label": "t:settings.mobile_card_size",
+      "options": [
+        {
+          "value": "small",
+          "label": "t:options.small"
+        },
+        {
+          "value": "large",
+          "label": "t:options.large"
+        }
+      ],
+      "default": "small"
+    },
+    {
+      "type": "select",
+      "id": "product_grid_width",
+      "label": "t:settings.width",
+      "options": [
+        {
+          "value": "centered",
+          "label": "t:options.page"
+        },
+        {
+          "value": "full-width",
+          "label": "t:options.full"
+        }
+      ],
+      "default": "centered"
+    },
+    {
+      "type": "checkbox",
+      "id": "full_width_on_mobile",
+      "label": "t:settings.full_width_on_mobile",
+      "default": true
+    },
+    {
+      "type": "checkbox",
+      "id": "enable_infinite_scroll",
+      "label": "t:settings.auto_load_products",
+      "default": true
+    },
+    {
+      "type": "range",
+      "id": "columns_gap_horizontal",
+      "label": "t:settings.horizontal_gap",
+      "min": 0,
+      "max": 50,
+      "step": 1,
+      "unit": "px",
+      "default": 16
+    },
+    {
+      "type": "range",
+      "id": "columns_gap_vertical",
+      "label": "t:settings.vertical_gap",
+      "min": 0,
+      "max": 50,
+      "step": 1,
+      "unit": "px",
+      "default": 16
+    },
+    {
+      "type": "range",
+      "id": "padding-inline-start",
+      "label": "t:settings.left_padding",
+      "min": 0,
+      "max": 100,
+      "step": 1,
+      "unit": "px",
+      "default": 0
+    },
+    {
+      "type": "range",
+      "id": "padding-inline-end",
+      "label": "t:settings.right_padding",
+      "min": 0,
+      "max": 100,
+      "step": 1,
+      "unit": "px",
+      "default": 0
+    },
+    {
+      "type": "range",
+      "id": "padding-block-start",
+      "label": "t:scs.campaign_section.settings.padding_top",
+      "min": 0,
+      "max": 120,
+      "step": 4,
+      "unit": "px",
+      "default": 48
+    },
+    {
+      "type": "range",
+      "id": "padding-block-end",
+      "label": "t:scs.campaign_section.settings.padding_bottom",
+      "min": 0,
+      "max": 120,
+      "step": 4,
+      "unit": "px",
+      "default": 48
+    }
+  ],
+  "presets": [
+    {
+      "name": "t:scs.campaign_section.name"
+    }
+  ]
+}
+{% endschema %}
