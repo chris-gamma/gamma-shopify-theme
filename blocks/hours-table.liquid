@@ -1,3 +1,17 @@
+{% doc %}
+  Renders a table displaying store hours with support for holiday periods.
+  Automatically detects current holidays or allows manual override.
+
+  Features:
+  - Display of regular store hours
+  - Holiday hour detection and display
+  - Holiday notice banner
+  - Mini size option for space-constrained layouts
+
+  @example
+  {% content_for 'block', type: 'hours-table' %}
+{% enddoc %}
+
 {% comment %}
   Hours Table Block
 {% endcomment %}

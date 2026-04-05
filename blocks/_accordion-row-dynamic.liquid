@@ -1,3 +1,17 @@
+{% doc %}
+  Renders an accordion row that can contain child blocks.
+  Used as a child block within accordion-dynamic.liquid.
+
+  @param {string} [heading] - The accordion row heading text
+  @param {boolean} [open_by_default] - Whether the row is open by default
+  @param {string} [icon] - Selected icon type for the row header
+  @param {image} [image_upload] - Custom image icon upload
+  @param {number} [width] - Icon width in pixels
+
+  @example
+  This block is used as a child block type within accordion-dynamic.liquid
+{% enddoc %}
+
 {% assign block_settings = block.settings %}
 
 {% capture block_content %}

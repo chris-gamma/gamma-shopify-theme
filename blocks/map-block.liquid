@@ -1,3 +1,18 @@
+{% doc %}
+  Renders an interactive map (umap.openstreetmap.fr) with placeholder support.
+  Includes lazy-loading, cookie management for privacy, and optional directions links.
+
+  Features:
+  - Responsive iframe with placeholder images
+  - Cookie-based user consent
+  - Optional GoogleMaps and AppleMaps directions links
+  - Mobile and desktop placeholder support
+  - Dynamic width and height configuration
+
+  @example
+  {% content_for 'block', type: 'map-block' %}
+{% enddoc %}
+
 {% comment %}
   Map view block
 {% endcomment %}
