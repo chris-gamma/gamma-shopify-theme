@@ -1,3 +1,11 @@
+{% doc %}
+  Renders a container for accordion rows with customizable styling options.
+  Allows merchants to add and configure multiple accordion rows.
+
+  @example
+  {% content_for 'block', type: 'accordion-dynamic' %}
+{% enddoc %}
+
 {% assign block_settings = block.settings %}
 <div
   class="accordion accordion--{{ block.id }} accordion--{{ block_settings.icon }} border-style spacing-style{% if block_settings.inherit_color_scheme == false %} color-{{ block_settings.color_scheme }}{% endif %}{% if block_settings.dividers %} accordion--dividers{% endif %}"

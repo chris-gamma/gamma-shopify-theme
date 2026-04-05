@@ -1,3 +1,16 @@
+{% doc %}
+  Renders a product system badge displaying battery system information.
+  Pulls data from the product's custom battery_system metafield.
+
+  Displays:
+  - Battery system icon (locale-aware for FR/EN)
+  - System type name
+  - Linked to associated collection if available
+
+  @example
+  {% content_for 'block', type: 'product-system-badges' %}
+{% enddoc %}
+
 {%- liquid
   if product.metafields.custom.battery_system and product.metafields.custom.battery_system.value != blank
     assign bat_sys = product.metafields.custom.battery_system.value
