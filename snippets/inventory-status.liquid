@@ -1,0 +1,33 @@
+{% doc %}
+  Returns Gamma's fulfillment status token for a product and variant pair.
+
+  @param {object} product - Product resource whose tags determine special-order behavior.
+  @param {object} variant - Variant resource whose inventory determines out-of-stock behavior.
+  @param {boolean} [require_available] - Restrict statuses to variants that are currently available.
+
+  @example
+  {% capture inventory_status %}
+    {% render 'inventory-status', product: product, variant: variant %}
+  {% endcapture %}
+{% enddoc %}
+
+{%- liquid
+  assign inventory_status = ''
+
+  if product != blank and variant != blank and variant.inventory_quantity <= 0
+    assign allow_continue_selling = false
+    if variant.inventory_management == 'shopify' and variant.inventory_policy == 'continue'
+      assign allow_continue_selling = true
+    endif
+
+    if require_available and variant.available != true
+      assign inventory_status = ''
+    elsif product.tags contains 'special order'
+      assign inventory_status = 'special_order'
+    elsif allow_continue_selling or variant.available
+      assign inventory_status = 'backordered'
+    endif
+  endif
+
+  echo inventory_status
+-%}

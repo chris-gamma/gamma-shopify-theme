@@ -3,15 +3,13 @@
 
   Renders the cart products list or empty cart state.
 
+  @param {object} block_settings - Block settings that control spacing and image behavior.
+  @param {string} [shopify_attributes] - Optional editor attributes for the outer wrapper.
   @param {boolean} [force_empty] - Force render empty cart state
 
   @example
-  {% render 'cart-products', force_empty: true %}
+  {% render 'cart-products', block_settings: block.settings, shopify_attributes: block.shopify_attributes, force_empty: true %}
 {% enddoc %}
-
-{% liquid
-  assign block_settings = block.settings
-%}
 
 <script
   src="{{ 'component-cart-items.js' | asset_url }}"
@@ -30,7 +28,7 @@
 ></script>
 
 <div
-  {{ block.shopify_attributes }}
+  {{ shopify_attributes }}
   class="cart-items__wrapper"
   {% if settings.product_title_case == 'uppercase' %}
     style="--product-title-case: uppercase;"
@@ -309,9 +307,13 @@
                         {% endif %}
                       {% endif %}
                     </div>
-                    {% if item.variant.inventory_quantity <= 0 %}
+                    {% capture inventory_status %}
+                      {% render 'inventory-status', product: item.product, variant: item.variant %}
+                    {% endcapture %}
+                    {% assign inventory_status = inventory_status | strip %}
+                    {% if inventory_status != blank %}
                       <div class="cart-items__inventory-status">
-                        {% if item.product.tags contains 'special order' %}
+                        {% if inventory_status == 'special_order' %}
                           {{ 'content.product_badge_special_order' | t }}
                         {% else %}
                           {{ 'content.product_badge_backorder' | t }}

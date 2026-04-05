@@ -1,0 +1,41 @@
+name: Upstream Sync Guardrails
+
+on:
+  pull_request:
+  workflow_dispatch:
+
+permissions:
+  contents: read
+
+jobs:
+  locale-allowlist:
+    name: Locale allowlist
+    runs-on: ubuntu-latest
+
+    steps:
+      - name: Check out repository
+        uses: actions/checkout@v4
+
+      - name: Validate tracked locale files
+        run: python3 .github/scripts/validate_locale_allowlist.py
+
+  theme-check:
+    name: Theme Check
+    runs-on: ubuntu-latest
+
+    steps:
+      - name: Check out repository
+        uses: actions/checkout@v4
+
+      - name: Set up Node.js
+        uses: actions/setup-node@v4
+        with:
+          node-version: 20
+
+      - name: Install Shopify CLI
+        # Pin to the same version used for local development (see README).
+        # Upgrade this pin intentionally — do not float on @latest.
+        run: npm install -g @shopify/cli@3.93.2
+
+      - name: Run Theme Check
+        run: shopify theme check --path .

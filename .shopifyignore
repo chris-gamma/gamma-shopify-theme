@@ -1,13 +1,34 @@
-# This file contains a list of files that will be excluded from Shopify CLI
-# operations such as push, pull, dev, etc.
+# =============================================================================
+# .shopifyignore — Gamma Shopify Theme
 #
-# Examples:
+# Controls which files Shopify CLI excludes from push/pull/dev operations.
+# This file is a CLI control, not a Git control. It does not affect what
+# Git tracks, and it is not used by the Shopify GitHub integration.
 #
-# Ignore a specific file:
-#   templates/product.json
-#
-# Ignore templates with a wildcard pattern:
-#   templates/*.json
-#
-# Ignore templates and sections with a regular expression:
-#   /(templates|sections)/.*\.json/
+# Do NOT add Shopify theme-surface files here (assets/, blocks/, config/,
+# layout/, locales/, sections/, snippets/, templates/). Those must remain
+# deployable. In particular, config/settings_data.json must NOT be listed
+# here — it is part of the live deployed theme.
+# =============================================================================
+
+# Repository infrastructure and tooling (not Shopify theme files)
+.github/**
+.venv/**
+.git/**
+.vscode/**
+
+# Root documentation and project metadata
+README.md
+README-Horizon.md
+CHANGES.md
+LICENSE.md
+LICENSE-Horizon.md
+release-notes-horizon.md
+
+# Root tooling config
+pyrightconfig.json
+shopify.theme.toml
+
+# Local developer state (belt-and-suspenders; these are also git-ignored)
+.env
+.env.*

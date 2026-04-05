@@ -1,3 +1,9 @@
+{% doc %}
+  Renders the product-page availability notice for backordered and special-order variants.
+
+  @param {object} closest.product - Product resource whose selected variant drives the notice.
+{% enddoc %}
+
 {% liquid
   assign block_settings = block.settings
   assign product = closest.product
@@ -5,7 +11,7 @@
     assign product = collections.all.products.first
   endif
 
-  assign variant = closest.product.selected_or_first_available_variant
+  assign variant = product.selected_or_first_available_variant
   assign inventory_quantity = variant.inventory_quantity
   assign inventory_policy = variant.inventory_policy
 
@@ -18,14 +24,19 @@
       assign quantity_rule_soldout = true
     endif
 
+    capture inventory_status
+      render 'inventory-status', product: product, variant: variant
+    endcapture
+    assign inventory_status = inventory_status | strip
+
     if inventory_managed and inventory_quantity <= 0 and inventory_policy == 'deny' or quantity_rule_soldout
       assign notice_type = 'sold_out'
       assign notice_text = ''
-    elsif inventory_quantity <= 0 and product.tags contains 'special order'
-      assign notice_type = 'special_order'
+    elsif inventory_status == 'special_order'
+      assign notice_type = inventory_status
       assign notice_text = 'content.special_order_notice_html' | t
-    elsif inventory_quantity <= 0
-      assign notice_type = 'backordered'
+    elsif inventory_status == 'backordered'
+      assign notice_type = inventory_status
       assign notice_text = 'content.backorder_notice_html' | t
     elsif variant.available
       assign notice_type = 'available'
@@ -62,7 +73,10 @@
   endcapture
 %}
 {%- if notice_type == 'backordered' or notice_type == 'special_order' -%}
-  <div class="availability-notice availability-notice--{{ notice_type }}">
+  <div
+    class="availability-notice availability-notice--{{ notice_type }}"
+    {{ block.shopify_attributes }}
+  >
     <div class="availability-notice__icon">
       {% if notice_type == 'backordered' %}
         {{- 'icon-backordered.svg' | inline_asset_content -}}
@@ -72,7 +86,6 @@
     </div>
     <div
       class="availability-notice__content text-block {{ text_block_classes }} {{ block_settings.type_preset | default: 'paragraph' }} spacing-style"
-      style="{{ block.shopify_attributes }}"
     >
       <p>
         {{ notice_text | newline_to_br -}}

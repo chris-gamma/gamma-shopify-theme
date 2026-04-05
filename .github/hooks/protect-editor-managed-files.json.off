@@ -1,0 +1,13 @@
+{
+  "hooks": {
+    "PreToolUse": [
+      {
+        "type": "command",
+        "command": "python3 .github/scripts/copilot-hooks/protect_editor_managed_files.py",
+        "windows": "py -3 .github/scripts/copilot-hooks/protect_editor_managed_files.py",
+        "cwd": ".",
+        "timeout": 20
+      }
+    ]
+  }
+}

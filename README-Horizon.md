@@ -1,5 +1,7 @@
 # Horizon
 
+> **Note for Gamma developers**: This is the upstream Horizon README, retained as vendor reference. The workflow instructions below (including `git pull upstream main`) describe Horizon's general development model, not Gamma's. For Gamma's upstream sync workflow, see [`README.md`](./README.md) and [`.github/reference/upstream-sync-playbook.md`](.github/reference/upstream-sync-playbook.md).
+
 [Getting started](#getting-started) |
 [Staying up to date with Horizon changes](#staying-up-to-date-with-horizon-changes) |
 [Developer tools](#developer-tools) |

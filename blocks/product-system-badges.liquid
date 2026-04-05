@@ -12,21 +12,29 @@
 {% enddoc %}
 
 {%- liquid
+  assign is_french_locale = false
+  if request.locale.iso_code == 'fr' or request.locale.iso_code == 'fr-CA'
+    assign is_french_locale = true
+  endif
+
   if product.metafields.custom.battery_system and product.metafields.custom.battery_system.value != blank
     assign bat_sys = product.metafields.custom.battery_system.value
   endif
 -%}
 {%- if bat_sys -%}
-  <div class="product-system-badges">
+  <div
+    class="product-system-badges"
+    {{ block.shopify_attributes }}
+  >
     <span class="product-system-badges-battery-system" style="--icon-height: {{ block.settings.icon_height }}px;">
       {%- if bat_sys.collection -%}
         <a href="{{ bat_sys.collection.value.url }}" class="product-system-badges-collection-link">
       {%- endif -%}
-      {%- if bat_sys.icon_fr and request.locale.iso_code == 'fr' -%}
+      {%- if bat_sys.icon_fr and is_french_locale -%}
         {%- assign bat_sys_icon = bat_sys.icon_fr -%}
-      {%- elsif bat_sys.icon_en and request.locale.iso_code == 'en' -%}
+      {%- elsif bat_sys.icon_en -%}
         {%- assign bat_sys_icon = bat_sys.icon_en -%}
-      {%- elsif bat_sys.icon_fr != blank and request.locale.iso_code == 'en' -%}
+      {%- elsif bat_sys.icon_fr != blank -%}
         {%- assign bat_sys_icon = bat_sys.icon_fr -%}
       {%- endif -%}
       {%- if bat_sys_icon -%}
@@ -83,13 +91,13 @@
     {
       "type": "number",
       "id": "icon_height",
-      "label": "Icon height (px)",
+      "label": "t:settings.icon_height_px",
       "default": 30
     }
   ],
   "presets": [
     {
-      "name": "Product system badges",
+      "name": "t:names.product_system_badges",
       "settings": { "icon_height": 30 }
     }
   ]

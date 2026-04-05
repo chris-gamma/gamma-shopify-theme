@@ -210,6 +210,7 @@
     "favicon": "Favicon",
     "heading": "Titre",
     "icon": "Icône",
+    "icon_height_px": "Hauteur de l'icône (px)",
     "image_icon": "Icône d'image",
     "make_section_full_width": "Afficher la section en pleine largeur",
     "overlay_opacity": "Opacité de la superposition",

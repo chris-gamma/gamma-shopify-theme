@@ -1,3 +1,9 @@
+{% doc %}
+  Renders the product-card gallery media and Gamma fulfillment badges.
+
+  @param {object} closest.product - Product resource bound to the shared product-card block tree.
+{% enddoc %}
+
 {% assign product = closest.product %}
 
 {% capture children %}
@@ -10,13 +16,24 @@
       "
     >
       {%- liquid
-        assign total_special = 0
+        assign total_out_of_stock_variants = 0
+        assign product_badge_status = ''
+
         for v in product.variants
-          if v.available == true and v.inventory_quantity <= 0
-            assign total_special = total_special | plus: 1
+          capture inventory_status
+            render 'inventory-status', product: product, variant: v, require_available: true
+          endcapture
+          assign inventory_status = inventory_status | strip
+
+          if inventory_status != blank
+            assign total_out_of_stock_variants = total_out_of_stock_variants | plus: 1
+            if product_badge_status == ''
+              assign product_badge_status = inventory_status
+            endif
           endif
         endfor
-        if total_special == product.variants_count
+
+        if total_out_of_stock_variants == product.variants_count and product_badge_status != ''
           assign back_or_special_order = true
         else
           assign back_or_special_order = false
@@ -26,10 +43,10 @@
         <div
           class="
             product-badges__badge product-badges__badge--rectangle
-            {% if product.tags contains "special order" %} color-{{ settings.badge_sold_out_color_scheme }}{% else %} color-{{ settings.badge_sold_out_color_scheme }}{% endif %}
+            color-{{ settings.badge_sold_out_color_scheme }}
           "
         >
-          {%- if product.tags contains "special order" -%}
+          {%- if product_badge_status == 'special_order' -%}
             {{ 'content.product_badge_special_order' | t }}
           {%- else -%}
             {{ 'content.product_badge_backorder' | t }}

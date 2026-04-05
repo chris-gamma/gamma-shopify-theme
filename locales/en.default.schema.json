@@ -907,6 +907,7 @@
     "hover_borders": "Hover borders",
     "hover_text": "Hover text",
     "icon": "Icon",
+    "icon_height_px": "Icon height (px)",
     "icon_background": "Icon background",
     "icons": "Icons",
     "image": "Image",
