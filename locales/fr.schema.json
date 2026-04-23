@@ -47,6 +47,8 @@
     "accelerated_checkout": "Paiement accéléré",
     "accordion": "Accordéon",
     "accordion_row": "Rangée d’accordéon",
+    "accordion_dynamic": "Accordéon : Dynamique",
+    "accordion_row_dynamic": "Rangée d’accordéon : Dynamique",
     "animations": "Animations",
     "announcement": "Annonce",
     "announcement_bar": "Barre d’annonces",
@@ -188,7 +190,8 @@
     "product_hotspots": "Zones réactives de produit",
     "hotspot_product": "Zone réactive",
     "product_sku": "SKU",
-    "layered_slideshow": "Diaporama superposé"
+    "layered_slideshow": "Diaporama superposé",
+    "product_system_badges": "Badges système des produits"
   },
   "settings": {
     "autoplay": "Lecture automatique",
