@@ -1,0 +1,57 @@
+{
+  "_export": {
+    "source": "shopify-admin-graphql",
+    "apiVersion": "2026-04",
+    "shop": "location-gamma.myshopify.com"
+  },
+  "definition": {
+    "id": "gid://shopify/MetaobjectDefinition/13492682925",
+    "name": "Warranty policy",
+    "type": "warranty_policy",
+    "description": "Define warranty policies for different products based on brand and type, to be displayed on product pages.",
+    "displayNameKey": "product_brand_type",
+    "createdAt": "2026-02-16T18:06:02Z",
+    "updatedAt": "2026-02-16T18:06:02Z",
+    "metaobjectsCount": 5,
+    "access": {
+      "admin": "PUBLIC_READ_WRITE",
+      "storefront": "PUBLIC_READ"
+    },
+    "capabilities": {
+      "publishable": {
+        "enabled": true
+      },
+      "translatable": {
+        "enabled": true
+      },
+      "renderable": {
+        "enabled": false
+      },
+      "onlineStore": {
+        "enabled": false
+      }
+    },
+    "fieldDefinitions": [
+      {
+        "key": "product_brand_type",
+        "name": "Product brand & type",
+        "description": "",
+        "required": true,
+        "type": {
+          "name": "single_line_text_field"
+        },
+        "validations": []
+      },
+      {
+        "key": "warranty_policy",
+        "name": "Warranty policy",
+        "description": "",
+        "required": true,
+        "type": {
+          "name": "rich_text_field"
+        },
+        "validations": []
+      }
+    ]
+  }
+}

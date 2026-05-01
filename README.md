@@ -14,6 +14,7 @@
     - [Staying up to date with Horizon changes](#staying-up-to-date-with-horizon-changes)
     - [Shopify AI Toolkit](#shopify-ai-toolkit)
     - [Shopify CLI](#shopify-cli)
+    - [Metaobject definitions](#metaobject-definitions)
     - [One-time Git setup](#one-time-git-setup)
   - [Development](#development)
     - [Agentic workflows](#agentic-workflows)
@@ -106,6 +107,36 @@ Use `shopify theme console` to view logs and debug information while developing 
 Use `shopify theme check` to validate your theme and ensure it meets Shopify's requirements before deploying.
 
 For more information on using the Shopify CLI, refer to the [Shopify CLI documentation](https://shopify.dev/docs/api/shopify-cli).
+
+### Metaobject definitions
+
+The live Shopify store is the source of truth for Gamma's metaobject definitions. This repo exports those definitions into `docs/metaobjects/` as store schema documentation for developers and Copilot. They are not theme assets and are not deployed by Shopify theme pushes.
+
+To configure local access for the `Metaobject Definition Exporter` app, copy `.env.example` to `.env.local` and fill in:
+
+- `SHOPIFY_SHOP_DOMAIN`
+- `SHOPIFY_CLIENT_ID`
+- `SHOPIFY_CLIENT_SECRET`
+- optional `SHOPIFY_API_VERSION` (defaults to `2026-04`)
+
+The Shopify app must be installed on the target store and include the Admin API scope `read_metaobject_definitions`.
+
+Update committed definition docs from the live store with:
+
+```sh
+npm run metaobjects:update
+```
+
+Verify that the committed docs are still current with the live store without writing files:
+
+```sh
+npm run metaobjects:check
+```
+
+The exporter writes one definition file per metaobject type plus an index file here:
+
+- `docs/metaobjects/index.json`
+- `docs/metaobjects/*.definition.json`
 
 ### One-time Git setup
 

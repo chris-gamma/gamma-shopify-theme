@@ -1,0 +1,67 @@
+{
+  "_export": {
+    "source": "shopify-admin-graphql",
+    "apiVersion": "2026-04",
+    "shop": "location-gamma.myshopify.com"
+  },
+  "definition": {
+    "id": "gid://shopify/MetaobjectDefinition/12968198317",
+    "name": "Power source",
+    "type": "shopify--power-source",
+    "description": "Specifies the power source a product uses to operate, such as solar or batteries",
+    "displayNameKey": "label",
+    "createdAt": "2026-01-30T17:29:06Z",
+    "updatedAt": "2026-01-30T17:29:06Z",
+    "metaobjectsCount": 4,
+    "access": {
+      "admin": "PUBLIC_READ_WRITE",
+      "storefront": "PUBLIC_READ"
+    },
+    "capabilities": {
+      "publishable": {
+        "enabled": false
+      },
+      "translatable": {
+        "enabled": true
+      },
+      "renderable": {
+        "enabled": false
+      },
+      "onlineStore": {
+        "enabled": false
+      }
+    },
+    "fieldDefinitions": [
+      {
+        "key": "label",
+        "name": "Label",
+        "description": null,
+        "required": true,
+        "type": {
+          "name": "single_line_text_field"
+        },
+        "validations": [
+          {
+            "name": "max",
+            "value": "255"
+          }
+        ]
+      },
+      {
+        "key": "taxonomy_reference",
+        "name": "Base power source",
+        "description": "Base values map to standards for better search and organization",
+        "required": true,
+        "type": {
+          "name": "product_taxonomy_value_reference"
+        },
+        "validations": [
+          {
+            "name": "product_taxonomy_attribute_handle",
+            "value": "power-source"
+          }
+        ]
+      }
+    ]
+  }
+}

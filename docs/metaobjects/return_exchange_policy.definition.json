@@ -1,0 +1,57 @@
+{
+  "_export": {
+    "source": "shopify-admin-graphql",
+    "apiVersion": "2026-04",
+    "shop": "location-gamma.myshopify.com"
+  },
+  "definition": {
+    "id": "gid://shopify/MetaobjectDefinition/13494190253",
+    "name": "Return & exchange policy",
+    "type": "return_exchange_policy",
+    "description": "Product or brand/tool-specific return & exchange policies to be displayed on product pages.",
+    "displayNameKey": "policy_type",
+    "createdAt": "2026-02-16T18:59:14Z",
+    "updatedAt": "2026-02-16T18:59:24Z",
+    "metaobjectsCount": 1,
+    "access": {
+      "admin": "PUBLIC_READ_WRITE",
+      "storefront": "PUBLIC_READ"
+    },
+    "capabilities": {
+      "publishable": {
+        "enabled": true
+      },
+      "translatable": {
+        "enabled": true
+      },
+      "renderable": {
+        "enabled": false
+      },
+      "onlineStore": {
+        "enabled": false
+      }
+    },
+    "fieldDefinitions": [
+      {
+        "key": "policy_type",
+        "name": "Policy type",
+        "description": "",
+        "required": true,
+        "type": {
+          "name": "single_line_text_field"
+        },
+        "validations": []
+      },
+      {
+        "key": "policy_text",
+        "name": "Policy text",
+        "description": "",
+        "required": true,
+        "type": {
+          "name": "rich_text_field"
+        },
+        "validations": []
+      }
+    ]
+  }
+}

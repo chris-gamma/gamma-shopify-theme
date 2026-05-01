@@ -153,14 +153,15 @@ yarn-error.log*
 
 # =============================================================================
 # E. Local developer config and secrets
+#
+# Local Shopify API credentials belong in .env.local or .env and must never
+# be committed. .env.example is intentionally committed as a safe template.
 # =============================================================================
 
 .env
-.env.*
 .env.local
-.env.development.local
-.env.test.local
-.env.production.local
+.env.*.local
+!.env.example
 
 
 # =============================================================================

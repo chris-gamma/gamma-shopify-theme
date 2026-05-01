@@ -1,0 +1,12 @@
+{
+  "name": "gamma-shopify-theme",
+  "private": true,
+  "version": "0.1.0",
+  "engines": {
+    "node": ">=20"
+  },
+  "scripts": {
+    "metaobjects:update": "node scripts/shopify/export-metaobject-definitions.mjs",
+    "metaobjects:check": "node scripts/shopify/assert-metaobject-definitions-fresh.mjs"
+  }
+}
