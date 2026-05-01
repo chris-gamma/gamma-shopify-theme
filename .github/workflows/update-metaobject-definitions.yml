@@ -1,0 +1,85 @@
+name: Update Shopify metaobject definitions
+
+on:
+  workflow_dispatch:
+
+permissions:
+  contents: write
+
+jobs:
+  export-metaobject-definitions:
+    name: Export Shopify metaobject definitions
+    runs-on: ubuntu-latest
+
+    steps:
+      - name: Ensure workflow runs from a branch
+        if: github.ref_type != 'branch'
+        run: |
+          echo 'This workflow must be run from a branch so it can commit changes back to that branch.' >&2
+          exit 1
+
+      - name: Check out repository
+        uses: actions/checkout@v4
+        with:
+          ref: ${{ github.ref_name }}
+
+      - name: Set up Node.js
+        uses: actions/setup-node@v4
+        with:
+          node-version: 20
+
+      - name: Validate required Shopify secrets
+        # Required repository secrets:
+        # - SHOPIFY_SHOP_DOMAIN: store.myshopify.com or https://store.myshopify.com
+        # - SHOPIFY_CLIENT_ID: Client ID for the installed Shopify Dev Dashboard app
+        # - SHOPIFY_CLIENT_SECRET: Client secret for the installed Shopify Dev Dashboard app
+        # The app must include the read_metaobject_definitions Admin API scope.
+        env:
+          SHOPIFY_SHOP_DOMAIN: ${{ secrets.SHOPIFY_SHOP_DOMAIN }}
+          SHOPIFY_CLIENT_ID: ${{ secrets.SHOPIFY_CLIENT_ID }}
+          SHOPIFY_CLIENT_SECRET: ${{ secrets.SHOPIFY_CLIENT_SECRET }}
+        run: |
+          missing=()
+          [[ -n "${SHOPIFY_SHOP_DOMAIN}" ]] || missing+=("SHOPIFY_SHOP_DOMAIN")
+          [[ -n "${SHOPIFY_CLIENT_ID}" ]] || missing+=("SHOPIFY_CLIENT_ID")
+          [[ -n "${SHOPIFY_CLIENT_SECRET}" ]] || missing+=("SHOPIFY_CLIENT_SECRET")
+
+          if (( ${#missing[@]} > 0 )); then
+            printf 'Missing required repository secrets: %s\n' "${missing[*]}" >&2
+            printf 'The Shopify app must include the read_metaobject_definitions scope.\n' >&2
+            exit 1
+          fi
+
+      - name: Export metaobject definitions from Shopify Admin GraphQL
+        # The shared exporter requests a fresh temporary Admin API token each run
+        # using Shopify client credentials, then uses that token for the GraphQL export.
+        env:
+          SHOPIFY_SHOP_DOMAIN: ${{ secrets.SHOPIFY_SHOP_DOMAIN }}
+          SHOPIFY_CLIENT_ID: ${{ secrets.SHOPIFY_CLIENT_ID }}
+          SHOPIFY_CLIENT_SECRET: ${{ secrets.SHOPIFY_CLIENT_SECRET }}
+          SHOPIFY_API_VERSION: 2026-04
+        run: npm run metaobjects:update
+
+      - name: Configure git author
+        run: |
+          git config user.name 'github-actions[bot]'
+          git config user.email '41898282+github-actions[bot]@users.noreply.github.com'
+
+      - name: Detect docs/metaobjects changes
+        id: detect-changes
+        run: |
+          if [[ -n "$(git status --porcelain -- docs/metaobjects)" ]]; then
+            echo 'changed=true' >> "$GITHUB_OUTPUT"
+          else
+            echo 'changed=false' >> "$GITHUB_OUTPUT"
+          fi
+
+      - name: Commit generated metaobject definition docs
+        if: steps.detect-changes.outputs.changed == 'true'
+        run: |
+          git add docs/metaobjects
+          git commit -m 'docs(metaobjects): update Shopify metaobject definitions'
+
+      - name: Push generated metaobject definition docs
+        if: steps.detect-changes.outputs.changed == 'true'
+        run: git push origin HEAD:${{ github.ref_name }}

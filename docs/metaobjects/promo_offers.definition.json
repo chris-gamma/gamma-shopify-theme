@@ -1,0 +1,92 @@
+{
+  "_export": {
+    "source": "shopify-admin-graphql",
+    "apiVersion": "2026-04",
+    "shop": "location-gamma.myshopify.com"
+  },
+  "definition": {
+    "id": "gid://shopify/MetaobjectDefinition/14874280109",
+    "name": "Promo Offers",
+    "type": "promo_offers",
+    "description": "",
+    "displayNameKey": "offer_name",
+    "createdAt": "2026-04-05T19:53:33Z",
+    "updatedAt": "2026-04-05T19:53:33Z",
+    "metaobjectsCount": 1,
+    "access": {
+      "admin": "PUBLIC_READ_WRITE",
+      "storefront": "PUBLIC_READ"
+    },
+    "capabilities": {
+      "publishable": {
+        "enabled": true
+      },
+      "translatable": {
+        "enabled": true
+      },
+      "renderable": {
+        "enabled": false
+      },
+      "onlineStore": {
+        "enabled": false
+      }
+    },
+    "fieldDefinitions": [
+      {
+        "key": "offer_name",
+        "name": "Offer name",
+        "description": "",
+        "required": true,
+        "type": {
+          "name": "single_line_text_field"
+        },
+        "validations": []
+      },
+      {
+        "key": "offer_description",
+        "name": "Offer description",
+        "description": "",
+        "required": false,
+        "type": {
+          "name": "rich_text_field"
+        },
+        "validations": []
+      },
+      {
+        "key": "offer_image",
+        "name": "Offer image",
+        "description": "",
+        "required": false,
+        "type": {
+          "name": "file_reference"
+        },
+        "validations": [
+          {
+            "name": "file_type_options",
+            "value": "[\"Image\"]"
+          }
+        ]
+      },
+      {
+        "key": "offer_image_link",
+        "name": "Offer image link",
+        "description": "",
+        "required": false,
+        "type": {
+          "name": "url"
+        },
+        "validations": []
+      },
+      {
+        "key": "products",
+        "name": "Products",
+        "description": "",
+        "required": true,
+        "type": {
+          "name": "list.product_reference"
+        },
+        "validations": []
+      }
+    ]
+  }
+}

@@ -1,0 +1,102 @@
+{
+  "_export": {
+    "source": "shopify-admin-graphql",
+    "apiVersion": "2026-04",
+    "shop": "location-gamma.myshopify.com"
+  },
+  "definition": {
+    "id": "gid://shopify/MetaobjectDefinition/13124796589",
+    "name": "Battery system",
+    "type": "battery_system",
+    "description": "Defines a manufacturer’s battery platform, such as STIHL AK/AP, ECHO 56V, or Hilti Nuron. Stores key details like name, manufacturer, voltage, and badge image so products can reference the correct system for compatibility, filtering, and display.",
+    "displayNameKey": "name",
+    "createdAt": "2026-02-04T15:48:32Z",
+    "updatedAt": "2026-03-08T15:36:43Z",
+    "metaobjectsCount": 4,
+    "access": {
+      "admin": "PUBLIC_READ_WRITE",
+      "storefront": "PUBLIC_READ"
+    },
+    "capabilities": {
+      "publishable": {
+        "enabled": true
+      },
+      "translatable": {
+        "enabled": true
+      },
+      "renderable": {
+        "enabled": false
+      },
+      "onlineStore": {
+        "enabled": false
+      }
+    },
+    "fieldDefinitions": [
+      {
+        "key": "name",
+        "name": "Name",
+        "description": "Human-readable label shown in admin & storefront (e.g. \"STIHL AK System\")",
+        "required": true,
+        "type": {
+          "name": "single_line_text_field"
+        },
+        "validations": []
+      },
+      {
+        "key": "icon_fr",
+        "name": "Icon (FR)",
+        "description": "",
+        "required": false,
+        "type": {
+          "name": "file_reference"
+        },
+        "validations": [
+          {
+            "name": "file_type_options",
+            "value": "[\"Image\"]"
+          }
+        ]
+      },
+      {
+        "key": "icon_en",
+        "name": "Icon (EN)",
+        "description": "",
+        "required": false,
+        "type": {
+          "name": "file_reference"
+        },
+        "validations": [
+          {
+            "name": "file_type_options",
+            "value": "[\"Image\"]"
+          }
+        ]
+      },
+      {
+        "key": "system_type",
+        "name": "System type",
+        "description": "",
+        "required": false,
+        "type": {
+          "name": "single_line_text_field"
+        },
+        "validations": [
+          {
+            "name": "choices",
+            "value": "[\"Interchangeable battery\",\"Integrated battery\"]"
+          }
+        ]
+      },
+      {
+        "key": "collection",
+        "name": "Collection",
+        "description": "",
+        "required": false,
+        "type": {
+          "name": "collection_reference"
+        },
+        "validations": []
+      }
+    ]
+  }
+}

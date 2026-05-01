@@ -1,0 +1,167 @@
+{
+  "_export": {
+    "source": "shopify-admin-graphql",
+    "apiVersion": "2026-04",
+    "shop": "location-gamma.myshopify.com"
+  },
+  "definition": {
+    "id": "gid://shopify/MetaobjectDefinition/14861074605",
+    "name": "Sales campaigns",
+    "type": "sales_campaigns",
+    "description": "Defines how active sales campaigns are displayed on home page, sales page and product pages.",
+    "displayNameKey": "sale_name",
+    "createdAt": "2026-04-05T06:18:25Z",
+    "updatedAt": "2026-04-05T22:51:29Z",
+    "metaobjectsCount": 1,
+    "access": {
+      "admin": "PUBLIC_READ_WRITE",
+      "storefront": "PUBLIC_READ"
+    },
+    "capabilities": {
+      "publishable": {
+        "enabled": true
+      },
+      "translatable": {
+        "enabled": true
+      },
+      "renderable": {
+        "enabled": true
+      },
+      "onlineStore": {
+        "enabled": true
+      }
+    },
+    "fieldDefinitions": [
+      {
+        "key": "sale_name",
+        "name": "Sale name",
+        "description": "User-facing name of the sale.",
+        "required": true,
+        "type": {
+          "name": "single_line_text_field"
+        },
+        "validations": []
+      },
+      {
+        "key": "sale_collection",
+        "name": "Sale collection",
+        "description": "A collection containing all items part of the sale campaign.",
+        "required": true,
+        "type": {
+          "name": "collection_reference"
+        },
+        "validations": []
+      },
+      {
+        "key": "start_date",
+        "name": "Start date",
+        "description": "",
+        "required": false,
+        "type": {
+          "name": "date_time"
+        },
+        "validations": []
+      },
+      {
+        "key": "end_date",
+        "name": "End date",
+        "description": "",
+        "required": false,
+        "type": {
+          "name": "date_time"
+        },
+        "validations": []
+      },
+      {
+        "key": "sale_paused",
+        "name": "Sale paused",
+        "description": "",
+        "required": false,
+        "type": {
+          "name": "boolean"
+        },
+        "validations": []
+      },
+      {
+        "key": "banner_text",
+        "name": "Banner text",
+        "description": "Displayed on product page sale banners.",
+        "required": false,
+        "type": {
+          "name": "rich_text_field"
+        },
+        "validations": []
+      },
+      {
+        "key": "banner_priority",
+        "name": "Banner priority",
+        "description": "The lower the number, the higher the priority. The winner is displayed. Default: 10",
+        "required": false,
+        "type": {
+          "name": "number_integer"
+        },
+        "validations": []
+      },
+      {
+        "key": "sale_list_text",
+        "name": "Sale list text",
+        "description": "Displayed on lists of active sales.",
+        "required": false,
+        "type": {
+          "name": "rich_text_field"
+        },
+        "validations": []
+      },
+      {
+        "key": "sale_list_priority",
+        "name": "Sale list priority",
+        "description": "The lower the number, the higher the priority. The winner is displayed. Default: 10",
+        "required": false,
+        "type": {
+          "name": "number_integer"
+        },
+        "validations": []
+      },
+      {
+        "key": "sale_image",
+        "name": "Sale image",
+        "description": "",
+        "required": false,
+        "type": {
+          "name": "file_reference"
+        },
+        "validations": [
+          {
+            "name": "file_type_options",
+            "value": "[\"Image\"]"
+          }
+        ]
+      },
+      {
+        "key": "sale_image_url",
+        "name": "Sale image URL",
+        "description": "",
+        "required": false,
+        "type": {
+          "name": "url"
+        },
+        "validations": []
+      },
+      {
+        "key": "offers",
+        "name": "Offers",
+        "description": "",
+        "required": false,
+        "type": {
+          "name": "list.metaobject_reference"
+        },
+        "validations": [
+          {
+            "name": "metaobject_definition_id",
+            "value": "gid://shopify/MetaobjectDefinition/14874280109"
+          }
+        ]
+      }
+    ]
+  }
+}
