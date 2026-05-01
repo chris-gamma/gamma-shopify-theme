@@ -11,14 +11,22 @@
 {% enddoc %}
 {% liquid
   assign now_ts = 'now' | date: '%s' | plus: 0
+  assign product_collection_tokens = '|'
   assign winning_campaign = blank
   assign winning_campaign_end_ts = 9999999999
+  assign matched_offer = blank
+
+  for product_collection in product.collections
+    assign product_collection_tokens = product_collection_tokens | append: product_collection.id | append: '|'
+  endfor
 
   for candidate_campaign in shop.metaobjects.sales_campaigns.values
     assign campaign_start_ts = 0
     assign campaign_end_ts = 9999999999
     assign campaign_has_started = true
     assign campaign_has_not_ended = true
+    assign campaign_applies = false
+    assign candidate_matched_offer = blank
 
     if candidate_campaign.start_date != blank and candidate_campaign.start_date.value != blank
       assign campaign_start_ts = candidate_campaign.start_date.value | date: '%s' | plus: 0
@@ -38,30 +46,27 @@
       continue
     endif
 
-    assign campaign_applies = false
-
     if candidate_campaign.sale_collection != blank and candidate_campaign.sale_collection.value != blank
-      for product_collection in product.collections
-        if product_collection.id == candidate_campaign.sale_collection.value.id
-          assign campaign_applies = true
-          break
-        endif
-      endfor
+      assign campaign_collection_token = '|' | append: candidate_campaign.sale_collection.value.id | append: '|'
+      if product_collection_tokens contains campaign_collection_token
+        assign campaign_applies = true
+      endif
     endif
 
-    if campaign_applies == false
-      if candidate_campaign.offers != blank and candidate_campaign.offers.value != blank
+    if candidate_campaign.offers != blank and candidate_campaign.offers.value != blank
+      if campaign_applies == false or campaign_end_ts < winning_campaign_end_ts
         for candidate_offer in candidate_campaign.offers.value
           if candidate_offer.products != blank and candidate_offer.products.value != blank
             for offered_product in candidate_offer.products.value
               if offered_product.id == product.id
                 assign campaign_applies = true
+                assign candidate_matched_offer = candidate_offer
                 break
               endif
             endfor
           endif
 
-          if campaign_applies
+          if candidate_matched_offer != blank
             break
           endif
         endfor
@@ -72,33 +77,12 @@
       if campaign_end_ts < winning_campaign_end_ts
         assign winning_campaign = candidate_campaign
         assign winning_campaign_end_ts = campaign_end_ts
+        assign matched_offer = candidate_matched_offer
       endif
     endif
   endfor
 
   if winning_campaign != blank
-    assign matched_offer = blank
-
-    if winning_campaign.offers != blank and winning_campaign.offers.value != blank
-      for ordered_offer in winning_campaign.offers.value
-        assign ordered_offer_matches = false
-
-        if ordered_offer.products != blank and ordered_offer.products.value != blank
-          for ordered_offer_product in ordered_offer.products.value
-            if ordered_offer_product.id == product.id
-              assign ordered_offer_matches = true
-              break
-            endif
-          endfor
-        endif
-
-        if ordered_offer_matches
-          assign matched_offer = ordered_offer
-          break
-        endif
-      endfor
-    endif
-
     capture campaign_url
       render 'scs-campaign-url', campaign: winning_campaign
     endcapture
@@ -118,8 +102,8 @@
 
         if matched_offer.offer_image_link != blank and matched_offer.offer_image_link.value != blank
           assign banner_image_url = matched_offer.offer_image_link.value
-        elsif winning_campaign.sale_image_link != blank and winning_campaign.sale_image_link.value != blank
-          assign banner_image_url = winning_campaign.sale_image_link.value
+        elsif winning_campaign.sale_image_url != blank and winning_campaign.sale_image_url.value != blank
+          assign banner_image_url = winning_campaign.sale_image_url.value
         endif
       endif
     endif

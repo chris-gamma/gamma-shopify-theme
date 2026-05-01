@@ -230,7 +230,7 @@ Promotions pages, product merchandising, metaobject-driven campaign content, sha
 The goal is to let Gamma promote time-based campaigns through reusable structured content instead of hand-building every promotion page and product callout.
 
 **Current status**  
-The core pieces are present and wired together, but this is still best treated as in development for reporting purposes. It is a large custom subsystem with multiple templates, metaobject dependencies, localized strings, and shared card wiring, so it should be considered stabilization-stage work rather than a finished rollout.
+The storefront surfaces are implemented, PDP banner matching has been stabilized with a small efficiency pass, and concise maintainer documentation now exists. This should still be treated as in development for reporting purposes because campaign lifecycle and visibility rules are not yet intentionally unified across all surfaces.
 
 **Change size**  
 Total lines of code added or modified: estimated 1,050
@@ -255,8 +255,8 @@ Total lines of code added or modified: estimated 1,050
 
 - Attribution: mixed-over-upstream
 - Attribution basis: the core SCS sections, snippets, and block are upstream-absent, and Gamma also modified existing product and template wiring to expose the system.
-- Short technical summary of how it was implemented: Gamma added a campaign index, campaign detail renderer, shared rich-text and banner helpers, a product-banner block, and template wiring that uses sales-campaign metaobjects plus shared product-card blocks.
-- Any important conformity, maintainability, localization, duplication, fragility, or architecture notes: the implementation stays broadly aligned with Horizon block and template patterns, but it is still a high-touch custom subsystem with many moving parts and should be validated carefully before being treated as complete.
+- Short technical summary of how it was implemented: Gamma added a campaign index, campaign detail renderer, shared rich-text and banner helpers, a product-banner block, template wiring that uses sales-campaign metaobjects plus shared product-card blocks, and a small PDP banner matching optimization that avoids repeated work without changing winner selection.
+- Any important conformity, maintainability, localization, duplication, fragility, or architecture notes: the implementation stays broadly aligned with Horizon block and template patterns, and now includes a concise standalone maintainer document, but it remains a high-touch custom subsystem whose lifecycle and visibility rules are still surface-specific.
 
 # Resolved previously uncertain surfaces
 
