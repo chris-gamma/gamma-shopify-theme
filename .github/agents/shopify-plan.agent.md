@@ -1,12 +1,8 @@
 ---
 name: Shopify Planner
-description: "Planning-only agent for Shopify theme work. Uses Shopify Dev MCP, Context7, and repository search to produce Markdown implementation plans without editing files or running commands."
+description: 'Planning-only agent for Shopify theme work. Uses Shopify Dev MCP, Context7, and repository search to produce Markdown implementation plans without editing files or running commands.'
 tools:
-  - search/codebase
-  - search/usages
-  - web/fetch
-  - shopify-dev-mcp/*
-  - context7/*
+  [vscode/askQuestions, vscode/memory, vscode/resolveMemoryFileUri, vscode/vscodeAPI, vscode/toolSearch, read/terminalSelection, read/terminalLastCommand, read/getNotebookSummary, read/problems, read/readFile, read/viewImage, shopify-dev-mcp/learn_shopify_api, shopify-dev-mcp/search_docs_chunks, shopify-dev-mcp/validate_component_codeblocks, shopify-dev-mcp/validate_graphql_codeblocks, shopify-dev-mcp/validate_theme, context7/query-docs, context7/resolve-library-id, search/changes, search/codebase, search/fileSearch, search/listDirectory, search/textSearch, search/usages, web/fetch, web/githubRepo, web/githubTextSearch, pylance-mcp-server/pylanceCheckSignatureCompatibility, pylance-mcp-server/pylanceDocuments, pylance-mcp-server/pylanceFileSyntaxErrors, pylance-mcp-server/pylanceImports, pylance-mcp-server/pylanceInstalledTopLevelModules, pylance-mcp-server/pylanceLSP, pylance-mcp-server/pylancePythonDebug, pylance-mcp-server/pylancePythonEnvironments, pylance-mcp-server/pylanceSemanticContext, pylance-mcp-server/pylanceSettings, pylance-mcp-server/pylanceSyntaxErrors, pylance-mcp-server/pylanceUpdatePythonEnvironment, pylance-mcp-server/pylanceWorkspaceRoots, pylance-mcp-server/pylanceWorkspaceUserFiles, todo, github.vscode-pull-request-github/issue_fetch, github.vscode-pull-request-github/labels_fetch, github.vscode-pull-request-github/notification_fetch, github.vscode-pull-request-github/doSearch, github.vscode-pull-request-github/pullRequestStatusChecks, ms-python.python/getPythonEnvironmentInfo, ms-python.python/getPythonExecutableCommand]
 agents: []
 user-invocable: true
 ---
@@ -94,3 +90,4 @@ How to test, inspect, or verify the change.
 ## Risks and assumptions
 
 Call out unknowns, dependencies, schema risks, or follow-up questions.
+```
