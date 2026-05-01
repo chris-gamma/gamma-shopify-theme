@@ -138,6 +138,10 @@ The exporter writes one definition file per metaobject type plus an index file h
 - `docs/metaobjects/index.json`
 - `docs/metaobjects/*.definition.json`
 
+Before using or modifying any code that references a Shopify metaobject, refresh the exported definitions, inspect `docs/metaobjects/index.json`, and then read the matching per-type definition file at `docs/metaobjects/{definition-type}.definition.json`.
+
+If the correct per-type definition file is not obvious, use `docs/metaobjects/index.json` to map the metaobject type or name to the correct file. Treat that per-type definition JSON as the source of truth for the metaobject type, field keys, field types, required fields, validations, `displayNameKey`, access settings, and capabilities. Do not invent or guess field keys.
+
 ### One-time Git setup
 
 After cloning the repo, run this command once to activate the `merge=ours` driver for `config/settings_data.json`:
