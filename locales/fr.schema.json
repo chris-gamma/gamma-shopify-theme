@@ -1114,5 +1114,39 @@
     "other_sections": "Autre",
     "storytelling": "Narration",
     "text": "Texte"
+  },
+  "scs": {
+    "banner_block": {
+      "name": "Bannière promotionnelle",
+      "settings": {
+        "show_image": "Afficher l’image",
+        "image_height": "Hauteur de l’image",
+        "compact_spacing": "Utiliser un espacement compact"
+      }
+    },
+    "index_section": {
+      "name": "Liste des promotions",
+      "settings": {
+        "heading": "Titre",
+        "body": "Texte",
+        "campaigns_per_page": "Promotions par page",
+        "show_ended_campaigns": "Afficher les campagnes terminées",
+        "color_scheme": "Combinaison de couleurs",
+        "padding_top": "Espacement supérieur",
+        "padding_bottom": "Espacement inférieur"
+      }
+    },
+    "campaign_section": {
+      "name": "Campagne promotionnelle",
+      "settings": {
+        "show_image": "Afficher l’image",
+        "hero_image_height": "Hauteur de l’image principale",
+        "group_by_offer": "Regrouper les produits par offre",
+        "products_per_page": "Produits par page",
+        "color_scheme": "Combinaison de couleurs",
+        "padding_top": "Espacement supérieur",
+        "padding_bottom": "Espacement inférieur"
+      }
+    }
   }
 }
