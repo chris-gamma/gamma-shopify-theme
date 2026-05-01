@@ -69,4 +69,10 @@ Gamma Equipment Rental's theme is a Shopify Horizon fork. It is buildless by des
 - If work spans multiple surfaces, apply all matching scoped files together.
 - Use the reference docs when deciding where a new variation should live or how an existing family is expected to extend.
 - Use `.github/reference/copilot-workflows.md` when you need to choose the right prompt or skill for a task.
+- Before making changes involving Shopify metaobjects, Liquid code that references `shop.metaobjects`, section schema settings of type `metaobject` or `metaobject_list`, metafields that reference metaobjects, or any feature that depends on Shopify metaobjects, first run `npm run metaobjects:update`.
+- Inspect `docs/metaobjects/index.json` and the relevant `docs/metaobjects/*.definition.json` files before editing metaobject-related code.
+- If the exporter changes `docs/metaobjects`, include those file changes in the same commit or explain why they are intentionally excluded.
+- Never invent metaobject field keys or assume a metaobject definition shape without checking `docs/metaobjects` first.
+- Never commit `.env`, `.env.local`, client secrets, temporary access tokens, or raw request headers.
+- If credentials are unavailable, stop and ask the developer to run `npm run metaobjects:update` locally before continuing.
 - After finishing, report assumptions, files changed, merchant-setting impact, validation performed, and remaining risks.

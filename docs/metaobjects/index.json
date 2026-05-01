@@ -1,0 +1,55 @@
+{
+  "_export": {
+    "source": "shopify-admin-graphql",
+    "apiVersion": "2026-04",
+    "shop": "location-gamma.myshopify.com"
+  },
+  "count": 9,
+  "definitions": [
+    {
+      "type": "battery_system",
+      "name": "Battery system",
+      "file": "battery_system.definition.json"
+    },
+    {
+      "type": "promo_offers",
+      "name": "Promo Offers",
+      "file": "promo_offers.definition.json"
+    },
+    {
+      "type": "return_exchange_policy",
+      "name": "Return & exchange policy",
+      "file": "return_exchange_policy.definition.json"
+    },
+    {
+      "type": "sales_campaigns",
+      "name": "Sales campaigns",
+      "file": "sales_campaigns.definition.json"
+    },
+    {
+      "type": "shopify--battery-technology",
+      "name": "Battery technology",
+      "file": "shopify--battery-technology.definition.json"
+    },
+    {
+      "type": "shopify--battery-type",
+      "name": "Battery type",
+      "file": "shopify--battery-type.definition.json"
+    },
+    {
+      "type": "shopify--power-source",
+      "name": "Power source",
+      "file": "shopify--power-source.definition.json"
+    },
+    {
+      "type": "store_hours",
+      "name": "Store hours",
+      "file": "store_hours.definition.json"
+    },
+    {
+      "type": "warranty_policy",
+      "name": "Warranty policy",
+      "file": "warranty_policy.definition.json"
+    }
+  ]
+}

@@ -9,6 +9,12 @@
 # layout/, locales/, sections/, snippets/, templates/). Those must remain
 # deployable. In particular, config/settings_data.json must NOT be listed
 # here — it is part of the live deployed theme.
+#
+# GitHub workflows, Copilot guidance, repo docs, and local developer tooling
+# are not Shopify theme assets and must not be uploaded during theme deploys.
+# Metaobject definition exports under docs/ are developer documentation and
+# must be committed to Git, but must not be deployed to Shopify.
+# Local environment files and templates stay local and must not be deployed.
 # =============================================================================
 
 # Repository infrastructure and tooling (not Shopify theme files)
@@ -16,11 +22,15 @@
 .venv/**
 .git/**
 .vscode/**
+scripts/**
+docs/**
+node_modules/**
 
 # Root documentation and project metadata
 README.md
 README-Horizon.md
 CHANGES.md
+CHANGELOG.md
 LICENSE.md
 LICENSE-Horizon.md
 release-notes-horizon.md
@@ -28,7 +38,24 @@ release-notes-horizon.md
 # Root tooling config
 pyrightconfig.json
 shopify.theme.toml
+package.json
+package-lock.json
+pnpm-lock.yaml
+yarn.lock
+.gitignore
+.editorconfig
+.prettierrc
+.prettierrc.*
+prettier.config.*
+eslint.config.*
+.eslintrc
+.eslintrc.*
+tsconfig.json
+jsconfig.json
 
 # Local developer state (belt-and-suspenders; these are also git-ignored)
 .env
 .env.*
+.env.local
+.env.*.local
+.env.example
