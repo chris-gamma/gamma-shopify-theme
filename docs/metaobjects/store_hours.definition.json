@@ -1,0 +1,227 @@
+{
+  "_export": {
+    "source": "shopify-admin-graphql",
+    "apiVersion": "2026-04",
+    "shop": "location-gamma.myshopify.com"
+  },
+  "definition": {
+    "id": "gid://shopify/MetaobjectDefinition/13891469485",
+    "name": "Store hours",
+    "type": "store_hours",
+    "description": "Different store hours, automatically displayed around holidays.",
+    "displayNameKey": "name",
+    "createdAt": "2026-03-01T20:12:51Z",
+    "updatedAt": "2026-03-01T21:35:23Z",
+    "metaobjectsCount": 9,
+    "access": {
+      "admin": "PUBLIC_READ_WRITE",
+      "storefront": "PUBLIC_READ"
+    },
+    "capabilities": {
+      "publishable": {
+        "enabled": true
+      },
+      "translatable": {
+        "enabled": true
+      },
+      "renderable": {
+        "enabled": false
+      },
+      "onlineStore": {
+        "enabled": false
+      }
+    },
+    "fieldDefinitions": [
+      {
+        "key": "name",
+        "name": "Name",
+        "description": "",
+        "required": true,
+        "type": {
+          "name": "single_line_text_field"
+        },
+        "validations": []
+      },
+      {
+        "key": "monday",
+        "name": "Monday",
+        "description": "",
+        "required": true,
+        "type": {
+          "name": "single_line_text_field"
+        },
+        "validations": []
+      },
+      {
+        "key": "tuesday",
+        "name": "Tuesday",
+        "description": "",
+        "required": true,
+        "type": {
+          "name": "single_line_text_field"
+        },
+        "validations": []
+      },
+      {
+        "key": "wednesday",
+        "name": "Wednesday",
+        "description": "",
+        "required": true,
+        "type": {
+          "name": "single_line_text_field"
+        },
+        "validations": []
+      },
+      {
+        "key": "thursday",
+        "name": "Thursday",
+        "description": "",
+        "required": true,
+        "type": {
+          "name": "single_line_text_field"
+        },
+        "validations": []
+      },
+      {
+        "key": "friday",
+        "name": "Friday",
+        "description": "",
+        "required": true,
+        "type": {
+          "name": "single_line_text_field"
+        },
+        "validations": []
+      },
+      {
+        "key": "saturday",
+        "name": "Saturday",
+        "description": "",
+        "required": true,
+        "type": {
+          "name": "single_line_text_field"
+        },
+        "validations": []
+      },
+      {
+        "key": "sunday",
+        "name": "Sunday",
+        "description": "",
+        "required": true,
+        "type": {
+          "name": "single_line_text_field"
+        },
+        "validations": []
+      },
+      {
+        "key": "show_holiday_hours_notice",
+        "name": "Show holiday hours notice?",
+        "description": "",
+        "required": false,
+        "type": {
+          "name": "boolean"
+        },
+        "validations": []
+      },
+      {
+        "key": "holiday_hours_notice",
+        "name": "Holiday hours notice",
+        "description": "",
+        "required": false,
+        "type": {
+          "name": "single_line_text_field"
+        },
+        "validations": []
+      },
+      {
+        "key": "highlight_monday",
+        "name": "Highlight Monday?",
+        "description": "Should this day be bolded/red to show holiday hours?",
+        "required": false,
+        "type": {
+          "name": "boolean"
+        },
+        "validations": []
+      },
+      {
+        "key": "highlight_tuesday",
+        "name": "Highlight Tuesday?",
+        "description": "Should this day be bolded/red to show holiday hours?",
+        "required": false,
+        "type": {
+          "name": "boolean"
+        },
+        "validations": []
+      },
+      {
+        "key": "highlight_wednesday",
+        "name": "Highlight Wednesday?",
+        "description": "Should this day be bolded/red to show holiday hours?",
+        "required": false,
+        "type": {
+          "name": "boolean"
+        },
+        "validations": []
+      },
+      {
+        "key": "highlight_thursday",
+        "name": "Highlight Thursday?",
+        "description": "Should this day be bolded/red to show holiday hours?",
+        "required": false,
+        "type": {
+          "name": "boolean"
+        },
+        "validations": []
+      },
+      {
+        "key": "highlight_friday",
+        "name": "Highlight Friday?",
+        "description": "Should this day be bolded/red to show holiday hours?",
+        "required": false,
+        "type": {
+          "name": "boolean"
+        },
+        "validations": []
+      },
+      {
+        "key": "highlight_saturday",
+        "name": "Highlight Saturday?",
+        "description": "Should this day be bolded/red to show holiday hours?",
+        "required": false,
+        "type": {
+          "name": "boolean"
+        },
+        "validations": []
+      },
+      {
+        "key": "display_start",
+        "name": "Display start",
+        "description": "",
+        "required": false,
+        "type": {
+          "name": "date_time"
+        },
+        "validations": []
+      },
+      {
+        "key": "display_end",
+        "name": "Display end",
+        "description": "",
+        "required": false,
+        "type": {
+          "name": "date_time"
+        },
+        "validations": []
+      },
+      {
+        "key": "force_off",
+        "name": "Force off",
+        "description": "",
+        "required": false,
+        "type": {
+          "name": "boolean"
+        },
+        "validations": []
+      }
+    ]
+  }
+}
