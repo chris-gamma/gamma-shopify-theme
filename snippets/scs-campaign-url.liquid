@@ -1,0 +1,27 @@
+{% doc %}
+  Resolves the storefront URL for a sales campaign.
+
+  @param {metaobject} campaign - The campaign metaobject
+
+  @example
+  {% render 'scs-campaign-url', campaign: campaign %}
+{% enddoc %}
+{% liquid
+  assign campaign_url = blank
+
+  if campaign != blank and campaign.system != blank and campaign.system.url != blank
+    assign campaign_url = campaign.system.url
+  endif
+
+  if campaign_url == blank
+    assign campaign_root = routes.root_url
+    assign campaign_root_last_char = campaign_root | slice: -1
+    if campaign_root_last_char != '/'
+      assign campaign_root = campaign_root | append: '/'
+    endif
+
+    assign campaign_url = campaign_root | append: 'pages/promotions/' | append: campaign.system.handle
+  endif
+
+  echo campaign_url | strip
+%}

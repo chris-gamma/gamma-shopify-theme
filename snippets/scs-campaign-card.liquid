@@ -7,12 +7,10 @@
   {% render 'scs-campaign-card', campaign: campaign %}
 {% enddoc %}
 {% liquid
-  assign campaign_root = routes.root_url
-  assign campaign_root_last_char = campaign_root | slice: -1
-  if campaign_root_last_char != '/'
-    assign campaign_root = campaign_root | append: '/'
-  endif
-  assign campaign_page_url = campaign_root | append: 'pages/promotions/' | append: campaign.system.handle
+  capture campaign_url
+    render 'scs-campaign-url', campaign: campaign
+  endcapture
+  assign campaign_url = campaign_url | strip
 
   assign card_image = blank
   if campaign.sale_image != blank and campaign.sale_image.value != blank
@@ -32,13 +30,13 @@
 %}
 <article class="scs-card scs-card--campaign" data-scs-campaign-card>
   {% if card_image != blank %}
-    <a class="scs-card__media" href="{{ campaign_page_url }}">
+    <a class="scs-card__media" href="{{ campaign_url }}">
       {% render 'image', image: card_image, height: 280 %}
     </a>
   {% endif %}
   <div class="scs-card__content">
     <h2 class="scs-card__title">
-      <a href="{{ campaign_page_url }}">{{ campaign.sale_name.value }}</a>
+      <a href="{{ campaign_url }}">{{ campaign.sale_name.value }}</a>
     </h2>
     {% if campaign.sale_list_text != blank %}
       <div class="scs-card__body rte">{% render 'scs-richtext', field: campaign.sale_list_text %}</div>
@@ -46,7 +44,7 @@
       <div class="scs-card__body rte">{% render 'scs-richtext', field: campaign.banner_text %}</div>
     {% endif %}
     <p class="scs-card__cta">
-      <a href="{{ campaign_page_url }}">{{ 'scs.storefront.index.view_sale' | t }}</a>
+      <a href="{{ campaign_url }}">{{ 'scs.storefront.index.view_sale' | t }}</a>
     </p>
   </div>
 </article>

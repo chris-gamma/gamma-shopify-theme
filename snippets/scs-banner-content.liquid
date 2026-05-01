@@ -16,23 +16,25 @@
 
   for candidate_campaign in shop.metaobjects.sales_campaigns.values
     assign campaign_start_ts = 0
-    assign campaign_end_ts = 0
-    assign campaign_is_active = false
+    assign campaign_end_ts = 9999999999
+    assign campaign_has_started = true
+    assign campaign_has_not_ended = true
 
     if candidate_campaign.start_date != blank and candidate_campaign.start_date.value != blank
       assign campaign_start_ts = candidate_campaign.start_date.value | date: '%s' | plus: 0
+      if campaign_start_ts > now_ts
+        assign campaign_has_started = false
+      endif
     endif
 
     if candidate_campaign.end_date != blank and candidate_campaign.end_date.value != blank
       assign campaign_end_ts = candidate_campaign.end_date.value | date: '%s' | plus: 0
-      if campaign_end_ts > now_ts
-        if campaign_start_ts == 0 or campaign_start_ts <= now_ts
-          assign campaign_is_active = true
-        endif
+      if campaign_end_ts < now_ts
+        assign campaign_has_not_ended = false
       endif
     endif
 
-    if campaign_is_active == false
+    if campaign_has_started == false or campaign_has_not_ended == false
       continue
     endif
 
@@ -97,16 +99,14 @@
       endfor
     endif
 
-    assign campaign_root = routes.root_url
-    assign campaign_root_last_char = campaign_root | slice: -1
-    if campaign_root_last_char != '/'
-      assign campaign_root = campaign_root | append: '/'
-    endif
-    assign campaign_page_url = campaign_root | append: 'pages/promotions/' | append: winning_campaign.system.handle
+    capture campaign_url
+      render 'scs-campaign-url', campaign: winning_campaign
+    endcapture
+    assign campaign_url = campaign_url | strip
 
-    assign banner_body_field = winning_campaign.banner_text
+    assign banner_body_field = blank
     assign banner_image = blank
-    assign banner_image_url = campaign_page_url
+    assign banner_image_url = campaign_url
 
     if matched_offer != blank
       if matched_offer.offer_description != blank
@@ -122,6 +122,14 @@
           assign banner_image_url = winning_campaign.sale_image_link.value
         endif
       endif
+    endif
+
+    if banner_body_field == blank and winning_campaign.sale_list_text != blank
+      assign banner_body_field = winning_campaign.sale_list_text
+    endif
+
+    if banner_body_field == blank and winning_campaign.banner_text != blank
+      assign banner_body_field = winning_campaign.banner_text
     endif
   endif
 %}
