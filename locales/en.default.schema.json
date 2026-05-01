@@ -1244,6 +1244,7 @@
         "show_image": "Show image",
         "hero_image_height": "Hero image height",
         "group_by_offer": "Group products by offer",
+        "products_per_page": "Products per page",
         "color_scheme": "Color scheme",
         "padding_top": "Top padding",
         "padding_bottom": "Bottom padding"

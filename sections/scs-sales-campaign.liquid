@@ -2,15 +2,47 @@
   assign campaign = metaobject
   assign sale_collection = campaign.sale_collection.value
   assign grouped_mode = section.settings.group_by_offer
-  assign products_per_page = 20
+  assign products_per_page = section.settings.products_per_page
+
+  assign has_offer_products = false
+  if campaign.offers != blank and campaign.offers.value != blank
+    for offer in campaign.offers.value
+      if offer.products != blank and offer.products.value != blank
+        assign has_offer_products = true
+        break
+      endif
+    endfor
+  endif
+
+  assign has_collection_products = false
+  if sale_collection != blank and sale_collection.products_count > 0
+    assign has_collection_products = true
+  endif
+
+  assign has_any_products = false
+  if has_collection_products or has_offer_products
+    assign has_any_products = true
+  endif
+
+  comment
+    When the merchant selects ungrouped mode but no collection is available,
+    there is no native filter/sort surface. Fall back to grouped rendering so
+    offer products still appear correctly. This is the smallest safe behaviour;
+    the merchant's ungrouped preference is silently overridden only in this
+    edge case.
+  endcomment
+  assign effective_grouped_mode = grouped_mode
+  if grouped_mode == false and sale_collection == blank
+    assign effective_grouped_mode = true
+  endif
 
   assign campaign_image = blank
   assign campaign_image_url = blank
   if campaign.sale_image != blank and campaign.sale_image.value != blank
     assign campaign_image = campaign.sale_image.value
   endif
-  if campaign.sale_image_link != blank and campaign.sale_image_link.value != blank
-    assign campaign_image_url = campaign.sale_image_link.value
+  if campaign.sale_image_url != blank and campaign.sale_image_url.value != blank
+    assign campaign_image_url = campaign.sale_image_url.value
   endif
 
   assign campaign_description = blank
@@ -61,15 +93,11 @@
 </section>
 
 <div class="scs-campaign-content">
-  {% if sale_collection == blank %}
+  {% if has_any_products == false %}
     <div class="scs-empty">
-      <p>{{ 'scs.storefront.empty.no_collection' | t }}</p>
+      <p>{{ 'scs.storefront.empty.no_products' | t }}</p>
     </div>
-  {% elsif sale_collection.products_count == 0 %}
-    <div class="scs-empty">
-      <p>{{ 'content.no_products_found' | t }}</p>
-    </div>
-  {% elsif grouped_mode %}
+  {% elsif effective_grouped_mode %}
 
     <section class="section section--page-width color-{{ section.settings.color_scheme }}">
       <div class="scs-campaign-content__inner">
@@ -106,6 +134,10 @@
 
     {% if campaign.offers != blank and campaign.offers.value != blank %}
       {% for offer in campaign.offers.value %}
+        {%- comment -%}
+          Offer products are rendered all-at-once (no pagination). Pagination applies
+          only to the "Other deals" catch-all collection remainder below.
+        {%- endcomment -%}
         {% if offer.products != blank and offer.products.value != blank %}
           {% assign group_grid_id = 'scs-grid-' | append: section.id | append: '-' | append: offer.system.handle %}
 
@@ -182,60 +214,62 @@
       Other deals: paginated collection products not matched to any offer above.
       The heading is omitted when no named offer groups were rendered (this is the only group).
     {%- endcomment -%}
-    {% paginate sale_collection.products by products_per_page %}
-      {% capture other_children %}
-        {% for current_product in sale_collection.products %}
-          {% capture token %}|{{ current_product.id }}|{% endcapture %}
-          {% unless seen_product_ids contains token %}
-            {% assign seen_product_ids = seen_product_ids | append: token %}
-            <li
-              id="{{ section.id }}-{{ current_product.id }}"
-              class="product-grid__item"
-              data-page="{{ paginate.current_page }}"
-              data-product-id="{{ current_product.id }}"
-              ref="cards[]"
+    {% if sale_collection != blank %}
+      {% paginate sale_collection.products by products_per_page %}
+        {% capture other_children %}
+          {% for current_product in sale_collection.products %}
+            {% capture token %}|{{ current_product.id }}|{% endcapture %}
+            {% unless seen_product_ids contains token %}
+              {% assign seen_product_ids = seen_product_ids | append: token %}
+              <li
+                id="{{ section.id }}-{{ current_product.id }}"
+                class="product-grid__item"
+                data-page="{{ paginate.current_page }}"
+                data-product-id="{{ current_product.id }}"
+                ref="cards[]"
+              >
+                {% # theme-check-disable %}
+                {% content_for 'block', type: '_product-card', id: 'product-card', closest.product: current_product %}
+                {% # theme-check-enable %}
+              </li>
+            {% endunless %}
+          {% endfor %}
+        {% endcapture %}
+
+        {% assign other_children_stripped = other_children | strip %}
+        {% if other_children_stripped != '' %}
+          {% assign no_offer_grid_id = 'scs-grid-' | append: section.id | append: '-no-offer' %}
+
+          <section class="scs-group scs-group--no-offer" data-scs-group-key="no-offer">
+            {% if rendered_offer_groups > 0 %}
+              <header class="scs-group__header">
+                <h2 class="scs-group__title">{{ 'scs.storefront.grouping.other_deals' | t }}</h2>
+              </header>
+            {% endif %}
+
+            <div
+              class="scs-group__grid"
+              style="
+                --product-grid-gap-mobile: {{ section.settings.columns_gap_vertical | at_most: 12 }}px {{ section.settings.columns_gap_horizontal | at_most: 12 }}px;
+                --product-grid-gap-desktop: {{ section.settings.columns_gap_vertical }}px {{ section.settings.columns_gap_horizontal }}px;
+              "
             >
-              {% # theme-check-disable %}
-              {% content_for 'block', type: '_product-card', id: 'product-card', closest.product: current_product %}
-              {% # theme-check-enable %}
-            </li>
-          {% endunless %}
-        {% endfor %}
-      {% endcapture %}
+              <ul
+                id="{{ no_offer_grid_id }}"
+                class="product-grid product-grid--{{ section.id }} product-grid--{{ section.settings.layout_type }}{% if section.settings.mobile_product_card_size == 'large' %} product-grid-mobile--large{% endif %}"
+                role="list"
+                data-product-card-size="{{ section.settings.product_card_size }}"
+                style="--mobile-columns: {% if section.settings.mobile_product_card_size == 'large' %}1{% else %}2{% endif %};"
+              >
+                {{ other_children }}
+              </ul>
+            </div>
 
-      {% assign other_children_stripped = other_children | strip %}
-      {% if other_children_stripped != '' %}
-        {% assign no_offer_grid_id = 'scs-grid-' | append: section.id | append: '-no-offer' %}
-
-        <section class="scs-group scs-group--no-offer" data-scs-group-key="no-offer">
-          {% if rendered_offer_groups > 0 %}
-            <header class="scs-group__header">
-              <h2 class="scs-group__title">{{ 'scs.storefront.grouping.other_deals' | t }}</h2>
-            </header>
-          {% endif %}
-
-          <div
-            class="scs-group__grid"
-            style="
-              --product-grid-gap-mobile: {{ section.settings.columns_gap_vertical | at_most: 12 }}px {{ section.settings.columns_gap_horizontal | at_most: 12 }}px;
-              --product-grid-gap-desktop: {{ section.settings.columns_gap_vertical }}px {{ section.settings.columns_gap_horizontal }}px;
-            "
-          >
-            <ul
-              id="{{ no_offer_grid_id }}"
-              class="product-grid product-grid--{{ section.id }} product-grid--{{ section.settings.layout_type }}{% if section.settings.mobile_product_card_size == 'large' %} product-grid-mobile--large{% endif %}"
-              role="list"
-              data-product-card-size="{{ section.settings.product_card_size }}"
-              style="--mobile-columns: {% if section.settings.mobile_product_card_size == 'large' %}1{% else %}2{% endif %};"
-            >
-              {{ other_children }}
-            </ul>
-          </div>
-
-          {% render 'pagination-controls', paginate: paginate %}
-        </section>
-      {% endif %}
-    {% endpaginate %}
+            {% render 'pagination-controls', paginate: paginate %}
+          </section>
+        {% endif %}
+      {% endpaginate %}
+    {% endif %}
 
       </div>
     </section>
@@ -447,6 +481,15 @@
       "id": "group_by_offer",
       "label": "t:scs.campaign_section.settings.group_by_offer",
       "default": true
+    },
+    {
+      "type": "range",
+      "id": "products_per_page",
+      "label": "t:scs.campaign_section.settings.products_per_page",
+      "min": 4,
+      "max": 50,
+      "step": 4,
+      "default": 20
     },
     {
       "type": "color_scheme",
