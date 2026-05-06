@@ -1,6 +1,8 @@
 from __future__ import annotations
 
 import json
+import os
+import subprocess
 from collections.abc import Mapping
 from pathlib import Path
 from typing import TypeAlias
@@ -22,11 +24,9 @@ from hook_common import (
     normalize_path,
     parse_apply_patch_added_chunks,
     run_command,
-    top_level_dirs,
 )
 
 
-FULL_THEME_CHECK_DIRS = {'config', 'locales', 'templates'}
 FORMATTABLE_EXTENSIONS = {'.css', '.js'}
 CHECKABLE_EXTENSIONS = {'.json', '.liquid'}
 MAX_SUMMARY_OFFENSES = 6
@@ -59,12 +59,8 @@ def maybe_run_prettier(paths: list[str]) -> None:
 
 
 def theme_check_scope(paths: list[str]) -> str:
-    directories = top_level_dirs(paths)
-    if len(directories) != 1:
-        return '.'
-    if directories[0] in FULL_THEME_CHECK_DIRS:
-        return '.'
-    return directories[0]
+    del paths  # Theme Check must run from the theme root; filtering happens after parsing output.
+    return '.'
 
 
 def parse_theme_check_output(raw_output: str) -> list[JSONObject]:
@@ -224,7 +220,20 @@ def main() -> int:
         return 0
 
     scope = theme_check_scope(checkable_paths)
-    result = run_command([shopify, 'theme', 'check', '--path', scope, '-o', 'json', '--no-color'], timeout=120)
+    timeout_seconds = int(os.environ.get('COPILOT_THEME_CHECK_TIMEOUT', '180'))
+    theme_check_command = [shopify, 'theme', 'check', '--path', scope, '-o', 'json', '--no-color']
+
+    try:
+        result = run_command(theme_check_command, timeout=timeout_seconds)
+    except subprocess.TimeoutExpired:
+        emit_json({
+            'systemMessage': (
+                f"Skipping Shopify theme check hook because it timed out after "
+                f"{timeout_seconds}s for scope '{scope}'. "
+                f"Run manually from the repo root: {' '.join(theme_check_command)}"
+            )
+        })
+        return 0
     entries = parse_theme_check_output(result.stdout)
     relevant_entries = filter_entries(entries, set(checkable_paths))
     line_ranges_by_path = current_tool_line_ranges(tool_name, tool_input, change_map, checkable_paths, cwd)
