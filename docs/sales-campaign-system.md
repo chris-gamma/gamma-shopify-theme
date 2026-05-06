@@ -20,8 +20,10 @@ The current theme code uses these `sales_campaigns` fields:
 - `sale_collection`
 - `start_date`
 - `end_date`
+- `sale_paused`
 - `banner_text`
 - `sale_list_text`
+- `sale_list_priority`
 - `sale_image`
 - `sale_image_url`
 - `offers`
@@ -39,13 +41,11 @@ The current theme code uses these `promo_offers` fields:
 - `products`
 - `system.handle`
 
-## Fields defined but not currently used
+## Fields defined but currently unused by theme code
 
-The exported `sales_campaigns` definition includes fields that are not currently used by the theme code:
+The exported `sales_campaigns` definition still includes fields that are not currently used:
 
-- `sales_campaigns.sale_paused`
 - `sales_campaigns.banner_priority`
-- `sales_campaigns.sale_list_priority`
 
 ## Route/helper rule
 
@@ -56,25 +56,97 @@ The exported `sales_campaigns` definition includes fields that are not currently
 
 This documents the current helper behavior only. It does not make broader claims about Shopify platform URL guarantees beyond what the code currently does.
 
-## Visibility/date behavior as currently implemented
+## Canonical lifecycle states
 
-Lifecycle and visibility rules are not fully centralized today.
+`snippets/scs-campaign-lifecycle.liquid` returns exactly one lifecycle state:
 
-Current behavior is split by surface:
+- `paused`
+- `invalid_date`
+- `not_started`
+- `ended`
+- `open_ended`
+- `active`
 
-- the PDP banner checks `start_date` and `end_date`
-- the campaign index optionally hides ended campaigns via `show_ended_campaigns`
-- the campaign detail section has no extra in-section date gate
-- `sale_paused` is defined in the exported metaobject definition but is not currently used by theme code
+Classification precedence is:
+
+1. `paused` when `sale_paused` is true
+2. `invalid_date` when both dates exist and `end_date < start_date`
+3. `not_started` when `start_date > now`
+4. `ended` when `end_date < now`
+5. `open_ended` when no `end_date` exists and the campaign is otherwise eligible to run
+6. `active` otherwise
+
+`paused` is now an active hard-visibility override across SCS surfaces.
+
+## Ended-display window
+
+`snippets/scs-campaign-ended-window.liquid` controls whether an ended campaign is still displayable.
+
+Window rule:
+
+- `runtime = end_date_ts - start_date_ts`
+- `window_end = end_date_ts + runtime`
+- an ended campaign is displayable while `now <= window_end`
+
+Edge handling:
+
+- ended-window logic applies only when lifecycle is `ended`
+- if `start_date` is missing, the ended campaign is treated as outside the window
+- if dates are invalid (`end_date < start_date`), lifecycle remains `invalid_date`
+
+## Surface visibility rules
+
+### Landing/index (`sections/scs-sales-index.liquid`)
+
+- shows `active` and `open_ended`
+- may show `ended` only when:
+	- `show_ended_campaigns` is enabled
+	- and ended-window eligibility is `true`
+- hides `paused`, `not_started`, `invalid_date`, and ended campaigns outside the ended window
+- campaign cards remain presentational via `snippets/scs-campaign-card.liquid`
+- campaign index is not paginated
+
+### Campaign detail (`sections/scs-sales-campaign.liquid`)
+
+- renders full detail content for `active`, `open_ended`, and ended-window-eligible `ended`
+- renders the generic unavailable state for:
+	- `paused`
+	- `not_started`
+	- `invalid_date`
+	- `ended` campaigns outside the ended window
+- grouped/ungrouped product rendering behavior is unchanged inside the renderable branch
+- no-products empty-state behavior is unchanged inside the renderable branch
+
+### PDP banner (`snippets/scs-banner-content.liquid`)
+
+- eligible lifecycle states are `active` and `open_ended` only
+- ineligible states are `paused`, `not_started`, `invalid_date`, and `ended`
+- ineligible campaigns are skipped before expensive nested offer/product matching
+
+## Landing/index ordering contract
+
+Landing/index ordering now uses `sale_list_priority` only on the index surface.
+
+Sort contract:
+
+1. apply lifecycle and ended-window visibility filtering first
+2. bucket campaigns with live (`active`, `open_ended`) before ended-window-eligible `ended`
+3. sort by `sale_list_priority` ascending inside each bucket
+4. treat blank `sale_list_priority` as `10`
+5. sort ties by normalized `end_date` ascending (`blank end_date` as far future)
+6. apply deterministic final tie-break by `campaign.system.handle` ascending
+
+`sale_list_priority` is not used for campaign detail ordering, offer ordering, or PDP banner selection.
 
 ## PDP banner winner-selection rule
 
 `snippets/scs-banner-content.liquid` currently preserves this winner-selection behavior:
 
-- the earliest ending applicable active campaign wins
+- the earliest ending applicable eligible campaign wins
 - a blank `end_date` is treated as far-future
 - ties keep the first encountered campaign because the comparison is strict
-- priority fields are not currently used
+
+`banner_priority` remains unused.
 
 ## Banner content fallback
 
@@ -86,7 +158,7 @@ When a winning campaign is found, the PDP banner body uses this fallback order:
 
 ## Banner image/link fallback
 
-The PDP banner currently uses offer-level media first when a matched offer supplies descriptive banner content:
+The PDP banner uses offer-level media first when a matched offer supplies descriptive banner content:
 
 - matched offer image: `offer_image`
 - matched offer image link: `offer_image_link`
@@ -97,7 +169,7 @@ If no matched-offer image is available, the banner does not currently fall back 
 
 If no image link field is available, the snippet remains safe by falling back to the campaign URL or to non-linked media markup.
 
-## Index/detail/PDP surfaces
+## Main files
 
 Main SCS surfaces and helpers:
 
@@ -105,6 +177,8 @@ Main SCS surfaces and helpers:
 - `sections/scs-sales-campaign.liquid` — renders the campaign detail page for a sales-campaign metaobject
 - `blocks/scs-product-sale-banner.liquid` — renders the PDP banner block wrapper and passes display settings into the shared banner snippet
 - `snippets/scs-banner-content.liquid` — resolves the winning campaign for the current product and renders the PDP banner content
+- `snippets/scs-campaign-lifecycle.liquid` — canonical lifecycle classification
+- `snippets/scs-campaign-ended-window.liquid` — ended-window eligibility checks
 - `snippets/scs-campaign-card.liquid` — renders a single campaign card for the index page
 - `snippets/scs-campaign-url.liquid` — resolves campaign URLs used by shared campaign surfaces
 
@@ -125,12 +199,7 @@ Main SCS surfaces and helpers:
 - ungrouped mode uses the normal collection grid/filter path
 - if ungrouped mode is selected but `sale_collection` is blank, the code falls back to grouped mode so offer-only campaigns can still render
 
-## Known intentional limitations
+## Current status note
 
-Current intentional limitations to keep in mind:
+SCS remains an in-progress/stabilization custom subsystem in this repo's reporting model, even though lifecycle/visibility and index ordering contracts are now formalized.
 
-- lifecycle and visibility rules are not fully centralized today
-- `sale_paused` is not currently used
-- priority fields are not currently used
-- PDP winner selection is end-date driven, not priority-driven
-- banner matching still scans campaign metaobjects and nested offers/products, though the current implementation reduces repeated work inside that scan

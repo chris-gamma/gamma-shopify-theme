@@ -230,7 +230,7 @@ Promotions pages, product merchandising, metaobject-driven campaign content, sha
 The goal is to let Gamma promote time-based campaigns through reusable structured content instead of hand-building every promotion page and product callout.
 
 **Current status**  
-The storefront surfaces are implemented, PDP banner matching has been stabilized with a small efficiency pass, and concise maintainer documentation now exists. This should still be treated as in development for reporting purposes because campaign lifecycle and visibility rules are not yet intentionally unified across all surfaces.
+The storefront surfaces are implemented, lifecycle and visibility behavior is now formalized across index/detail/PDP surfaces, ended-campaign display is time-limited by a runtime-based ended window, and landing/index ordering now applies `sale_list_priority`. This should still be treated as in development/stabilization for reporting purposes.
 
 **Change size**  
 Total lines of code added or modified: estimated 1,050
@@ -255,8 +255,8 @@ Total lines of code added or modified: estimated 1,050
 
 - Attribution: mixed-over-upstream
 - Attribution basis: the core SCS sections, snippets, and block are upstream-absent, and Gamma also modified existing product and template wiring to expose the system.
-- Short technical summary of how it was implemented: Gamma added a campaign index, campaign detail renderer, shared rich-text and banner helpers, a product-banner block, template wiring that uses sales-campaign metaobjects plus shared product-card blocks, and a small PDP banner matching optimization that avoids repeated work without changing winner selection.
-- Any important conformity, maintainability, localization, duplication, fragility, or architecture notes: the implementation stays broadly aligned with Horizon block and template patterns, and now includes a concise standalone maintainer document, but it remains a high-touch custom subsystem whose lifecycle and visibility rules are still surface-specific.
+- Short technical summary of how it was implemented: Gamma now classifies campaigns through canonical lifecycle states (`paused`, `invalid_date`, `not_started`, `ended`, `open_ended`, `active`), applies `sale_paused` as a hard visibility override, gates ended-campaign visibility through a reusable runtime-based ended-window helper, and sorts index cards by live/ended bucket then `sale_list_priority` (blank as `10`) with deterministic tie-breakers.
+- Any important conformity, maintainability, localization, duplication, fragility, or architecture notes: `banner_priority` remains intentionally unused, PDP winner selection remains end-date-driven among eligible campaigns, sales index pagination remains absent (not reintroduced), and grouped/ungrouped detail rendering remains unchanged for campaigns that are allowed to render.
 
 # Resolved previously uncertain surfaces
 

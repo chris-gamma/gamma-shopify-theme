@@ -5,12 +5,21 @@
   endcapture
   assign campaign_lifecycle = campaign_lifecycle | strip
 
-  assign campaign_is_visible = false
+  assign campaign_is_renderable = false
   if campaign_lifecycle == 'active' or campaign_lifecycle == 'open_ended'
-    assign campaign_is_visible = true
+    assign campaign_is_renderable = true
+  elsif campaign_lifecycle == 'ended'
+    capture campaign_is_in_ended_window
+      render 'scs-campaign-ended-window', campaign: campaign
+    endcapture
+    assign campaign_is_in_ended_window = campaign_is_in_ended_window | strip
+
+    if campaign_is_in_ended_window == 'true'
+      assign campaign_is_renderable = true
+    endif
   endif
 
-  if campaign_is_visible
+  if campaign_is_renderable
     assign sale_collection = campaign.sale_collection.value
     assign grouped_mode = section.settings.group_by_offer
     assign products_per_page = section.settings.products_per_page
@@ -74,7 +83,7 @@
 %}
 <div class="section-background color-{{ section.settings.color_scheme }}"></div>
 
-{% if campaign_is_visible %}
+{% if campaign_is_renderable %}
 
 <section
   class="section section--page-width scs-campaign-header-section color-{{ section.settings.color_scheme }}"

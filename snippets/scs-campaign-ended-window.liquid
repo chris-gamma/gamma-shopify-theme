@@ -1,0 +1,51 @@
+{% doc %}
+  Checks whether an ended campaign is still inside its post-end display window.
+
+  @param {metaobject} campaign - The campaign metaobject
+
+  @example
+  {% render 'scs-campaign-ended-window', campaign: campaign %}
+{% enddoc %}
+{% liquid
+  assign campaign_is_in_ended_window = false
+
+  if campaign != blank
+    capture campaign_lifecycle
+      render 'scs-campaign-lifecycle', campaign: campaign
+    endcapture
+    assign campaign_lifecycle = campaign_lifecycle | strip
+
+    if campaign_lifecycle == 'ended'
+      assign has_start_date = false
+      assign has_end_date = false
+      assign campaign_start_ts = 0
+      assign campaign_end_ts = 0
+
+      if campaign.start_date != blank and campaign.start_date.value != blank
+        assign has_start_date = true
+        assign campaign_start_ts = campaign.start_date.value | date: '%s' | plus: 0
+      endif
+
+      if campaign.end_date != blank and campaign.end_date.value != blank
+        assign has_end_date = true
+        assign campaign_end_ts = campaign.end_date.value | date: '%s' | plus: 0
+      endif
+
+      if has_start_date and has_end_date and campaign_end_ts >= campaign_start_ts
+        assign campaign_runtime = campaign_end_ts | minus: campaign_start_ts
+        assign ended_window_end_ts = campaign_end_ts | plus: campaign_runtime
+        assign now_ts = 'now' | date: '%s' | plus: 0
+
+        if now_ts <= ended_window_end_ts
+          assign campaign_is_in_ended_window = true
+        endif
+      endif
+    endif
+  endif
+
+  if campaign_is_in_ended_window
+    echo 'true'
+  else
+    echo 'false'
+  endif
+%}
