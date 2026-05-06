@@ -1,66 +1,80 @@
 {% liquid
   assign campaign = metaobject
-  assign sale_collection = campaign.sale_collection.value
-  assign grouped_mode = section.settings.group_by_offer
-  assign products_per_page = section.settings.products_per_page
+  capture campaign_lifecycle
+    render 'scs-campaign-lifecycle', campaign: campaign
+  endcapture
+  assign campaign_lifecycle = campaign_lifecycle | strip
 
-  assign has_offer_products = false
-  if campaign.offers != blank and campaign.offers.value != blank
-    for offer in campaign.offers.value
-      if offer.products != blank and offer.products.value != blank
-        assign has_offer_products = true
-        break
-      endif
-    endfor
+  assign campaign_is_visible = false
+  if campaign_lifecycle == 'active' or campaign_lifecycle == 'open_ended'
+    assign campaign_is_visible = true
   endif
 
-  assign has_collection_products = false
-  if sale_collection != blank and sale_collection.products_count > 0
-    assign has_collection_products = true
-  endif
+  if campaign_is_visible
+    assign sale_collection = campaign.sale_collection.value
+    assign grouped_mode = section.settings.group_by_offer
+    assign products_per_page = section.settings.products_per_page
 
-  assign has_any_products = false
-  if has_collection_products or has_offer_products
-    assign has_any_products = true
-  endif
+    assign has_offer_products = false
+    if campaign.offers != blank and campaign.offers.value != blank
+      for offer in campaign.offers.value
+        if offer.products != blank and offer.products.value != blank
+          assign has_offer_products = true
+          break
+        endif
+      endfor
+    endif
 
-  comment
-    When the merchant selects ungrouped mode but no collection is available,
-    there is no native filter/sort surface. Fall back to grouped rendering so
-    offer products still appear correctly. This is the smallest safe behaviour;
-    the merchant's ungrouped preference is silently overridden only in this
-    edge case.
-  endcomment
-  assign effective_grouped_mode = grouped_mode
-  if grouped_mode == false and sale_collection == blank
-    assign effective_grouped_mode = true
-  endif
+    assign has_collection_products = false
+    if sale_collection != blank and sale_collection.products_count > 0
+      assign has_collection_products = true
+    endif
 
-  assign campaign_image = blank
-  assign campaign_image_url = blank
-  if campaign.sale_image != blank and campaign.sale_image.value != blank
-    assign campaign_image = campaign.sale_image.value
-  endif
-  if campaign.sale_image_url != blank and campaign.sale_image_url.value != blank
-    assign campaign_image_url = campaign.sale_image_url.value
-  endif
+    assign has_any_products = false
+    if has_collection_products or has_offer_products
+      assign has_any_products = true
+    endif
 
-  assign campaign_description = blank
-  if campaign.sale_list_text != blank
-    assign campaign_description = campaign.sale_list_text
-  elsif campaign.banner_text != blank
-    assign campaign_description = campaign.banner_text
-  endif
+    comment
+      When the merchant selects ungrouped mode but no collection is available,
+      there is no native filter/sort surface. Fall back to grouped rendering so
+      offer products still appear correctly. This is the smallest safe behaviour;
+      the merchant's ungrouped preference is silently overridden only in this
+      edge case.
+    endcomment
+    assign effective_grouped_mode = grouped_mode
+    if grouped_mode == false and sale_collection == blank
+      assign effective_grouped_mode = true
+    endif
 
-  assign show_campaign_lead = false
-  if section.settings.show_image and campaign_image != blank
-    assign show_campaign_lead = true
-  endif
-  if campaign_description != blank
-    assign show_campaign_lead = true
+    assign campaign_image = blank
+    assign campaign_image_url = blank
+    if campaign.sale_image != blank and campaign.sale_image.value != blank
+      assign campaign_image = campaign.sale_image.value
+    endif
+    if campaign.sale_image_url != blank and campaign.sale_image_url.value != blank
+      assign campaign_image_url = campaign.sale_image_url.value
+    endif
+
+    assign campaign_description = blank
+    if campaign.sale_list_text != blank
+      assign campaign_description = campaign.sale_list_text
+    elsif campaign.banner_text != blank
+      assign campaign_description = campaign.banner_text
+    endif
+
+    assign show_campaign_lead = false
+    if section.settings.show_image and campaign_image != blank
+      assign show_campaign_lead = true
+    endif
+    if campaign_description != blank
+      assign show_campaign_lead = true
+    endif
   endif
 %}
 <div class="section-background color-{{ section.settings.color_scheme }}"></div>
+
+{% if campaign_is_visible %}
 
 <section
   class="section section--page-width scs-campaign-header-section color-{{ section.settings.color_scheme }}"
@@ -325,6 +339,16 @@
 
   {% endif %}
 </div>
+{% else %}
+  <section
+    class="section section--page-width color-{{ section.settings.color_scheme }}"
+    style="--padding-block-start: {{ section.settings.padding-block-start }}px; --padding-block-end: {{ section.settings.padding-block-end }}px;"
+  >
+    <div class="scs-empty">
+      <p>{{ 'scs.storefront.empty.unavailable' | t }}</p>
+    </div>
+  </section>
+{% endif %}
 
 {% stylesheet %}
   .scs-campaign-header-section {

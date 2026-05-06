@@ -1,5 +1,30 @@
 {% liquid
-  assign now_ts = 'now' | date: '%s' | plus: 0
+  assign visible_campaign_handles_csv = blank
+
+  for campaign in shop.metaobjects.sales_campaigns.values
+    capture campaign_lifecycle
+      render 'scs-campaign-lifecycle', campaign: campaign
+    endcapture
+    assign campaign_lifecycle = campaign_lifecycle | strip
+
+    assign render_campaign = false
+    if campaign_lifecycle == 'active' or campaign_lifecycle == 'open_ended'
+      assign render_campaign = true
+    elsif campaign_lifecycle == 'ended' and section.settings.show_ended_campaigns
+      assign render_campaign = true
+    endif
+
+    if render_campaign
+      if visible_campaign_handles_csv != blank
+        assign visible_campaign_handles_csv = visible_campaign_handles_csv | append: ','
+      endif
+      assign visible_campaign_handles_csv = visible_campaign_handles_csv | append: campaign.system.handle
+    endif
+  endfor
+
+  if visible_campaign_handles_csv != blank
+    assign visible_campaign_handles = visible_campaign_handles_csv | split: ','
+  endif
 %}
 <div class="section-background color-{{ section.settings.color_scheme }}"></div>
 <section
@@ -18,31 +43,28 @@
       </header>
     {% endif %}
 
-    {% paginate shop.metaobjects.sales_campaigns.values by section.settings.campaigns_per_page %}
-      <div class="scs-index__grid" data-scs-index-grid>
-        {% for campaign in shop.metaobjects.sales_campaigns.values %}
-          {% assign render_campaign = true %}
-          {% if campaign.end_date != blank and campaign.end_date.value != blank %}
-            {% assign campaign_end_ts = campaign.end_date.value | date: '%s' | plus: 0 %}
-            {% if section.settings.show_ended_campaigns == false %}
-              {% if campaign_end_ts < now_ts %}
-                {% assign render_campaign = false %}
+    {% if visible_campaign_handles_csv != blank %}
+      {% paginate visible_campaign_handles by section.settings.campaigns_per_page %}
+        <div class="scs-index__grid" data-scs-index-grid>
+          {% for campaign_handle in visible_campaign_handles %}
+            {% if campaign_handle != blank %}
+              {% assign campaign = shop.metaobjects.sales_campaigns[campaign_handle] %}
+              {% if campaign != blank %}
+                {% render 'scs-campaign-card', campaign: campaign %}
               {% endif %}
             {% endif %}
-          {% endif %}
+          {% endfor %}
+        </div>
 
-          {% if render_campaign %}
-            {% render 'scs-campaign-card', campaign: campaign %}
-          {% endif %}
-        {% endfor %}
-      </div>
-
-      {% if paginate.pages > 1 %}
-        <nav class="scs-index__pagination" aria-label="{{ 'content.pagination.nav_label' | t }}">
-          {{ paginate | default_pagination }}
-        </nav>
-      {% endif %}
-    {% endpaginate %}
+        {% if paginate.pages > 1 %}
+          <nav class="scs-index__pagination" aria-label="{{ 'content.pagination.nav_label' | t }}">
+            {{ paginate | default_pagination }}
+          </nav>
+        {% endif %}
+      {% endpaginate %}
+    {% else %}
+      <div class="scs-index__grid" data-scs-index-grid></div>
+    {% endif %}
   </div>
 </section>
 {% stylesheet %}

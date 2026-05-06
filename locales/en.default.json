@@ -396,6 +396,7 @@
         "more_products": "Loading more products…"
       },
       "empty": {
+        "unavailable": "This promotion is currently unavailable.",
         "no_products": "No products are available for this campaign.",
         "no_collection": "No sale collection is connected to this campaign"
       }

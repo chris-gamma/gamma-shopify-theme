@@ -1,0 +1,43 @@
+{% doc %}
+  Classifies a sales campaign lifecycle state.
+
+  @param {metaobject} campaign - The campaign metaobject
+
+  @example
+  {% render 'scs-campaign-lifecycle', campaign: campaign %}
+{% enddoc %}
+{% liquid
+  assign now_ts = 'now' | date: '%s' | plus: 0
+  assign has_start_date = false
+  assign has_end_date = false
+  assign campaign_start_ts = 0
+  assign campaign_end_ts = 0
+
+  if campaign == blank
+    echo 'invalid_date'
+  elsif campaign.sale_paused != blank and campaign.sale_paused.value == true
+    echo 'paused'
+  else
+    if campaign.start_date != blank and campaign.start_date.value != blank
+      assign has_start_date = true
+      assign campaign_start_ts = campaign.start_date.value | date: '%s' | plus: 0
+    endif
+
+    if campaign.end_date != blank and campaign.end_date.value != blank
+      assign has_end_date = true
+      assign campaign_end_ts = campaign.end_date.value | date: '%s' | plus: 0
+    endif
+
+    if has_start_date and has_end_date and campaign_end_ts < campaign_start_ts
+      echo 'invalid_date'
+    elsif has_start_date and campaign_start_ts > now_ts
+      echo 'not_started'
+    elsif has_end_date and campaign_end_ts < now_ts
+      echo 'ended'
+    elsif has_end_date == false
+      echo 'open_ended'
+    else
+      echo 'active'
+    endif
+  endif
+%}

@@ -10,7 +10,6 @@
   {% render 'scs-banner-content', product: product, show_image: true, image_height: 88, compact_spacing: false %}
 {% enddoc %}
 {% liquid
-  assign now_ts = 'now' | date: '%s' | plus: 0
   assign product_collection_tokens = '|'
   assign winning_campaign = blank
   assign winning_campaign_end_ts = 9999999999
@@ -21,29 +20,21 @@
   endfor
 
   for candidate_campaign in shop.metaobjects.sales_campaigns.values
-    assign campaign_start_ts = 0
     assign campaign_end_ts = 9999999999
-    assign campaign_has_started = true
-    assign campaign_has_not_ended = true
     assign campaign_applies = false
     assign candidate_matched_offer = blank
 
-    if candidate_campaign.start_date != blank and candidate_campaign.start_date.value != blank
-      assign campaign_start_ts = candidate_campaign.start_date.value | date: '%s' | plus: 0
-      if campaign_start_ts > now_ts
-        assign campaign_has_started = false
-      endif
+    capture candidate_campaign_lifecycle
+      render 'scs-campaign-lifecycle', campaign: candidate_campaign
+    endcapture
+    assign candidate_campaign_lifecycle = candidate_campaign_lifecycle | strip
+
+    if candidate_campaign_lifecycle != 'active' and candidate_campaign_lifecycle != 'open_ended'
+      continue
     endif
 
     if candidate_campaign.end_date != blank and candidate_campaign.end_date.value != blank
       assign campaign_end_ts = candidate_campaign.end_date.value | date: '%s' | plus: 0
-      if campaign_end_ts < now_ts
-        assign campaign_has_not_ended = false
-      endif
-    endif
-
-    if campaign_has_started == false or campaign_has_not_ended == false
-      continue
     endif
 
     if candidate_campaign.sale_collection != blank and candidate_campaign.sale_collection.value != blank
@@ -114,6 +105,14 @@
 
     if banner_body_field == blank and winning_campaign.banner_text != blank
       assign banner_body_field = winning_campaign.banner_text
+    endif
+
+    if banner_image == blank and winning_campaign.sale_image != blank and winning_campaign.sale_image.value != blank
+      assign banner_image = winning_campaign.sale_image.value
+    endif
+
+    if banner_image_url == campaign_url and winning_campaign.sale_image_url != blank and winning_campaign.sale_image_url.value != blank
+      assign banner_image_url = winning_campaign.sale_image_url.value
     endif
   endif
 %}
