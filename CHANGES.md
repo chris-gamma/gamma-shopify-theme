@@ -244,7 +244,7 @@ Total lines of code added or modified: estimated 1,050
 - `snippets/scs-richtext.liquid`
 - `blocks/scs-product-sale-banner.liquid`
 - `templates/metaobject/sales_campaigns.json`
-- `templates/page.sales.json`
+- `templates/page.promotions.json`
 - `templates/product.json`
 - `locales/en.default.json`
 - `locales/fr.json`
