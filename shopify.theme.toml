@@ -29,3 +29,9 @@ theme_id = "152421925037"
 # Development / preview theme — safe for iterative development and testing.
 store = "location-gamma.myshopify.com"
 theme_id = "152420548781"
+
+[environments.dev-store]
+# Separate development store with sample products. Useful for testing features
+# before the full product catalog is available on the live theme.
+store = "gamma-dev-2318.myshopify.com"
+theme_id = "160449757420"
