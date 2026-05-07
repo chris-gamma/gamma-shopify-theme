@@ -114,15 +114,36 @@
     if banner_image_url == campaign_url and winning_campaign.sale_image_url != blank and winning_campaign.sale_image_url.value != blank
       assign banner_image_url = winning_campaign.sale_image_url.value
     endif
+
+    assign show_banner_action = false
+    if campaign_url != blank
+      assign show_banner_action = true
+    endif
+
+    assign banner_image_link_url = banner_image_url
+    if show_banner_action and banner_image_link_url == campaign_url
+      assign banner_image_link_url = blank
+    endif
   endif
 %}
 {% if winning_campaign != blank and banner_body_field != blank %}
+  {% capture banner_content_markup %}
+    <div class="scs-banner__body rte">
+      {% render 'scs-richtext', field: banner_body_field %}
+    </div>
+    {% if show_banner_action %}
+      <p class="scs-banner__cta">
+        <a href="{{ campaign_url }}">{{ 'scs.storefront.index.view_sale' | t }}</a>
+      </p>
+    {% endif %}
+  {% endcapture %}
+
   <div class="scs-banner{% if compact_spacing %} scs-banner--compact{% endif %}" data-scs-banner>
     {% if show_image and banner_image != blank %}
       <div class="scs-banner__media-layout">
         <div class="scs-banner__image-wrap">
-          {% if banner_image_url != blank %}
-            <a class="scs-banner__image-link" href="{{ banner_image_url }}">
+          {% if banner_image_link_url != blank %}
+            <a class="scs-banner__image-link" href="{{ banner_image_link_url }}">
               {% render 'image', image: banner_image, height: image_height %}
             </a>
           {% else %}
@@ -132,16 +153,12 @@
           {% endif %}
         </div>
         <div class="scs-banner__content">
-          <div class="scs-banner__body rte">
-            {% render 'scs-richtext', field: banner_body_field %}
-          </div>
+          {{ banner_content_markup }}
         </div>
       </div>
     {% else %}
       <div class="scs-banner__content">
-        <div class="scs-banner__body rte">
-          {% render 'scs-richtext', field: banner_body_field %}
-        </div>
+        {{ banner_content_markup }}
       </div>
     {% endif %}
   </div>

@@ -163,6 +163,7 @@
         {%- endcomment -%}
         {% if offer.products != blank and offer.products.value != blank %}
           {% assign group_grid_id = 'scs-grid-' | append: section.id | append: '-' | append: offer.system.handle %}
+          {% assign group_title_id = 'scs-group-title-' | append: section.id | append: '-' | append: offer.system.handle %}
 
           {% capture group_children %}
             {% for op in offer.products.value %}
@@ -187,9 +188,13 @@
           {% if group_children_stripped != '' %}
             {% assign rendered_offer_groups = rendered_offer_groups | plus: 1 %}
 
-            <section class="scs-group" data-scs-group-key="{{ offer.system.handle }}">
+            <section
+              class="scs-group"
+              data-scs-group-key="{{ offer.system.handle }}"
+              aria-labelledby="{{ group_title_id }}"
+            >
               <header class="scs-group__header">
-                <h2 class="scs-group__title">{{ offer.offer_name.value }}</h2>
+                <h2 id="{{ group_title_id }}" class="scs-group__title">{{ offer.offer_name.value }}</h2>
                 {% assign has_offer_image = false %}
                 {% if offer.offer_image != blank and offer.offer_image.value != blank %}
                   {% assign has_offer_image = true %}

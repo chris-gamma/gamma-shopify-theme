@@ -383,6 +383,7 @@
         "more_products": "Chargement d’autres produits…"
       },
       "empty": {
+        "no_campaigns": "Aucune promotion n’est disponible pour le moment.",
         "unavailable": "Cette promotion n’est pas disponible pour le moment.",
         "no_products": "Aucun produit n'est disponible pour cette promotion.",
         "no_collection": "Aucune collection promotionnelle n’est liée à cette campagne"

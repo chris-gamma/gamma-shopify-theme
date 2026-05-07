@@ -4,12 +4,14 @@
   @example
   {% content_for 'block', type: 'scs-product-sale-banner', id: 'scs-product-sale-banner' %}
 {% enddoc %}
-{% render 'scs-banner-content',
-  product: product,
-  show_image: block.settings.show_image,
-  image_height: block.settings.image_height,
-  compact_spacing: block.settings.compact_spacing
-%}
+<div class="scs-banner-block" {{ block.shopify_attributes }}>
+  {% render 'scs-banner-content',
+    product: product,
+    show_image: block.settings.show_image,
+    image_height: block.settings.image_height,
+    compact_spacing: block.settings.compact_spacing
+  %}
+</div>
 {% stylesheet %}
   .scs-banner {
     display: grid;
@@ -56,6 +58,15 @@
   }
 
   .scs-banner__body :is(strong, em, a) {
+    color: inherit;
+  }
+
+  .scs-banner__cta {
+    margin: 0.5rem 0 0;
+    font-weight: 500;
+  }
+
+  .scs-banner__cta a {
     color: inherit;
   }
 

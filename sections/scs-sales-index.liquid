@@ -15,80 +15,88 @@
       </header>
     {% endif %}
 
-    <div class="scs-index__grid" data-scs-index-grid>
-      {% liquid
-        assign campaign_sort_records = ''
+    {% liquid
+      assign campaign_sort_records = ''
 
-        for campaign in shop.metaobjects.sales_campaigns.values
-          capture campaign_lifecycle
-            render 'scs-campaign-lifecycle', campaign: campaign
+      for campaign in shop.metaobjects.sales_campaigns.values
+        capture campaign_lifecycle
+          render 'scs-campaign-lifecycle', campaign: campaign
+        endcapture
+        assign campaign_lifecycle = campaign_lifecycle | strip
+
+        assign render_campaign = false
+        assign campaign_bucket_rank = blank
+
+        if campaign_lifecycle == 'active' or campaign_lifecycle == 'open_ended'
+          assign render_campaign = true
+          assign campaign_bucket_rank = '0'
+        elsif campaign_lifecycle == 'ended' and section.settings.show_ended_campaigns
+          capture campaign_is_in_ended_window
+            render 'scs-campaign-ended-window', campaign: campaign
           endcapture
-          assign campaign_lifecycle = campaign_lifecycle | strip
+          assign campaign_is_in_ended_window = campaign_is_in_ended_window | strip
 
-          assign render_campaign = false
-          assign campaign_bucket_rank = blank
-
-          if campaign_lifecycle == 'active' or campaign_lifecycle == 'open_ended'
+          if campaign_is_in_ended_window == 'true'
             assign render_campaign = true
-            assign campaign_bucket_rank = '0'
-          elsif campaign_lifecycle == 'ended' and section.settings.show_ended_campaigns
-            capture campaign_is_in_ended_window
-              render 'scs-campaign-ended-window', campaign: campaign
-            endcapture
-            assign campaign_is_in_ended_window = campaign_is_in_ended_window | strip
-
-            if campaign_is_in_ended_window == 'true'
-              assign render_campaign = true
-              assign campaign_bucket_rank = '1'
-            endif
+            assign campaign_bucket_rank = '1'
           endif
-
-          if render_campaign
-            assign campaign_priority = 10
-            if campaign.sale_list_priority != blank and campaign.sale_list_priority.value != blank
-              assign campaign_priority = campaign.sale_list_priority.value | plus: 0
-            endif
-            assign campaign_priority_sort = campaign_priority | plus: 1000000
-
-            assign campaign_end_ts = 9999999999
-            if campaign.end_date != blank and campaign.end_date.value != blank
-              assign campaign_end_ts = campaign.end_date.value | date: '%s' | plus: 0
-            endif
-
-            capture campaign_sort_record
-              echo campaign_bucket_rank
-              echo '~'
-              echo campaign_priority_sort
-              echo '~'
-              echo campaign_end_ts
-              echo '~'
-              echo campaign.system.handle
-            endcapture
-            assign campaign_sort_record = campaign_sort_record | strip
-
-            if campaign_sort_records == ''
-              assign campaign_sort_records = campaign_sort_record
-            else
-              assign campaign_sort_records = campaign_sort_records | append: '||' | append: campaign_sort_record
-            endif
-          endif
-        endfor
-
-        assign sorted_campaign_records = '' | split: ','
-        if campaign_sort_records != ''
-          assign sorted_campaign_records = campaign_sort_records | split: '||' | sort_natural
         endif
-      %}
 
-      {% for campaign_record in sorted_campaign_records %}
-        {% assign campaign_record_parts = campaign_record | split: '~' %}
-        {% assign campaign_handle = campaign_record_parts[3] %}
-        {% assign sorted_campaign = shop.metaobjects.sales_campaigns[campaign_handle] %}
-        {% if sorted_campaign != blank %}
-          {% render 'scs-campaign-card', campaign: sorted_campaign %}
-        {% endif %}
-      {% endfor %}
-    </div>
+        if render_campaign
+          assign campaign_priority = 10
+          if campaign.sale_list_priority != blank and campaign.sale_list_priority.value != blank
+            assign campaign_priority = campaign.sale_list_priority.value | plus: 0
+          endif
+          assign campaign_priority_sort = campaign_priority | plus: 1000000
+
+          assign campaign_end_ts = 9999999999
+          if campaign.end_date != blank and campaign.end_date.value != blank
+            assign campaign_end_ts = campaign.end_date.value | date: '%s' | plus: 0
+          endif
+
+          capture campaign_sort_record
+            echo campaign_bucket_rank
+            echo '~'
+            echo campaign_priority_sort
+            echo '~'
+            echo campaign_end_ts
+            echo '~'
+            echo campaign.system.handle
+          endcapture
+          assign campaign_sort_record = campaign_sort_record | strip
+
+          if campaign_sort_records == ''
+            assign campaign_sort_records = campaign_sort_record
+          else
+            assign campaign_sort_records = campaign_sort_records | append: '||' | append: campaign_sort_record
+          endif
+        endif
+      endfor
+
+      assign sorted_campaign_records = '' | split: ','
+      if campaign_sort_records != ''
+        assign sorted_campaign_records = campaign_sort_records | split: '||' | sort_natural
+      endif
+    %}
+
+    {% if sorted_campaign_records.size > 0 %}
+      <ul class="scs-index__grid" data-scs-index-grid role="list">
+        {% for campaign_record in sorted_campaign_records %}
+          {% assign campaign_record_parts = campaign_record | split: '~' %}
+          {% assign campaign_handle = campaign_record_parts[3] %}
+          {% assign sorted_campaign = shop.metaobjects.sales_campaigns[campaign_handle] %}
+          {% if sorted_campaign != blank %}
+            <li class="scs-index__item">
+              {% render 'scs-campaign-card', campaign: sorted_campaign %}
+            </li>
+          {% endif %}
+        {% endfor %}
+      </ul>
+    {% else %}
+      <div class="scs-empty" data-scs-index-empty>
+        <p>{{ 'scs.storefront.empty.no_campaigns' | t }}</p>
+      </div>
+    {% endif %}
   </div>
 </section>
 {% stylesheet %}
@@ -113,6 +121,13 @@
     grid-template-columns: repeat(1, minmax(0, 1fr));
     gap: 1rem;
     margin-bottom: 2rem;
+    list-style: none;
+    margin-inline: 0;
+    padding: 0;
+  }
+
+  .scs-index__item {
+    list-style: none;
   }
 
   .scs-card {
@@ -125,10 +140,6 @@
   .scs-card__media {
     display: block;
     width: 100%;
-  }
-
-  .scs-card__media a {
-    display: block;
   }
 
   .scs-card__content {
@@ -158,10 +169,12 @@
 
   .scs-card__cta {
     margin: 0.5rem 0 0;
+    font-weight: 500;
   }
 
-  .scs-card__cta a {
-    font-weight: 500;
+  .scs-empty {
+    padding: 2rem 0;
+    text-align: center;
   }
 
   @media screen and (min-width: 750px) {

@@ -11,6 +11,7 @@
     render 'scs-campaign-url', campaign: campaign
   endcapture
   assign campaign_url = campaign_url | strip
+  assign campaign_title_id = 'scs-campaign-title-' | append: campaign.system.handle
 
   assign card_image = blank
   if campaign.sale_image != blank and campaign.sale_image.value != blank
@@ -28,14 +29,14 @@
     endif
   endif
 %}
-<article class="scs-card scs-card--campaign" data-scs-campaign-card>
+<article class="scs-card scs-card--campaign" data-scs-campaign-card aria-labelledby="{{ campaign_title_id }}">
   {% if card_image != blank %}
-    <a class="scs-card__media" href="{{ campaign_url }}">
+    <div class="scs-card__media">
       {% render 'image', image: card_image, height: 280 %}
-    </a>
+    </div>
   {% endif %}
   <div class="scs-card__content">
-    <h2 class="scs-card__title">
+    <h2 id="{{ campaign_title_id }}" class="scs-card__title">
       <a href="{{ campaign_url }}">{{ campaign.sale_name.value }}</a>
     </h2>
     {% if campaign.sale_list_text != blank %}
@@ -43,9 +44,7 @@
     {% elsif campaign.banner_text != blank %}
       <div class="scs-card__body rte">{% render 'scs-richtext', field: campaign.banner_text %}</div>
     {% endif %}
-    <p class="scs-card__cta">
-      <a href="{{ campaign_url }}">{{ 'scs.storefront.index.view_sale' | t }}</a>
-    </p>
+    <p class="scs-card__cta">{{ 'scs.storefront.index.view_sale' | t }}</p>
   </div>
 </article>
 {% stylesheet %}
@@ -58,10 +57,6 @@
   }
 
   .scs-card__media {
-    display: block;
-  }
-
-  .scs-card__media a {
     display: block;
   }
 

@@ -1129,7 +1129,6 @@
       "settings": {
         "heading": "Titre",
         "body": "Texte",
-        "campaigns_per_page": "Promotions par page",
         "show_ended_campaigns": "Afficher les campagnes terminées",
         "color_scheme": "Combinaison de couleurs",
         "padding_top": "Espacement supérieur",

@@ -1231,7 +1231,6 @@
       "settings": {
         "heading": "Heading",
         "body": "Body",
-        "campaigns_per_page": "Campaigns per page",
         "show_ended_campaigns": "Show ended campaigns",
         "color_scheme": "Color scheme",
         "padding_top": "Top padding",
