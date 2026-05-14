@@ -87,6 +87,8 @@
 
 <section
   class="section section--page-width scs-campaign-header-section color-{{ section.settings.color_scheme }}"
+  data-scs-surface="detail"
+  data-scs-detail-header
   style="--padding-block-start: {{ section.settings.padding-block-start }}px; --padding-block-end: {{ section.settings.padding-block-end }}px;"
 >
   <div class="scs-campaign-header">
@@ -117,7 +119,7 @@
 
 <div class="scs-campaign-content">
   {% if has_any_products == false %}
-    <div class="scs-empty">
+    <div class="scs-empty" data-scs-detail-empty data-scs-detail-empty-reason="no_products">
       <p>{{ 'scs.storefront.empty.no_products' | t }}</p>
     </div>
   {% elsif effective_grouped_mode %}
@@ -356,9 +358,10 @@
 {% else %}
   <section
     class="section section--page-width color-{{ section.settings.color_scheme }}"
+    data-scs-surface="detail"
     style="--padding-block-start: {{ section.settings.padding-block-start }}px; --padding-block-end: {{ section.settings.padding-block-end }}px;"
   >
-    <div class="scs-empty">
+    <div class="scs-empty" data-scs-detail-empty data-scs-detail-empty-reason="unavailable">
       <p>{{ 'scs.storefront.empty.unavailable' | t }}</p>
     </div>
   </section>

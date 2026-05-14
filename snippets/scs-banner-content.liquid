@@ -133,12 +133,12 @@
     </div>
     {% if show_banner_action %}
       <p class="scs-banner__cta">
-        <a href="{{ campaign_url }}">{{ 'scs.storefront.index.view_sale' | t }}</a>
+        <a href="{{ campaign_url }}" data-scs-banner-cta>{{ 'scs.storefront.index.view_sale' | t }}</a>
       </p>
     {% endif %}
   {% endcapture %}
 
-  <div class="scs-banner{% if compact_spacing %} scs-banner--compact{% endif %}" data-scs-banner>
+  <div class="scs-banner{% if compact_spacing %} scs-banner--compact{% endif %}" data-scs-banner data-scs-campaign-handle="{{ winning_campaign.system.handle }}">
     {% if show_image and banner_image != blank %}
       <div class="scs-banner__media-layout">
         <div class="scs-banner__image-wrap">

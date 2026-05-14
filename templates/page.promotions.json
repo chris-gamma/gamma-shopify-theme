@@ -4,7 +4,6 @@
       "type": "scs-sales-index",
       "settings": {
         "heading": "Promotions",
-        "campaigns_per_page": 12,
         "show_ended_campaigns": false,
         "color_scheme": "scheme-1",
         "padding-block-start": 48,

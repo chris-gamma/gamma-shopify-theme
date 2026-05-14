@@ -29,7 +29,7 @@
     endif
   endif
 %}
-<article class="scs-card scs-card--campaign" data-scs-campaign-card aria-labelledby="{{ campaign_title_id }}">
+<article class="scs-card scs-card--campaign" data-scs-campaign-card data-scs-campaign-handle="{{ campaign.system.handle }}"{% if campaign_url == blank %} data-scs-campaign-url-missing{% endif %} aria-labelledby="{{ campaign_title_id }}">
   {% if card_image != blank %}
     <div class="scs-card__media">
       {% render 'image', image: card_image, height: 280 %}
@@ -37,7 +37,11 @@
   {% endif %}
   <div class="scs-card__content">
     <h2 id="{{ campaign_title_id }}" class="scs-card__title">
-      <a href="{{ campaign_url }}">{{ campaign.sale_name.value }}</a>
+      {% if campaign_url != blank %}
+        <a href="{{ campaign_url }}">{{ campaign.sale_name.value }}</a>
+      {% else %}
+        {{ campaign.sale_name.value }}
+      {% endif %}
     </h2>
     {% if campaign.sale_list_text != blank %}
       <div class="scs-card__body rte">{% render 'scs-richtext', field: campaign.sale_list_text %}</div>

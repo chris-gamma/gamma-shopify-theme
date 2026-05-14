@@ -4,6 +4,12 @@
 
 The Sales Campaign System (SCS) is Gamma's metaobject-driven promotions subsystem.
 
+Ownership boundary:
+
+- the Gamma theme renders canonical storefront surfaces
+- the `sales-campaign-manager` app verifies compatibility and reports remediation guidance
+- the app does not mutate theme files in base v1
+
 It currently powers three storefront surfaces:
 
 - the campaign index page
@@ -52,7 +58,8 @@ The exported `sales_campaigns` definition still includes fields that are not cur
 `snippets/scs-campaign-url.liquid` resolves campaign URLs as follows:
 
 - use `campaign.system.url` when present
-- otherwise fall back to `routes.root_url` + `pages/promotions/` + `campaign.system.handle`
+- otherwise infer `{sale_index_handle}` from the current `/pages/{sale_index_handle}` or `/pages/{sale_index_handle}/{campaign_handle}` request path and build `/pages/{sale_index_handle}/{campaign.system.handle}`
+- if a safe route root cannot be inferred, emit no fallback URL
 
 This documents the current helper behavior only. It does not make broader claims about Shopify platform URL guarantees beyond what the code currently does.
 
@@ -165,7 +172,7 @@ The PDP banner uses offer-level media first when a matched offer supplies descri
 
 If that matched-offer path is active and no offer image link is present, the link target falls back to the winning campaign's `sale_image_url`.
 
-If no matched-offer image is available, the banner does not currently fall back to rendering `campaign.sale_image`; the banner renders without media instead.
+If no matched-offer image is available, the banner falls back to `campaign.sale_image` when present.
 
 If no image link field is available, the snippet remains safe by falling back to the campaign URL or to non-linked media markup.
 

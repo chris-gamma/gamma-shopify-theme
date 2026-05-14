@@ -4,7 +4,7 @@
   @example
   {% content_for 'block', type: 'scs-product-sale-banner', id: 'scs-product-sale-banner' %}
 {% enddoc %}
-<div class="scs-banner-block" {{ block.shopify_attributes }}>
+<div class="scs-banner-block" data-scs-banner-block {{ block.shopify_attributes }}>
   {% render 'scs-banner-content',
     product: product,
     show_image: block.settings.show_image,
