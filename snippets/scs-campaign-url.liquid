@@ -2,7 +2,6 @@
   Resolves the storefront URL for a sales campaign.
 
   @param {metaobject} campaign - The campaign metaobject
-  @param {string} [sale_index_handle] - Optional explicit route root hint for fallback URL building
 
   @example
   {% render 'scs-campaign-url', campaign: campaign %}
@@ -20,29 +19,13 @@
   endif
 
   if campaign_url == blank and campaign_handle != blank
-    assign inferred_sale_index_handle = blank
-    assign request_path = request.path | default: ''
-    assign request_path_parts = request_path | split: '/'
-    assign request_path_root = request_path_parts[1]
-    assign request_path_sale_index_handle = request_path_parts[2]
-
-    if request_path_root == 'pages' and request_path_sale_index_handle != blank
-      assign inferred_sale_index_handle = request_path_sale_index_handle
-    elsif sale_index_handle != blank
-      assign inferred_sale_index_handle = sale_index_handle
+    assign campaign_root = routes.root_url
+    assign campaign_root_last_char = campaign_root | slice: -1
+    if campaign_root_last_char != '/'
+      assign campaign_root = campaign_root | append: '/'
     endif
 
-    assign inferred_sale_index_handle = inferred_sale_index_handle | strip | downcase | replace: '_', '-' | replace: ' ', '-'
-
-    if inferred_sale_index_handle != blank
-      assign campaign_root = routes.root_url
-      assign campaign_root_last_char = campaign_root | slice: -1
-      if campaign_root_last_char != '/'
-        assign campaign_root = campaign_root | append: '/'
-      endif
-
-      assign campaign_url = campaign_root | append: 'pages/' | append: inferred_sale_index_handle | append: '/' | append: campaign_handle
-    endif
+    assign campaign_url = campaign_root | append: 'pages/promotions/' | append: campaign_handle
   endif
 
   echo campaign_url | strip

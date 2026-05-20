@@ -58,8 +58,10 @@ The exported `sales_campaigns` definition still includes fields that are not cur
 `snippets/scs-campaign-url.liquid` resolves campaign URLs as follows:
 
 - use `campaign.system.url` when present
-- otherwise infer `{sale_index_handle}` from the current `/pages/{sale_index_handle}` or `/pages/{sale_index_handle}/{campaign_handle}` request path and build `/pages/{sale_index_handle}/{campaign.system.handle}`
-- if a safe route root cannot be inferred, emit no fallback URL
+- otherwise build the fixed Gamma fallback URL `/pages/promotions/{campaign.system.handle}`
+
+The helper does not infer route roots from request-path context and does not
+switch to app-proxy URLs for canonical campaign links.
 
 This documents the current helper behavior only. It does not make broader claims about Shopify platform URL guarantees beyond what the code currently does.
 
