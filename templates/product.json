@@ -282,7 +282,7 @@
                       "type": "custom-liquid",
                       "name": "t:names.custom_liquid",
                       "settings": {
-                        "custom_liquid": "{% assign included_in_the_set = product.selected_or_first_available_variant.metafields.custom.included_in_the_set %}\n\n{% if included_in_the_set != blank %}\n  <div class=\"rte\">{{ included_in_the_set | metafield_tag }}</div>\n{% endif %}"
+                        "custom_liquid": "{% assign included_in_the_set = closest.product.selected_or_first_available_variant.metafields.custom.included_in_the_set %}\n{% capture included_in_the_set_check %}{{ included_in_the_set | metafield_tag | strip_html | strip }}{% endcapture %}\n{% if included_in_the_set == blank or included_in_the_set_check == '' %}\n  {% assign included_in_the_set = closest.product.metafields.custom.included_in_the_set %}\n{% endif %}\n\n{% if included_in_the_set != blank %}\n  <div class=\"rte\">{{ included_in_the_set | metafield_tag }}</div>\n{% endif %}"
                       },
                       "blocks": {}
                     }
@@ -305,7 +305,7 @@
                       "type": "custom-liquid",
                       "name": "Tech specs table",
                       "settings": {
-                        "custom_liquid": "{%- assign tech_specs = product.selected_or_first_available_variant.metafields.custom.technical_specifications -%}\n{%- if tech_specs != blank and tech_specs.value != blank -%}\n  <table class=\"table product-specs-table\">\n    <tbody>\n      {%- for spec in tech_specs.value -%}\n        {%- assign parts = spec | split: ':' -%}\n        {%- assign label = parts | first | strip -%}\n        {%- assign value = parts | slice: 1 | join: ':' | strip -%}\n\n        {%- if label != blank or value != blank -%}\n          <tr>\n            <th scope=\"row\" style=\"text-align:left;\">{{ label }}</th>\n            <td style=\"text-align:left;\">{{ value }}</td>\n          </tr>\n        {%- endif -%}\n      {%- endfor -%}\n    </tbody>\n  </table>\n{%- endif -%}"
+                        "custom_liquid": "{%- assign tech_specs = closest.product.selected_or_first_available_variant.metafields.custom.technical_specifications -%}\n{%- if tech_specs == blank -%}\n  {%- assign tech_specs = closest.product.metafields.custom.technical_specifications -%}\n{%- endif -%}\n{%- if tech_specs != blank and tech_specs.value != blank -%}\n  <table class=\"table product-specs-table\">\n    <tbody>\n      {%- for spec in tech_specs.value -%}\n        {%- assign parts = spec | split: ':' -%}\n        {%- assign label = parts | first | strip -%}\n        {%- assign value = parts | slice: 1 | join: ':' | strip -%}\n\n        {%- if label != blank or value != blank -%}\n          <tr>\n            <th scope=\"row\" style=\"text-align:left;\">{{ label }}</th>\n            <td style=\"text-align:left;\">{{ value }}</td>\n          </tr>\n        {%- endif -%}\n      {%- endfor -%}\n    </tbody>\n  </table>\n{%- endif -%}"
                       },
                       "blocks": {}
                     }
@@ -328,7 +328,7 @@
                       "type": "custom-liquid",
                       "name": "t:names.custom_liquid",
                       "settings": {
-                        "custom_liquid": "{% assign gammas_advice = product.selected_or_first_available_variant.metafields.custom.gamma_s_advice %}\n\n{% if gammas_advice != blank %}\n  <div class=\"rte\">{{ gammas_advice | metafield_tag }}</div>\n{% endif %}"
+                        "custom_liquid": "{% assign gammas_advice = closest.product.selected_or_first_available_variant.metafields.custom.gamma_s_advice %}\n{% capture gammas_advice_check %}{{ gammas_advice | metafield_tag | strip_html | strip }}{% endcapture %}\n{% if gammas_advice == blank or gammas_advice_check == '' %}\n  {% assign gammas_advice = closest.product.metafields.custom.gamma_s_advice %}\n{% endif %}\n\n{% if gammas_advice != blank %}\n  <div class=\"rte\">{{ gammas_advice | metafield_tag }}</div>\n{% endif %}"
                       },
                       "blocks": {}
                     }
@@ -351,7 +351,7 @@
                       "type": "custom-liquid",
                       "name": "t:names.custom_liquid",
                       "settings": {
-                        "custom_liquid": "{% assign spare_parts_accessories = product.selected_or_first_available_variant.metafields.custom.spare_parts_accessories %}\n\n{% if spare_parts_accessories != blank %}\n  <div class=\"rte\">{{ spare_parts_accessories | metafield_tag }}</div>\n{% endif %}"
+                        "custom_liquid": "{% assign spare_parts_accessories = closest.product.selected_or_first_available_variant.metafields.custom.spare_parts_accessories %}\n{% capture spare_parts_accessories_check %}{{ spare_parts_accessories | metafield_tag | strip_html | strip }}{% endcapture %}\n{% if spare_parts_accessories == blank or spare_parts_accessories_check == '' %}\n  {% assign spare_parts_accessories = closest.product.metafields.custom.spare_parts_accessories %}\n{% endif %}\n\n{% if spare_parts_accessories != blank %}\n  <div class=\"rte\">{{ spare_parts_accessories | metafield_tag }}</div>\n{% endif %}"
                       },
                       "blocks": {}
                     }
@@ -374,7 +374,7 @@
                       "type": "custom-liquid",
                       "name": "t:names.custom_liquid",
                       "settings": {
-                        "custom_liquid": "{% assign manuals_documentation = product.selected_or_first_available_variant.metafields.custom.manuals_documentation %}\n\n{% if manuals_documentation != blank %}\n  <div class=\"rte\">{{ manuals_documentation | metafield_tag }}</div>\n{% endif %}"
+                        "custom_liquid": "{% assign manuals_documentation = closest.product.selected_or_first_available_variant.metafields.custom.manuals_documentation %}\n{% capture manuals_documentation_check %}{{ manuals_documentation | metafield_tag | strip_html | strip }}{% endcapture %}\n{% if manuals_documentation == blank or manuals_documentation_check == '' %}\n  {% assign manuals_documentation = closest.product.metafields.custom.manuals_documentation %}\n{% endif %}\n\n{% if manuals_documentation != blank %}\n  <div class=\"rte\">{{ manuals_documentation | metafield_tag }}</div>\n{% endif %}"
                       },
                       "blocks": {}
                     }
@@ -397,7 +397,7 @@
                       "type": "custom-liquid",
                       "name": "t:names.custom_liquid",
                       "settings": {
-                        "custom_liquid": "{% assign frequently_asked_questions = product.selected_or_first_available_variant.metafields.custom.frequently_asked_questions %}\n\n{% if frequently_asked_questions != blank %}\n  <div class=\"rte\">{{ frequently_asked_questions | metafield_tag }}</div>\n{% endif %}"
+                        "custom_liquid": "{% assign frequently_asked_questions = closest.product.selected_or_first_available_variant.metafields.custom.frequently_asked_questions %}\n{% capture frequently_asked_questions_check %}{{ frequently_asked_questions | metafield_tag | strip_html | strip }}{% endcapture %}\n{% if frequently_asked_questions == blank or frequently_asked_questions_check == '' %}\n  {% assign frequently_asked_questions = closest.product.metafields.custom.frequently_asked_questions %}\n{% endif %}\n\n{% if frequently_asked_questions != blank %}\n  <div class=\"rte\">{{ frequently_asked_questions | metafield_tag }}</div>\n{% endif %}"
                       },
                       "blocks": {}
                     }
@@ -420,7 +420,7 @@
                       "type": "custom-liquid",
                       "name": "t:names.custom_liquid",
                       "settings": {
-                        "custom_liquid": "{% assign warranty_policy_metaobject = product.selected_or_first_available_variant.metafields.custom.warranty_policy.value %}\n\n{% if warranty_policy_metaobject != blank and warranty_policy_metaobject.warranty_policy != blank %}\n  <div class=\"rte\">\n    {{ warranty_policy_metaobject.warranty_policy | metafield_tag }}\n  </div>\n{% endif %}"
+                        "custom_liquid": "{% assign warranty_policy_metaobject = closest.product.selected_or_first_available_variant.metafields.custom.warranty_policy.value %}\n{% capture warranty_policy_check %}{{ warranty_policy_metaobject.warranty_policy | metafield_tag | strip_html | strip }}{% endcapture %}\n{% if warranty_policy_metaobject == blank or warranty_policy_check == '' %}\n  {% assign warranty_policy_metaobject = closest.product.metafields.custom.warranty_policy.value %}\n{% endif %}\n\n{% if warranty_policy_metaobject != blank and warranty_policy_metaobject.warranty_policy != blank %}\n  <div class=\"rte\">\n    {{ warranty_policy_metaobject.warranty_policy | metafield_tag }}\n  </div>\n{% endif %}"
                       },
                       "blocks": {}
                     }
@@ -443,7 +443,7 @@
                       "type": "custom-liquid",
                       "name": "t:names.custom_liquid",
                       "settings": {
-                        "custom_liquid": "{% assign return_exchange_policy_metaobject = product.selected_or_first_available_variant.metafields.custom.return_exchange_policy.value %}\n\n{% if return_exchange_policy_metaobject != blank and return_exchange_policy_metaobject.policy_text != blank %}\n  <div class=\"rte\">\n    {{ return_exchange_policy_metaobject.policy_text | metafield_tag }}\n  </div>\n{% endif %}"
+                        "custom_liquid": "{% assign return_exchange_policy_metaobject = closest.product.selected_or_first_available_variant.metafields.custom.return_exchange_policy.value %}\n{% capture return_exchange_policy_check %}{{ return_exchange_policy_metaobject.policy_text | metafield_tag | strip_html | strip }}{% endcapture %}\n{% if return_exchange_policy_metaobject == blank or return_exchange_policy_check == '' %}\n  {% assign return_exchange_policy_metaobject = closest.product.metafields.custom.return_exchange_policy.value %}\n{% endif %}\n\n{% if return_exchange_policy_metaobject != blank and return_exchange_policy_metaobject.policy_text != blank %}\n  <div class=\"rte\">\n    {{ return_exchange_policy_metaobject.policy_text | metafield_tag }}\n  </div>\n{% endif %}"
                       },
                       "blocks": {}
                     }
